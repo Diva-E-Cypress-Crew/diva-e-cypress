@@ -30,6 +30,6 @@ npm install -D @shelex/cypress-allure-plugin@2.40.1
 ```
 ### Cypress Starten
 ```bash
- "cypress:open": "cypress open",
+cypress open
 ```
 Über E2E Testing Broweser auswählen und Test ausführen. 
