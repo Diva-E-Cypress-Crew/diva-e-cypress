@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^20.0.1",
+    "@shelex/cypress-allure-plugin": "^2.40.1",
+    "cypress": "^13.6.3",
+    "cypress-cucumber-preprocessor": "^4.3.1",
+    "typescript": "^5.3.3"
+  },
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true,
+    "stepDefinitions": [
+      "cypress/e2e/common/steps/*.ts",
+      "cypress/e2e/common/**/*.ts"
+    ],
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": ".tmp/cucumber-json/cucumber-results",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    }
+  },
+  "scripts": {
+    "cypress:open": "cypress open",
+    "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature"
+  }
+}
