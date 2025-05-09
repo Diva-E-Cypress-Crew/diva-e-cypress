@@ -22,5 +22,11 @@
   "scripts": {
     "cypress:open": "cypress open",
     "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature"
+  },
+  "dependencies": {
+    "axios": "^1.9.0",
+    "ollama": "^0.5.15",
+    "puppeteer": "^24.8.2",
+    "ts-node": "^10.9.2"
   }
 }
