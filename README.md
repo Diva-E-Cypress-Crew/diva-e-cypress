@@ -14,8 +14,8 @@
 - Grace Leton Dodi
 
 ## KanBan - Board
-https://miro.com/welcomeonboard/M2orVW90Z3ZxM3lVTWcwM2tSdURoZU1MeExKalk0NnFhZFprQ0xpOXZlUjJnQUFLVWh4WHo0YU9oNjZQS3IzLzVkWE5sZ1hnekFsOFAvc1RVWUE3REZZQ3JXRHFjNUIxay96a090WGVrNkkwSTdxM1hxZUVMVmQwUFZpR1dQKzFQdGo1ZEV3bUdPQWRZUHQzSGl6V2NBPT0hdjE=?share_link_id=3607064566
-
+[Miro(veraltet)](https://miro.com/app/board/uXjVIMEqWZo=/?share_link_id=682357976358)
+[Trello](https://trello.com/b/JGFZBSRz/projekt-wm)
 ## Setup
 ```bash
 npm install
@@ -33,3 +33,13 @@ npm install -D @shelex/cypress-allure-plugin@2.40.1
 cypress open
 ```
 Über E2E Testing Broweser auswählen und Test ausführen. 
+
+### Ollama 
+
+## Installation
+
+https://ollama.com/download
+
+```bash
+ollama run llama3.2
+```
