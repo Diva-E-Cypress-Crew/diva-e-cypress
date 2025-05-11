@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^20.0.1",
     "@shelex/cypress-allure-plugin": "^2.40.1",
@@ -21,6 +22,12 @@
   },
   "scripts": {
     "cypress:open": "cypress open",
-    "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature"
+    "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature",
+    "ollama:test": "node src/ollama-test.js",
+    "openai:test": "node src/openai-test.js",
+    "puppeteer:test": "node src/puppeteer-test.js"
+  },
+  "dependencies": {
+    "ollama": "^0.5.15"
   }
 }
