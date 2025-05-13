@@ -21,6 +21,7 @@
     }
   },
   "scripts": {
+    "ollama:deploy": "node --loader ts-node/esm src/ollama.ts",
     "cypress:open": "cypress open",
     "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature",
     "ollama:test": "node src/ollama-test.js",
@@ -28,6 +29,8 @@
     "puppeteer:test": "node src/puppeteer-test.js"
   },
   "dependencies": {
-    "ollama": "^0.5.15"
+    "ollama": "^0.5.15",
+    "puppeteer": "^24.8.2",
+    "ts-node": "^10.9.2"
   }
 }
