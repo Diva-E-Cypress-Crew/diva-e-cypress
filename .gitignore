@@ -3,3 +3,5 @@
 node_modules
 
 /allure-results/
+/cypress/e2e/common/selectors/ollama_selectors.ts
+/cypress/e2e/common/steps/ollama_steps.ts
