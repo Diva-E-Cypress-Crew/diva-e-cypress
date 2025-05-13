@@ -15,7 +15,7 @@ async function getResponse(message: string): Promise<string> {
 }
 
 async function main() {
-    const featureFile: string = fs.readFileSync('../cypress/e2e/features/demo.feature', 'utf8')
+    const featureFile: string = fs.readFileSync('cypress/e2e/features/demo.feature', 'utf8')
     let message: string = "Please remember this .feature file:\n" + featureFile
     let response = await getResponse(message)
     console.log(response)
@@ -40,7 +40,7 @@ async function main() {
 
     console.log(response)
 
-    fs.writeFile('../cypress/e2e/common/selectors/ollama_selectors.ts', response, (err: NodeJS.ErrnoException | null) => {
+    fs.writeFile('cypress/e2e/common/selectors/ollama_selectors.ts', response, (err: NodeJS.ErrnoException | null) => {
         if (err) {
             console.error(err);
         } else {
@@ -57,7 +57,7 @@ async function main() {
 
     console.log(response)
 
-    fs.writeFile('../cypress/e2e/common/steps/ollama_steps.ts', response, (err: NodeJS.ErrnoException | null) => {
+    fs.writeFile('cypress/e2e/common/steps/ollama_steps.ts', response, (err: NodeJS.ErrnoException | null) => {
         if (err) {
             console.error(err);
         } else {

@@ -1,29 +1,35 @@
-import cy from 'cypress';
+```typescript
+import { cy } from 'cypress';
 
-cy.get('#form-container')
-  .should('be.visible')
+export const selectors = {
+  // Element to click the Anlage button
+  selAnlegen: '.btn-list__item--button',
 
-cy.get('.list > li')
-  .each((listItem) => {
-    cy.wrap(listItem).get('.anlage-plan-ueberpruefe').should('be.visible');
-    cy.wrap(listItem).get('.anlage-plan-ueberpruefe').click();
-    cy.wrap(listItem).get('.anlage-plan-wertentwicklung').should('be.visible');
-  });
+  // Element to find Vermittler
+  selVermittler: '#find-your-berater-button',
 
-cy.get('.anlage-plan-wertentwicklung')
-  .each((item) => {
-    cy.wrap(item).get('#ausgabe-aufschlag').should('be.visible');
-    cy.wrap(item).get('#meag-fonds-gewinnanteil').should('be.visible');
-    cy.wrap(item).get('#meag-fonds-gewinnanteil > input').should('have.value', '0.1');
-    cy.wrap(item).get('#steuerliche-auswirkungen').should('be.visible');
-  });
+  // Input for inputting name
+  selNameInput: 'input[name="name"]',
 
-cy.get('.form-button')
-  .click();
+  // Input for inputting email
+  selEmailInput: 'input[name="email"]',
 
-cy.get('.anlage-plan-ueberpruefe')
-  .each((listItem) => {
-    cy.wrap(listItem).get('#kosten-funktion').should('have.value', '1000.00');
-    cy.wrap(listItem).get('#verluste-funktion').should('be.visible');
-  });
-  
+  // Button to click "Anlegen" button
+  selAnlagenButton: '.btn-list__item--button',
+
+  // Element containing the table data of the anlage result
+  selAnlageResultTable: '#results-table',
+
+  // Input field for entering investment amount
+  selInvestmentAmountInput: 'input[name="amount"]',
+
+  // Button to click "Anlegen" button
+  selAnlagenKostenButton: '.btn-list__item--button',
+
+  // Element containing the result text of the anlage cost
+  selAnlagenKostenText: '#results-table > tbody > tr:nth-child(2) > td:nth-child(3) > span',
+
+  // Input field for entering investment period
+  selInvestmentPeriodInput: 'input[name="period"]',
+};
+```
