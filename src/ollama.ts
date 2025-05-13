@@ -14,6 +14,17 @@ async function getResponse(message: string): Promise<string> {
     return response.message.content.toString()
 }
 
+/**
+ * Entfernt führende und abschließende ```-Marker (mit optionalem Language-Tag)
+ */
+function stripCodeFences(text: string): string {
+    return text
+        // Entfernt den ersten ```Zeile (z.B. ``` oder ```typescript)
+        .replace(/^```[a-zA-Z]*\r?\n/, '')
+        // Entfernt das abschließende ```
+        .replace(/\r?\n```$/, '');
+}
+
 async function main() {
     const featureFile: string = fs.readFileSync('cypress/e2e/features/demo.feature', 'utf8')
     let message: string = "Please remember this .feature file:\n" + featureFile
@@ -36,34 +47,36 @@ async function main() {
                \n\n
                As an answer please return me the typescript code. Dont comment your answer just be silent and send the code.`
 
-    response = await getResponse(message)
+    response = await getResponse(message);
 
-    console.log(response)
+    const cleanedSelectors = stripCodeFences(response);
 
-    fs.writeFile('cypress/e2e/common/selectors/ollama_selectors.ts', response, (err: NodeJS.ErrnoException | null) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('File written successfully.');
+    fs.writeFile(
+        'cypress/e2e/common/selectors/ollama_selectors.ts',
+        cleanedSelectors,
+        (err) => {
+            if (err) console.error(err);
+            else console.log('selectors-Datei erfolgreich geschrieben.');
         }
-    });
+    );
 
     message = `Now generate me the steps.ts file. Therefore import the selectors from ../selectors/ollama_selectors. 
                 And write me the steps base one the cucumber .feature file you remembered earlier using Given, When, Then from "@badeball/cypress-cucumber-preprocessor";
                \n\n
                As an answer please return me the typescript code. Dont comment your answer just be silent and send the code.`
 
-    response = await getResponse(message)
+    response = await getResponse(message);
 
-    console.log(response)
+    const cleanedSteps = stripCodeFences(response);
 
-    fs.writeFile('cypress/e2e/common/steps/ollama_steps.ts', response, (err: NodeJS.ErrnoException | null) => {
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('File written successfully.');
+    fs.writeFile(
+        'cypress/e2e/common/steps/ollama_steps.ts',
+        cleanedSteps,
+        (err) => {
+            if (err) console.error(err);
+            else console.log('steps-Datei erfolgreich geschrieben.');
         }
-    });
+    );
 }
 
 main().catch(console.error)

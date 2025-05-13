@@ -1,35 +1,16 @@
-```typescript
 import { cy } from 'cypress';
 
-export const selectors = {
-  // Element to click the Anlage button
-  selAnlegen: '.btn-list__item--button',
-
-  // Element to find Vermittler
-  selVermittler: '#find-your-berater-button',
-
-  // Input for inputting name
-  selNameInput: 'input[name="name"]',
-
-  // Input for inputting email
-  selEmailInput: 'input[name="email"]',
-
-  // Button to click "Anlegen" button
-  selAnlagenButton: '.btn-list__item--button',
-
-  // Element containing the table data of the anlage result
-  selAnlageResultTable: '#results-table',
-
-  // Input field for entering investment amount
-  selInvestmentAmountInput: 'input[name="amount"]',
-
-  // Button to click "Anlegen" button
-  selAnlagenKostenButton: '.btn-list__item--button',
-
-  // Element containing the result text of the anlage cost
-  selAnlagenKostenText: '#results-table > tbody > tr:nth-child(2) > td:nth-child(3) > span',
-
-  // Input field for entering investment period
-  selInvestmentPeriodInput: 'input[name="period"]',
+const cySelectors = {
+  selAnlegen: '.list > li > a', // Anlegen button
+  selWertentwicklung: '#wertentwicklung', // Wertentwicklung dropdown
+  selAnlagenzeitraumEinmaligeAusgabe: '#anlagenzeitraum > :first-child', // Einmalige Ausgabe
+  selAnlagenzeitraumJahreszeitraum: '#anlagenzeitraum > :nth-child(2)', // Jahreszeitraum
+  selWertentwicklungLinienwert: 'option[value="linienwert"]', // Linienwert
+  selWertentwicklungPunktwert: 'option[value="punktwert"]', // Punktwert
+  selAnlagenhäufigkeitMondrunde: '#anlagenhäufigkeit > :nth-child(1)', // Anlagehäufigkeit - Monat und Runde
+  selAnlagenhäufigkeitWochendrunde: '#anlagenhäufigkeit > :nth-child(2)', // Anlagehäufigkeit - Woche und Runde
+  selKapitalverzinsungOption: 'option[value="kapitalverzinsung"]', // Kapitalverzinsung Option
+  selVerwaltungsgebührOption: 'option[value="verwaltungsgehr"]' // Verwaltungsgebühr Option
 };
-```
+
+export default cySelectors;
