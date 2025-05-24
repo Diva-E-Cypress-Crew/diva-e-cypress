@@ -7,3 +7,4 @@ node_modules
 /cypress/e2e/common/steps/ollama_steps.ts
 /.vs
 /dist
+/generatecypresstest/out
