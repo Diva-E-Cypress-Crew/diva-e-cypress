@@ -1,4 +1,4 @@
-import ollama from 'ollama'
+import * as ollama from "ollama";
 import * as fs from 'fs'
 import puppeteer from "puppeteer";
 
@@ -6,7 +6,7 @@ const messages: { role: 'user' | 'assistant', content: string }[] = []
 
 async function getResponse(message: string): Promise<string> {
     messages.push({ role: 'user', content: message })
-    const response = await ollama.chat({
+    const response = await (ollama as any).chat({
         model: 'llama3.2',
         messages: messages,
     })
