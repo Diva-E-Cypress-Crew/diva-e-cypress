@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export function activate(context: vscode.ExtensionContext) {
-  const disposable = vscode.commands.registerCommand('generatefeature.generateFeature', (uri: vscode.Uri) => {
+  const disposable = vscode.commands.registerCommand('generatecypresstest.generateCypressTest', (uri: vscode.Uri) => {
     const inputPath = uri.fsPath;
 
     if (!fs.existsSync(inputPath)) {

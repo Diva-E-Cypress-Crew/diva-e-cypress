@@ -39,7 +39,7 @@ const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 function activate(context) {
-    const disposable = vscode.commands.registerCommand('generatefeature.generateFeature', (uri) => {
+    const disposable = vscode.commands.registerCommand('generatecypresstest.generateCypressTest', (uri) => {
         const inputPath = uri.fsPath;
         if (!fs.existsSync(inputPath)) {
             vscode.window.showErrorMessage("❌ Datei nicht gefunden.");
@@ -55,3 +55,4 @@ function activate(context) {
     context.subscriptions.push(disposable);
 }
 function deactivate() { }
+//# sourceMappingURL=extension.js.map
