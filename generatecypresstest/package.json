@@ -57,7 +57,10 @@
     "eslint": "^9.25.1",
     "ollama": "^0.5.15",
     "puppeteer": "^24.10.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@huggingface/inference": "^4.0.0",
+    "dotenv": "^16.5.0",
+    "inference": "^2.0.106"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
