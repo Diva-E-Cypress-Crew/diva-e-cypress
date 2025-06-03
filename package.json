@@ -10,7 +10,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "out/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
@@ -39,8 +39,8 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p generatecypresstest",
-    "watch": "tsc -watch -p generatecypresstest",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test"
@@ -57,7 +57,10 @@
     "eslint": "^9.25.1",
     "ollama": "^0.5.15",
     "puppeteer": "^24.10.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@huggingface/inference": "^4.0.0",
+    "dotenv": "^16.5.0",
+    "inference": "^2.0.106"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
