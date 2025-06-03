@@ -1,6 +1,6 @@
 {
-  "name": "generatecypresstest",
-  "displayName": "generateCypressTest",
+  "name": "diva-e-cypress",
+  "displayName": "diva-e-cypress",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -10,27 +10,27 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "generatecypresstest.generateWithOllama",
+        "command": "diva-e-cypress.generateWithOllama",
         "title": "Generate Cypress Test (Ollama)"
       },
       {
-        "command": "generatecypresstest.generateWithHuggingface",
+        "command": "diva-e-cypress.generateWithHuggingface",
         "title": "Generate Cypress Test (Huggingface)"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "generatecypresstest.generateWithOllama",
+          "command": "diva-e-cypress.generateWithOllama",
           "when": "resourceExtname == .feature",
           "group": "navigation"
         },
         {
-          "command": "generatecypresstest.generateWithHuggingface",
+          "command": "diva-e-cypress.generateWithHuggingface",
           "when": "resourceExtname == .feature",
           "group": "navigation"
         }
@@ -60,7 +60,9 @@
     "typescript": "^5.8.3",
     "@huggingface/inference": "^4.0.0",
     "dotenv": "^16.5.0",
-    "inference": "^2.0.106"
+    "inference": "^2.0.106",
+    "esbuild": "^0.25.4",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
