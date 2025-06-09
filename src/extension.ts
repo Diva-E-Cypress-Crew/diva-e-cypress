@@ -16,11 +16,11 @@ export function activate(context: vscode.ExtensionContext) {
   const disposableOllama = vscode.commands.registerCommand(
     'diva-e-cypress.generateWithOllama',
     async (uri: vscode.Uri) => {
-      const projectRoot = path.dirname(path.dirname(uri.fsPath));
-      outputChannel.clear();
-      outputChannel.show();
-      runOllama(outputChannel, projectRoot);
-      vscode.window.showInformationMessage(`✅ Ollama run gestartet – bitte schau ins Output-Panel.`);
+        const featureFile: string = uri.fsPath.toString();
+        outputChannel.clear();
+        outputChannel.show();
+        runOllama(outputChannel, featureFile);
+        vscode.window.showInformationMessage(`✅ Ollama run gestartet – bitte schau ins Output-Panel.`);
     }
   );
 
@@ -28,11 +28,11 @@ export function activate(context: vscode.ExtensionContext) {
   const disposableHF = vscode.commands.registerCommand(
     'diva-e-cypress.generateWithHuggingface',
     async (uri: vscode.Uri) => {
-      const projectRoot = path.dirname(path.dirname(uri.fsPath));
-      outputChannel.clear();
-      outputChannel.show();
-      runHuggingface(outputChannel, projectRoot);
-      vscode.window.showInformationMessage(`✅ Huggingface Run gestartet – bitte schau ins Output-Panel.`);
+        const featureFile: string = uri.fsPath.toString();
+        outputChannel.clear();
+        outputChannel.show();
+        runHuggingface(outputChannel, featureFile);
+        vscode.window.showInformationMessage(`✅ Huggingface Run gestartet – bitte schau ins Output-Panel.`);
     }
   );
 
