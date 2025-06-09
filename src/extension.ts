@@ -14,7 +14,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // 1) Befehl für Ollama
   const disposableOllama = vscode.commands.registerCommand(
-    'generatecypresstest.generateWithOllama',
+    'diva-e-cypress.generateWithOllama',
     async (uri: vscode.Uri) => {
       const projectRoot = path.dirname(path.dirname(uri.fsPath));
       outputChannel.clear();
@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   // 2) Neuer Befehl für Huggingface
   const disposableHF = vscode.commands.registerCommand(
-    'generatecypresstest.generateWithHuggingface',
+    'diva-e-cypress.generateWithHuggingface',
     async (uri: vscode.Uri) => {
       const projectRoot = path.dirname(path.dirname(uri.fsPath));
       outputChannel.clear();
