@@ -1,0 +1,38 @@
+Generate a clean TypeScript file named "ollama_selectors.ts" at path cypress/e2e/common/selectors/ollama_selectors.ts.
+Output only the TypeScript code—absolutely no comments, no markdown fences, no explanatory text.
+The file must consist exactly of the following exported helper functions at the top (in this order), and then any additional "sel..."‐functions for custom elements:
+
+export const visitHomepage = () => {
+  return cy.visit('/');
+};
+
+export const clickLabel = (label: string) => {
+  const normalizedLabel = label.toLowerCase().replace(/\s+/g, '-').trim();
+  return cy.get('body').then(($body) => {
+    if ($body.find('[data-cy="' + normalizedLabel + '"]').length > 0) {
+      return cy.get('[data-cy="' + normalizedLabel + '"]', { timeout: 5000 }).click();
+    }
+    if ($body.find('.tile-' + normalizedLabel).length > 0) {
+      return cy.get('.tile-' + normalizedLabel, { timeout: 5000 }).click();
+    }
+    return cy.contains(label).click();
+  });
+};
+
+export const getLabel = (label: string) => {
+  const normalizedLabel = label.toLowerCase().replace(/\s+/g, '-').trim();
+  return cy.get('body').then(($body) => {
+    if ($body.find('[data-cy="' + normalizedLabel + '"]').length > 0) {
+      return cy.get('[data-cy="' + normalizedLabel + '"]', { timeout: 5000 });
+    }
+    return cy.contains(label);
+  });
+};
+
+For every UI element referenced in the .feature file that cannot reliably be found via clickLabel(...) or getLabel(...), create a corresponding selector function with the prefix "sel" followed by a CamelCase short description. Each must look exactly like this:
+
+export const selMyCustomElement = () => {
+  return cy.get('<insert CSS selector>');
+};
+
+After the last "export const ..." line, there must be no additional text or comments. The file ends immediately after the final semicolon.

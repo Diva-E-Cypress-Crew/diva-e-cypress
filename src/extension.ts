@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
         const featureFile: string = uri.fsPath.toString();
         outputChannel.clear();
         outputChannel.show();
-        runOllama(outputChannel, featureFile);
+        runOllama(outputChannel, featureFile, context);
         vscode.window.showInformationMessage(`✅ Ollama run gestartet – bitte schau ins Output-Panel.`);
     }
   );

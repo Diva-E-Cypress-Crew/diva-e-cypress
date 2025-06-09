@@ -1,0 +1,43 @@
+Generate a clean TypeScript file named "ollama_steps.ts" under cypress/e2e/common/steps.
+Output only the TypeScript code—no comments, no markdown fences, no explanatory text.
+Use literal Step definitions matching exactly the .feature file:
+- Import at the top:
+import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import {
+  visitHomepage,
+  clickLabel,
+  getLabel,
+  selAnlegen,
+  selEndbetrag,
+  selAnlagebetragInput,
+  selEndbetragLabel,
+  selEndbetragValue
+} from '../../../common/selectors/ollama_selectors.js';
+
+Then write each step exactly:
+Given('the Customer is on the homepage', () => {
+  return visitHomepage();
+});
+When('he clicks the "{string}" button', (label: string) => {
+  return clickLabel(label);
+});
+Then('the "{string}" tile should be displayed', (label: string) => {
+  return getLabel(label).should('be.visible');
+});
+Then('soll die Anlegen-Kachel anklickbar sein', () => {
+  return selAnlegen().should('be.visible').click();
+});
+Then('wird der Endbetrag angezeigt', () => {
+  return selEndbetrag().should('be.visible');
+});
+Then('soll die Anlagebetrag-Eingabe-Box sichtbar sein', () => {
+  return selAnlagebetragInput().should('be.visible');
+});
+Then('soll der Endbetrag-Label angezeigt werden', () => {
+  return selEndbetragLabel().should('be.visible');
+});
+Then('soll der Endbetrag-Wert angezeigt werden', () => {
+  return selEndbetragValue().should('be.visible');
+});
+
+After the final semicolon, the file must end immediately with no additional text or comments.
