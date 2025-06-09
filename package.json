@@ -1,45 +1,70 @@
 {
-  "type": "module",
-
-  "devDependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^22.0.1",
-    "@shelex/cypress-allure-plugin": "^2.41.1",
-    "@types/node": "^22.15.18",
-    "cypress": "^13.6.3",
-    "esbuild": "^0.25.4",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.8.3",
-    "webpack": "^5.99.9"
+  "name": "diva-e-cypress",
+  "displayName": "diva-e-cypress",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
   },
-  "cypress-cucumber-preprocessor": {
-    "nonGlobalStepDefinitions": true,
-    "stepDefinitions": [
-      "cypress/e2e/common/steps/*.ts",
-      "cypress/e2e/common/**/*.ts"
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "diva-e-cypress.generateWithOllama",
+        "title": "Generate Cypress Test (Ollama)"
+      },
+      {
+        "command": "diva-e-cypress.generateWithHuggingface",
+        "title": "Generate Cypress Test (Huggingface)"
+      }
     ],
-    "cucumberJson": {
-      "generate": true,
-      "outputFolder": ".tmp/cucumber-json/cucumber-results",
-      "filePrefix": "",
-      "fileSuffix": ".cucumber"
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "diva-e-cypress.generateWithOllama",
+          "when": "resourceExtname == .feature",
+          "group": "navigation"
+        },
+        {
+          "command": "diva-e-cypress.generateWithHuggingface",
+          "when": "resourceExtname == .feature",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "scripts": {
-    "cypress:open": "cypress open",
-    "demo:chrome": "cypress run --browser chrome --spec cypress/e2e/features/demo.feature",
-    "ollama:run": "ollama run llama3.2",
-    "ollama:deploy": "tsc && node dist/ollama.js",
-    "ollama:test": "node src/ollama-test.js",
-    "openai:test": "node src/openai-test.js",
-    "puppeteer:test": "node src/puppeteer-test.js"
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
   },
-
-  "dependencies": {
-    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.4",
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@types/node-fetch": "^2.6.12",
+    "@types/vscode": "^1.100.0",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.25.1",
+    "ollama": "^0.5.15",
+    "puppeteer": "^24.10.0",
+    "typescript": "^5.8.3",
     "@huggingface/inference": "^4.0.0",
     "dotenv": "^16.5.0",
     "inference": "^2.0.106",
-    "ollama": "^0.5.15",
-    "puppeteer": "^24.8.2"
+    "esbuild": "^0.25.4",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }
