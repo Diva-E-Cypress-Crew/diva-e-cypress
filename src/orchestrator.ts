@@ -2,35 +2,32 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { window, workspace, OutputChannel } from 'vscode';
+import { window, OutputChannel } from 'vscode';
 import ollama from 'ollama';
 
 import { ChatMessage, SelectorsAgent } from './agents/selectorsAgent';
-import { StepsAgent } from './agents/stepsAgent';
+import { StepsAgent }                   from './agents/stepsAgent';
 import {
   VerificationAgent,
-  VerifyResult,
+  VerifyResult
 } from './agents/verificationAgent';
 
 export class Orchestrator {
-  // we accumulate chat history here
   private msgs: ChatMessage[] = [];
   private output: OutputChannel;
 
-  // simple wrapper over ollama.chat
   private llmClient = {
     chat: async (messages: ChatMessage[]): Promise<string> => {
       const resp: any = await (ollama as any).chat({
         model: 'llama3.2',
-        messages,
+        messages
       });
-      // adjust depending on your version of ollama-client
       return (
         resp.choices?.[0]?.message?.content ??
         resp.choices?.[0]?.text ??
-        String(resp)
-      );
-    },
+        JSON.stringify(resp)
+      ).trim();
+    }
   };
 
   constructor(private featureFile: string) {
@@ -39,78 +36,57 @@ export class Orchestrator {
 
   public async run(): Promise<void> {
     try {
-      // ─── 1) Load Feature ─────────────────────────────────────────────────────
+      this.output.clear();
+      this.output.show(true);
+      this.output.appendLine(`🚀 Orchestrator started for ${path.basename(this.featureFile)}`);
+
+      // 1) Load feature
       const feature = fs.readFileSync(this.featureFile, 'utf-8');
       this.msgs.push({ role: 'user', content: feature });
-      this.output.appendLine(
-        `🔖 Loaded feature: ${path.basename(this.featureFile)}`
-      );
 
-      // ─── 2) Generate Selectors ──────────────────────────────────────────────
-      this.output.appendLine('🔍 Running SelectorsAgent...');
-      const selectorsAgent = new SelectorsAgent(this.msgs, this.llmClient);
-      const selectorsCode = await selectorsAgent.generate(feature);
-      const selectorsPath = this.writeFile(
-        'generated_selectors.ts',
-        selectorsCode
-      );
+      // 2) Calculate fixed filenames
+      const dir     = path.dirname(this.featureFile);
+      const selFile = 'orchestrator_selectors.ts';
+      const stpFile = 'orchestrator_steps.ts';
+
+      // 3) SelectorsAgent
+      this.output.appendLine('🔍 Running SelectorsAgent…');
+      const selAgent      = new SelectorsAgent(this.msgs, this.llmClient);
+      const selectorsCode = await selAgent.generate(feature);
+      const selPath       = path.join(dir, selFile);
+      fs.writeFileSync(selPath, selectorsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: selectorsCode });
-      this.output.appendLine(`✅ selectors written to ${selectorsPath}`);
+      this.output.appendLine(`✅ Selectors overwritten in ${selFile}`);
 
-      // ─── 3) Generate Steps ─────────────────────────────────────────────────
-      this.output.appendLine('📝 Running StepsAgent...');
-      const stepsAgent = new StepsAgent(this.msgs, this.llmClient);
-      const stepsCode = await stepsAgent.generate(feature, selectorsCode);
-      const stepsPath = this.writeFile('generated_steps.ts', stepsCode);
+      // 4) StepsAgent
+      this.output.appendLine('📝 Running StepsAgent…');
+      const stpAgent  = new StepsAgent(this.msgs, this.llmClient);
+      const stepsCode = await stpAgent.generate(feature, selectorsCode);
+      const stpPath   = path.join(dir, stpFile);
+      fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
-      this.output.appendLine(`✅ steps written to ${stepsPath}`);
+      this.output.appendLine(`✅ Steps overwritten in ${stpFile}`);
 
-      // ─── 4) LLM-based Verification ────────────────────────────────────────
-      this.output.appendLine('✔️ Running VerificationAgent...');
-      const verifier = new VerificationAgent(this.llmClient);
-      const result: VerifyResult = await verifier.verify(
-        selectorsCode,
-        stepsCode
-      );
+      // 5) VerificationAgent
+      this.output.appendLine('✔️ Running VerificationAgent…');
+      const verifier: VerificationAgent = new VerificationAgent(this.llmClient);
+      const result: VerifyResult = await verifier.verify(selectorsCode, stepsCode);
 
       if (result.passed) {
-        this.output.appendLine('🎉 Verification passed: ALL_OK');
+        this.output.appendLine('🎉 Verification passed: both files are valid.');
       } else {
-        this.output.appendLine(
-          '❌ Verification found issues — applying LLM-suggested fixes...'
-        );
+        this.output.appendLine('❌ Verification failed – applying fixes…');
         if (result.correctedSelectors) {
-          const fixedSelPath = this.writeFile(
-            'fixed_selectors.ts',
-            result.correctedSelectors
-          );
-          this.output.appendLine(`🔄 corrected selectors → ${fixedSelPath}`);
+          fs.writeFileSync(selPath, result.correctedSelectors, 'utf-8');
+          this.output.appendLine(`🔄 selectors fixed in ${selFile}`);
         }
         if (result.correctedSteps) {
-          const fixedStepsPath = this.writeFile(
-            'fixed_steps.ts',
-            result.correctedSteps
-          );
-          this.output.appendLine(`🔄 corrected steps → ${fixedStepsPath}`);
+          fs.writeFileSync(stpPath, result.correctedSteps, 'utf-8');
+          this.output.appendLine(`🔄 steps fixed in ${stpFile}`);
         }
       }
-
-      this.output.show(true);
     } catch (err: any) {
       window.showErrorMessage(`Orchestrator error: ${err.message || err}`);
     }
-  }
-
-  /**
-   * Helper to write into cypress/e2e folder
-   */
-  private writeFile(filename: string, content: string): string {
-    const wsRoot = workspace.workspaceFolders?.[0].uri.fsPath ?? process.cwd();
-    const outDir = path.join(wsRoot, 'cypress', 'e2e');
-    fs.mkdirSync(outDir, { recursive: true });
-    const outPath = path.join(outDir, filename);
-    fs.writeFileSync(outPath, content, 'utf-8');
-    this.output.appendLine(`Wrote: ${outPath}`);
-    return outPath;
   }
 }

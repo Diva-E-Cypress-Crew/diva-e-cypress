@@ -2,8 +2,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { ChatMessage } from './selectorsAgent';
-import { LLmClient } from './selectorsAgent';
+import { ChatMessage, LLmClient } from './selectorsAgent';
 
 /**
  * Agent, der aus Feature-Text + Selektoren die Step-Definitions baut.
@@ -20,26 +19,34 @@ export class StepsAgent {
   ): Promise<string> {
     // 1) Prompt laden
     const promptPath = path.join(
-      __dirname,
-      '..', '..',
-      'prompts',
-      'steps_instruction.txt'
+      __dirname, '..', '..', 'prompts', 'steps_instruction.txt'
     );
     const systemPrompt = fs.readFileSync(promptPath, 'utf-8');
 
     // 2) Message-History erweitern
     const messages: ChatMessage[] = [
       ...this.msgs,
-      // Zuerst den Assist-Context mit den generierten Selektoren
       { role: 'assistant', content: selectorsCode },
-      // Dann das System-Prompt für Steps
-      { role: 'system',    content: systemPrompt  },
-      // Dann der Feature-Text nochmal als User-Input
-      { role: 'user',      content: feature       },
+      { role: 'system',    content: systemPrompt   },
+      { role: 'user',      content: feature        }
     ];
 
-    // 3) An LLM schicken
-    const response = await this.llmClient.chat(messages);
-    return response;
+    // 3) Raw-Antwort vom LLM holen
+    const raw = await this.llmClient.chat(messages);
+
+    // 4) Text extrahieren
+    let text: string;
+    if (typeof raw === 'string') {
+      text = raw;
+    } else if (Array.isArray(raw.choices) && raw.choices[0]?.message?.content) {
+      text = raw.choices[0].message.content;
+    } else if (Array.isArray(raw.choices) && raw.choices[0]?.text) {
+      text = raw.choices[0].text;
+    } else {
+      console.error('Unexpected LLM response shape in StepsAgent:', raw);
+      text = JSON.stringify(raw);
+    }
+
+    return text.trim();
   }
 }
