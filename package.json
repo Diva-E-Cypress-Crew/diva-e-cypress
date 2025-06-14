@@ -20,8 +20,12 @@
       {
         "command": "diva-e-cypress.generateWithHuggingface",
         "title": "Generate Cypress Test (Huggingface)"
+      },
+     {
+        "command": "diva-e-cypress.generateTest",
+        "title": "Generate Cypress Test (Orchestrator)"
       }
-    ],
+      ],
     "menus": {
       "explorer/context": [
         {
@@ -31,6 +35,11 @@
         },
         {
           "command": "diva-e-cypress.generateWithHuggingface",
+          "when": "resourceExtname == .feature",
+          "group": "navigation"
+        },
+        {
+          "command": "diva-e-cypress.generateTest",
           "when": "resourceExtname == .feature",
           "group": "navigation"
         }
