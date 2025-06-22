@@ -81,7 +81,7 @@ export function runOllama(outputChannel: vscode.OutputChannel, featureFilePath: 
 
     // ─── 4a) Selektoren-Datei schreiben ─────────────────────────────────────
     const selectorsDir = path.dirname(featureFilePath);
-    const featureName: string = path.basename(selectorsDir)
+    const featureName: string = path.basename(selectorsDir);
     if (!fs.existsSync(selectorsDir)) {
       fs.mkdirSync(selectorsDir, { recursive: true });
     }

@@ -1,43 +1,24 @@
-Generate a clean TypeScript file named "ollama_steps.ts" under cypress/e2e/common/steps.
-Output only the TypeScript code—no comments, no markdown fences, no explanatory text.
-Use literal Step definitions matching exactly the .feature file:
-- Import at the top:
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-import {
-  visitHomepage,
-  clickLabel,
-  getLabel,
-  selAnlegen,
-  selEndbetrag,
-  selAnlagebetragInput,
-  selEndbetragLabel,
-  selEndbetragValue
-} from '../../../common/selectors/ollama_selectors.js';
+You are a generator for Cypress Cucumber step definitions.
+Input: any Gherkin feature file and the selector file "orchestrator_selectors.ts".
+Output: valid TypeScript file named "orchestrator_steps.ts" with exactly:
 
-Then write each step exactly:
-Given('the Customer is on the homepage', () => {
-  return visitHomepage();
-});
-When('he clicks the "{string}" button', (label: string) => {
-  return clickLabel(label);
-});
-Then('the "{string}" tile should be displayed', (label: string) => {
-  return getLabel(label).should('be.visible');
-});
-Then('soll die Anlegen-Kachel anklickbar sein', () => {
-  return selAnlegen().should('be.visible').click();
-});
-Then('wird der Endbetrag angezeigt', () => {
-  return selEndbetrag().should('be.visible');
-});
-Then('soll die Anlagebetrag-Eingabe-Box sichtbar sein', () => {
-  return selAnlagebetragInput().should('be.visible');
-});
-Then('soll der Endbetrag-Label angezeigt werden', () => {
-  return selEndbetragLabel().should('be.visible');
-});
-Then('soll der Endbetrag-Wert angezeigt werden', () => {
-  return selEndbetragValue().should('be.visible');
-});
+1. Imports:
+   import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+   import { visitHomepage, clickLabel, getLabel, /* all sel… */ } from './orchestrator_selectors';
 
-After the final semicolon, the file must end immediately with no additional text or comments.
+2. One block per Gherkin step. **Always:**
+   - Replace every `"..."` in Gherkin with a `{string}` placeholder inside the expression, **without extra quotes**:
+       When he clicks the "Anlegen" button  
+       → When('he clicks the {string} button', (label: string) => …);
+       Then the "Foo" text should be displayed  
+       → Then('the {string} text should be displayed', (text: string) => …);
+   - If a `sel<PascalName>()` exists for that element, use it:
+       `selAnlegenTile().click()`
+     otherwise use the generic helper:
+       `clickLabel(label)`
+   - Only the step file contains `.click()` or `.should()`; **no** selector definitions or clicks inside selectors.
+
+**Rules:**
+- No Markdown fences.
+- Use real newlines and tabs.
+- End file immediately after the last `});`.

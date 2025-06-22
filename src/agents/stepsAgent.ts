@@ -5,7 +5,7 @@ import * as path from 'path';
 import { ChatMessage, LLmClient } from './selectorsAgent';
 
 /**
- * Agent, der aus Feature-Text + Selektoren die Step-Definitions baut.
+ * Agent, der aus Feature‐Text + Selektoren Step‐Definitions baut.
  */
 export class StepsAgent {
   constructor(
@@ -23,7 +23,7 @@ export class StepsAgent {
     );
     const systemPrompt = fs.readFileSync(promptPath, 'utf-8');
 
-    // 2) Message-History erweitern
+    // 2) History zusammenbauen
     const messages: ChatMessage[] = [
       ...this.msgs,
       { role: 'assistant', content: selectorsCode },
@@ -31,10 +31,10 @@ export class StepsAgent {
       { role: 'user',      content: feature        }
     ];
 
-    // 3) Raw-Antwort vom LLM holen
+    // 3) LLM‐Antwort holen
     const raw = await this.llmClient.chat(messages);
 
-    // 4) Text extrahieren
+    // 4) Antwort extrahieren
     let text: string;
     if (typeof raw === 'string') {
       text = raw;
@@ -43,9 +43,21 @@ export class StepsAgent {
     } else if (Array.isArray(raw.choices) && raw.choices[0]?.text) {
       text = raw.choices[0].text;
     } else {
-      console.error('Unexpected LLM response shape in StepsAgent:', raw);
       text = JSON.stringify(raw);
     }
+
+    // 5) JSON‐Literal entpacken
+    if ((text.startsWith('"') && text.endsWith('"')) ||
+        (text.startsWith('`') && text.endsWith('`'))) {
+      try {
+        text = JSON.parse(text);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    // 6) Escape-Sequenzen in echte Zeilenumbrüche umwandeln
+    text = text.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
     return text.trim();
   }

@@ -4,7 +4,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 /**
- * Einfacher Typ für Chat-Messages
+ * Vereinfachter Typ für Chat-Messages
  */
 export interface ChatMessage {
   role: 'system' | 'user' | 'assistant';
@@ -12,14 +12,14 @@ export interface ChatMessage {
 }
 
 /**
- * Minimaler Typ für einen LLM-Client
+ * Minimal‐Interface für deinen LLM‐Client
  */
 export interface LLmClient {
   chat: (messages: ChatMessage[]) => Promise<any>;
 }
 
 /**
- * Agent, der aus Feature-Text Selektoren generiert.
+ * Agent, der aus Feature‐Text Selektoren generiert.
  */
 export class SelectorsAgent {
   constructor(
@@ -34,17 +34,17 @@ export class SelectorsAgent {
     );
     const systemPrompt = fs.readFileSync(promptPath, 'utf-8');
 
-    // 2) Message-History erweitern
+    // 2) History zusammenbauen
     const messages: ChatMessage[] = [
       ...this.msgs,
       { role: 'system', content: systemPrompt },
-      { role: 'user',   content: feature }
+      { role: 'user',   content: feature     }
     ];
 
-    // 3) Raw-Antwort vom LLM holen
+    // 3) LLM‐Antwort holen
     const raw = await this.llmClient.chat(messages);
 
-    // 4) Text extrahieren (anpassen, falls dein Client anderes Shape liefert)
+    // 4) Antwort extrahieren
     let text: string;
     if (typeof raw === 'string') {
       text = raw;
@@ -53,9 +53,21 @@ export class SelectorsAgent {
     } else if (Array.isArray(raw.choices) && raw.choices[0]?.text) {
       text = raw.choices[0].text;
     } else {
-      console.error('Unexpected LLM response shape in SelectorsAgent:', raw);
       text = JSON.stringify(raw);
     }
+
+    // 5) JSON‐Literal entpacken
+    if ((text.startsWith('"') && text.endsWith('"')) ||
+        (text.startsWith('`') && text.endsWith('`'))) {
+      try {
+        text = JSON.parse(text);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    // 6) Escape-Sequenzen in echte Zeilenumbrüche umwandeln
+    text = text.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
     return text.trim();
   }

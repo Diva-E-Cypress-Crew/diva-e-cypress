@@ -7,26 +7,26 @@ import ollama from 'ollama';
 
 import { ChatMessage, SelectorsAgent } from './agents/selectorsAgent';
 import { StepsAgent }                   from './agents/stepsAgent';
-import {
-  VerificationAgent,
-  VerifyResult
-} from './agents/verificationAgent';
+import { VerificationAgent }            from './agents/verificationAgent';
 
 export class Orchestrator {
   private msgs: ChatMessage[] = [];
   private output: OutputChannel;
 
+  // 1) LLM‐Client so anpassen, dass nur message.content zurückkommt:
   private llmClient = {
     chat: async (messages: ChatMessage[]): Promise<string> => {
       const resp: any = await (ollama as any).chat({
         model: 'llama3.2',
         messages
       });
-      return (
-        resp.choices?.[0]?.message?.content ??
-        resp.choices?.[0]?.text ??
-        JSON.stringify(resp)
-      ).trim();
+      // Ollama liefert { model, created_at, message: { role, content } }
+      const content =
+        resp.choices?.[0]?.message?.content   // falls resp.choices vorhanden
+          ?? resp.message?.content            // standard-Ollama-Format
+          ?? resp.choices?.[0]?.text          // fallback
+          ?? JSON.stringify(resp);            // ultimative Fallback
+      return content.trim();
     }
   };
 
@@ -38,39 +38,41 @@ export class Orchestrator {
     try {
       this.output.clear();
       this.output.show(true);
-      this.output.appendLine(`🚀 Orchestrator started for ${path.basename(this.featureFile)}`);
+      this.output.appendLine(
+        `🚀 Orchestrator started for ${path.basename(this.featureFile)}`
+      );
 
-      // 1) Load feature
+      // ——— 1) Feature laden ——————————————
       const feature = fs.readFileSync(this.featureFile, 'utf-8');
       this.msgs.push({ role: 'user', content: feature });
 
-      // 2) Calculate fixed filenames
+      // ——— 2) Ausgabedateien festlegen ——————
       const dir     = path.dirname(this.featureFile);
       const selFile = 'orchestrator_selectors.ts';
       const stpFile = 'orchestrator_steps.ts';
 
-      // 3) SelectorsAgent
+      // ——— 3) SelectorsAgent ————————————
       this.output.appendLine('🔍 Running SelectorsAgent…');
       const selAgent      = new SelectorsAgent(this.msgs, this.llmClient);
       const selectorsCode = await selAgent.generate(feature);
       const selPath       = path.join(dir, selFile);
       fs.writeFileSync(selPath, selectorsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: selectorsCode });
-      this.output.appendLine(`✅ Selectors overwritten in ${selFile}`);
+      this.output.appendLine(`✅ Selectors written to ${selFile}`);
 
-      // 4) StepsAgent
+      // ——— 4) StepsAgent ——————————————
       this.output.appendLine('📝 Running StepsAgent…');
       const stpAgent  = new StepsAgent(this.msgs, this.llmClient);
       const stepsCode = await stpAgent.generate(feature, selectorsCode);
       const stpPath   = path.join(dir, stpFile);
       fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
-      this.output.appendLine(`✅ Steps overwritten in ${stpFile}`);
+      this.output.appendLine(`✅ Steps written to ${stpFile}`);
 
-      // 5) VerificationAgent
+      // ——— 5) VerificationAgent —————————
       this.output.appendLine('✔️ Running VerificationAgent…');
-      const verifier: VerificationAgent = new VerificationAgent(this.llmClient);
-      const result: VerifyResult = await verifier.verify(selectorsCode, stepsCode);
+      const verifier = new VerificationAgent(this.llmClient);
+      const result   = await verifier.verify(selectorsCode, stepsCode);
 
       if (result.passed) {
         this.output.appendLine('🎉 Verification passed: both files are valid.');

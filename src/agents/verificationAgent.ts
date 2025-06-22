@@ -1,62 +1,127 @@
 // src/agents/verificationAgent.ts
 
+import * as ts from 'typescript';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ChatMessage, LLmClient } from './selectorsAgent';
 
-import { ChatMessage } from './selectorsAgent';  // unser gemeinsamer Message-Typ
-
-/**
- * Ergebnis der Überprüfung:
- * - passed: true, wenn LLM “ALL_OK” zurückgegeben hat
- * - correctedSelectors / correctedSteps nur befüllt, wenn LLM Korrekturen vorschlägt
- */
 export interface VerifyResult {
   passed: boolean;
+  errors: string[];
   correctedSelectors?: string;
   correctedSteps?: string;
 }
 
 export class VerificationAgent {
-  constructor(
-    private llmClient: { chat: (msgs: ChatMessage[]) => Promise<string> }
-  ) {}
+  constructor(private llmClient: LLmClient) {}
 
   public async verify(
     selectorsCode: string,
     stepsCode: string
   ): Promise<VerifyResult> {
-    // 1) Prompt laden
+    const errors: string[] = [];
+
+    // 1) Syntax‐Check via transpileModule
+    const selDiag = ts.transpileModule(selectorsCode, {
+      compilerOptions: { module: ts.ModuleKind.CommonJS },
+      reportDiagnostics: true
+    }).diagnostics ?? [];
+    const stpDiag = ts.transpileModule(stepsCode, {
+      compilerOptions: { module: ts.ModuleKind.CommonJS },
+      reportDiagnostics: true
+    }).diagnostics ?? [];
+
+    selDiag.concat(stpDiag).forEach(d => {
+      errors.push(ts.flattenDiagnosticMessageText(d.messageText, '\n'));
+    });
+
+    // 2) Konsistenz‐Check Imports vs. Exports
+    const selExports = this.extractExports(selectorsCode);
+    const stpImports = this.extractImports(stepsCode);
+    const missing    = stpImports.filter(name => !selExports.includes(name));
+    if (missing.length) {
+      errors.push(`Missing selector exports for: ${missing.join(', ')}`);
+    }
+
+    // 3) Wenn keine Fehler, fertig
+    if (errors.length === 0) {
+      return { passed: true, errors };
+    }
+
+    // 4) LLM‐Fix nur bei Fehlern
     const promptPath = path.join(
-      __dirname,
-      '..', '..',
-      'prompts',
-      'verification_instruction.txt'
+      __dirname, '..', '..', 'prompts', 'verification_instruction.txt'
     );
     const systemPrompt = fs.readFileSync(promptPath, 'utf-8');
 
-    // 2) Chat-History aufbauen
     const messages: ChatMessage[] = [
-      { role: 'system',    content: systemPrompt       },
-      { role: 'user',      content: selectorsCode      },
-      { role: 'user',      content: stepsCode          },
+      { role: 'system',    content: systemPrompt   },
+      { role: 'assistant', content: selectorsCode },
+      { role: 'assistant', content: stepsCode     },
+      {
+        role: 'user',
+        content:
+          'Errors:\n' +
+          errors.map(e => `- ${e}`).join('\n') +
+          '\n\nPlease return exactly a JSON object with two keys:\n' +
+          '"selectors": "<full corrected selectors file or null>",\n' +
+          '"steps":    "<full corrected steps file or null>"\n' +
+          'Use actual newlines, no escapes or fences.'
+      }
     ];
 
-    // 3) LLM aufrufen
-    const reply = await this.llmClient.chat(messages);
+    const raw = await this.llmClient.chat(messages);
 
-    // 4) Auswertung
-    if (reply.trim() === 'ALL_OK') {
-      return { passed: true };
+    let fixedSelectors: string|undefined;
+    let fixedSteps:    string|undefined;
+    try {
+      const obj = JSON.parse(raw);
+      if (typeof obj.selectors === 'string') fixedSelectors = obj.selectors;
+      if (typeof obj.steps     === 'string') fixedSteps    = obj.steps;
+    } catch {
+      errors.push('LLM response was not valid JSON');
     }
-
-    // 5) Beim “Fehlerfall”: Parsen der beiden Blöcke
-    const selMatch  = reply.match(/BEGIN selectors\.ts([\s\S]*?)END selectors\.ts/);
-    const stepMatch = reply.match(/BEGIN steps\.ts([\s\S]*?)END steps\.ts/);
 
     return {
       passed: false,
-      correctedSelectors: selMatch  ? selMatch[1].trim()  : undefined,
-      correctedSteps:    stepMatch ? stepMatch[1].trim() : undefined,
+      errors,
+      correctedSelectors: fixedSelectors,
+      correctedSteps:    fixedSteps
     };
+  }
+
+  private extractExports(code: string): string[] {
+    const sf = ts.createSourceFile('sel.ts', code, ts.ScriptTarget.Latest, true);
+    const names: string[] = [];
+    sf.forEachChild(node => {
+      if (
+        ts.isVariableStatement(node) &&
+        node.modifiers?.some(m => m.kind === ts.SyntaxKind.ExportKeyword)
+      ) {
+        node.declarationList.declarations.forEach(decl => {
+          if (ts.isIdentifier(decl.name)) {
+            names.push(decl.name.text);
+          }
+        });
+      }
+    });
+    return names;
+  }
+
+  private extractImports(code: string): string[] {
+    const sf = ts.createSourceFile('stp.ts', code, ts.ScriptTarget.Latest, true);
+    const names: string[] = [];
+    sf.forEachChild(node => {
+      if (
+        ts.isImportDeclaration(node) &&
+        node.importClause?.namedBindings &&
+        ts.isNamedImports(node.importClause.namedBindings)
+      ) {
+        node.importClause.namedBindings.elements.forEach(el => {
+          names.push(el.name.text);
+        });
+      }
+    });
+    return names;
   }
 }

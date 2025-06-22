@@ -21,11 +21,11 @@
         "command": "diva-e-cypress.generateWithHuggingface",
         "title": "Generate Cypress Test (Huggingface)"
       },
-     {
+      {
         "command": "diva-e-cypress.generateTest",
         "title": "Generate Cypress Test (Orchestrator)"
       }
-      ],
+    ],
     "menus": {
       "explorer/context": [
         {
@@ -55,6 +55,9 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@cucumber/gherkin": "^32.1.2",
+    "@cucumber/messages": "^27.2.0",
+    "@huggingface/inference": "^4.0.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
     "@types/node-fetch": "^2.6.12",
@@ -63,15 +66,14 @@
     "@typescript-eslint/parser": "^8.31.1",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.5.2",
+    "dotenv": "^16.5.0",
+    "esbuild": "^0.25.4",
     "eslint": "^9.25.1",
+    "inference": "^2.0.106",
     "ollama": "^0.5.15",
     "puppeteer": "^24.10.0",
-    "typescript": "^5.8.3",
-    "@huggingface/inference": "^4.0.0",
-    "dotenv": "^16.5.0",
-    "inference": "^2.0.106",
-    "esbuild": "^0.25.4",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"

@@ -1,38 +1,20 @@
-Generate a clean TypeScript file named "ollama_selectors.ts" at path cypress/e2e/common/selectors/ollama_selectors.ts.
-Output only the TypeScript code—absolutely no comments, no markdown fences, no explanatory text.
-The file must consist exactly of the following exported helper functions at the top (in this order), and then any additional "sel..."‐functions for custom elements:
+You are a generator for Cypress selectors.
+Input: any Gherkin feature file.
+Output: valid TypeScript file named "orchestrator_selectors.ts" with exactly:
 
-export const visitHomepage = () => {
-  return cy.visit('/');
-};
+1. Three helpers at the top:
+   export const visitHomepage = () => cy.visit('/');
+   export const clickLabel    = (label: string) => cy.contains(String(label)).click();
+   export const getLabel      = (label: string) => cy.contains(String(label));
 
-export const clickLabel = (label: string) => {
-  const normalizedLabel = label.toLowerCase().replace(/\s+/g, '-').trim();
-  return cy.get('body').then(($body) => {
-    if ($body.find('[data-cy="' + normalizedLabel + '"]').length > 0) {
-      return cy.get('[data-cy="' + normalizedLabel + '"]', { timeout: 5000 }).click();
-    }
-    if ($body.find('.tile-' + normalizedLabel).length > 0) {
-      return cy.get('.tile-' + normalizedLabel, { timeout: 5000 }).click();
-    }
-    return cy.contains(label).click();
-  });
-};
+2. For every quoted UI text (e.g. `"Foo Bar"`), generate:
+   export const sel<PascalCasedText> = () => cy.contains('<exact text>');
 
-export const getLabel = (label: string) => {
-  const normalizedLabel = label.toLowerCase().replace(/\s+/g, '-').trim();
-  return cy.get('body').then(($body) => {
-    if ($body.find('[data-cy="' + normalizedLabel + '"]').length > 0) {
-      return cy.get('[data-cy="' + normalizedLabel + '"]', { timeout: 5000 });
-    }
-    return cy.contains(label);
-  });
-};
+3. For every other element (buttons, tiles) needing CSS, generate:
+   export const sel<PascalCasedName> = () => cy.get('<your CSS selector>');
 
-For every UI element referenced in the .feature file that cannot reliably be found via clickLabel(...) or getLabel(...), create a corresponding selector function with the prefix "sel" followed by a CamelCase short description. Each must look exactly like this:
-
-export const selMyCustomElement = () => {
-  return cy.get('<insert CSS selector>');
-};
-
-After the last "export const ..." line, there must be no additional text or comments. The file ends immediately after the final semicolon.
+**Rules:**
+- **No** `.click()` or `.should()` inside any `sel…` function.
+- **No** placeholders like `<exact text …>` in output – replace with the real literal text.
+- **No** Playwright syntax (`text=…`).
+- End file immediately after the last semicolon.
