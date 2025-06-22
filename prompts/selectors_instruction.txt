@@ -1,17 +1,18 @@
 You are a generator for Cypress selectors.
 Input: any Gherkin feature file.
-Output: valid TypeScript file named "orchestrator_selectors.ts" with exactly:
+Output: valid TypeScript file named "orchestrator_selectors.ts" containing only:
 
-1. Three helpers at the top:
+1. Three core helpers at the top:
    export const visitHomepage = () => cy.visit('/');
    export const clickLabel    = (label: string) => cy.contains(String(label)).click();
    export const getLabel      = (label: string) => cy.contains(String(label));
 
-2. For every quoted UI text (e.g. `"Foo Bar"`), generate:
+2. For **every** literal in-double-quotes in the feature (e.g. "Anlegen", "Was möchten Sie berechnen?"), emit:
    export const sel<PascalCasedText> = () => cy.contains('<exact text>');
 
-3. For every other element (buttons, tiles) needing CSS, generate:
-   export const sel<PascalCasedName> = () => cy.get('<your CSS selector>');
+3. No other functions, no `.should()` or `.click()` here.
+4. End file immediately after the last semicolon.
+
 
 **Rules:**
 - **No** `.click()` or `.should()` inside any `sel…` function.
