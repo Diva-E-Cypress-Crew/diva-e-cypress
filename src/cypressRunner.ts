@@ -16,7 +16,8 @@ async function runCypress(featureFilePath: string): Promise<string> {
         featureFilePath,
         '--reporter',
         'spec',
-      ], {shell: true, cwd: featureDir});
+      ], { shell: true, cwd: featureDir });
+
       let output = '';
 
       cypressProcess.stdout.on('data', (data) => {
@@ -33,13 +34,15 @@ async function runCypress(featureFilePath: string): Promise<string> {
 
       cypressProcess.on('close', (code) => {
         if (code === 0) {
+          console.log('Cypress run completed successfully.');
           resolve(output);
         } else {
-          reject(new Error(`Cypress exited with code ${code}`));
+          output +=`Cypress exited with code ${code}`;
+          resolve(output);
         }
-      });  
+      });
     } else {
-      console.log('No cypress dir found');
+      reject(new Error('No cypress dir found'));
     }
   });
 }
