@@ -9,6 +9,8 @@ import { ChatMessage, SelectorsAgent } from './agents/selectorsAgent';
 import { StepsAgent }                   from './agents/stepsAgent';
 import { VerificationAgent }            from './agents/verificationAgent';
 
+import { runCypress } from './cypressRunner';
+
 export class Orchestrator {
   private msgs: ChatMessage[] = [];
   private output: OutputChannel;
@@ -68,6 +70,13 @@ export class Orchestrator {
       fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
       this.output.appendLine(`✅ Steps written to ${stpFile}`);
+
+      // ——— 5) CypressAgent ——————————————
+      this.output.appendLine('📝 Running CypressAgent…');
+      this.output.appendLine(this.featureFile);
+      const cypressLog: string = await runCypress(this.featureFile);
+
+      this.output.appendLine(cypressLog);
 
       // ——— 5) VerificationAgent —————————
       this.output.appendLine('✔️ Running VerificationAgent…');

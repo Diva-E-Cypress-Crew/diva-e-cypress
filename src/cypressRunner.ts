@@ -1,58 +1,70 @@
 import { spawn } from 'child_process';
-import { dirname } from 'path';
+import { resolve } from 'path';
 
-console.log("hello");
+/**
+ * Runs Cypress via spawn inside Node.js (safe from Electron context).
+ */
+export async function runCypress(featureFilePath: string): Promise<string> {
+  return new Promise((resolvePromise) => {
+    const projectRoot = process.cwd();
+    console.log(`📁 Cypress working directory: ${projectRoot}`);
 
-async function runCypress(featureFilePath: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const match = featureFilePath.match(/^(.*?cypress)(\\|\/)/i);
-    if (match) {
-      const featureDir: string = dirname(match[1]);
-
-      const cypressProcess = spawn('npx', [
+    const cypressProcess = spawn(
+      'npx',
+      [
         'cypress',
         'run',
         '--spec',
         featureFilePath,
         '--reporter',
         'spec',
-      ], { shell: true, cwd: featureDir });
+      ],
+      { shell: true, cwd: projectRoot }
+    );
 
-      let output = '';
+    let output = '';
 
-      cypressProcess.stdout.on('data', (data) => {
-        const text = data.toString();
-        process.stdout.write(text);
-        output += text;
-      });
+    cypressProcess.stdout.on('data', (data) => {
+      const text = data.toString();
+      process.stdout.write(text);
+      output += text;
+    });
 
-      cypressProcess.stderr.on('data', (data) => {
-        const text = data.toString();
-        process.stderr.write(text);
-        output += text;
-      });
+    cypressProcess.stderr.on('data', (data) => {
+      const text = data.toString();
+      process.stderr.write(text);
+      output += text;
+    });
 
-      cypressProcess.on('close', (code) => {
-        if (code === 0) {
-          console.log('Cypress run completed successfully.');
-          resolve(output);
-        } else {
-          output +=`Cypress exited with code ${code}`;
-          resolve(output);
-        }
-      });
-    } else {
-      reject(new Error('No cypress dir found'));
-    }
+    cypressProcess.on('close', (code) => {
+      if (code === 0) {
+        resolvePromise(output);
+      } else {
+        output += `\nCypress exited with code ${code}`;
+        resolvePromise(output);
+      }
+    });
   });
 }
 
-(async () => {
-  try {
-    const fullOutput = await runCypress("C:/Users/Felix/Documents/GitHub/diva-e-cypress-tests/cypress/e2e/orchestrator/orchestrator.feature");
-    console.log('\n=== Full Cypress Output Captured ===');
-    console.log(fullOutput);
-  } catch (err) {
-    console.error('Error running Cypress:', err);
+/**
+ * If this file is run directly via `node cypressRunner.ts <path>`, execute it.
+ */
+if (require.main === module) {
+  const featurePath = process.argv[2];
+  if (!featurePath) {
+    console.error('❌ No feature file path provided.');
+    process.exit(1);
   }
-})();
+
+  runCypress(featurePath)
+    .then((log) => {
+      console.log('\n=== CYPRESS OUTPUT START ===');
+      console.log(log);
+      console.log('=== CYPRESS OUTPUT END ===\n');
+    })
+    .catch((err) => {
+      console.error('Error running Cypress:', err);
+      process.exit(1);
+    });
+}
