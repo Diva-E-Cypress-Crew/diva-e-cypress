@@ -1,24 +1,13 @@
 import { spawn } from 'child_process';
 import { resolve } from 'path';
 
-/**
- * Runs Cypress via spawn inside Node.js (safe from Electron context).
- */
 export async function runCypress(featureFilePath: string): Promise<string> {
   return new Promise((resolvePromise) => {
     const projectRoot = process.cwd();
-    console.log(`📁 Cypress working directory: ${projectRoot}`);
 
     const cypressProcess = spawn(
       'npx',
-      [
-        'cypress',
-        'run',
-        '--spec',
-        featureFilePath,
-        '--reporter',
-        'spec',
-      ],
+      ['cypress', 'run', '--spec', featureFilePath, '--reporter', 'spec'],
       { shell: true, cwd: projectRoot }
     );
 
@@ -47,13 +36,11 @@ export async function runCypress(featureFilePath: string): Promise<string> {
   });
 }
 
-/**
- * If this file is run directly via `node cypressRunner.ts <path>`, execute it.
- */
+// If this file is run directly by Node CLI, execute Cypress run
 if (require.main === module) {
   const featurePath = process.argv[2];
   if (!featurePath) {
-    console.error('❌ No feature file path provided.');
+    console.error('Please provide a feature file path');
     process.exit(1);
   }
 
@@ -61,7 +48,7 @@ if (require.main === module) {
     .then((log) => {
       console.log('\n=== CYPRESS OUTPUT START ===');
       console.log(log);
-      console.log('=== CYPRESS OUTPUT END ===\n');
+      console.log('=== CYPRESS OUTPUT END ===');
     })
     .catch((err) => {
       console.error('Error running Cypress:', err);

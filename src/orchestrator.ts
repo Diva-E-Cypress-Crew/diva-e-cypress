@@ -1,33 +1,31 @@
-// src/orchestrator.ts
-
+import { spawn } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import { window, OutputChannel } from 'vscode';
 import ollama from 'ollama';
 
 import { ChatMessage, SelectorsAgent } from './agents/selectorsAgent';
-import { StepsAgent }                   from './agents/stepsAgent';
-import { VerificationAgent }            from './agents/verificationAgent';
+import { StepsAgent } from './agents/stepsAgent';
+import { VerificationAgent } from './agents/verificationAgent';
 
-import { runCypress } from './cypressRunner';
+// remove import { runCypress } from './cypressRunner'; 
+// (we won't call runCypress() directly here anymore)
 
 export class Orchestrator {
   private msgs: ChatMessage[] = [];
   private output: OutputChannel;
 
-  // 1) LLM‐Client so anpassen, dass nur message.content zurückkommt:
   private llmClient = {
     chat: async (messages: ChatMessage[]): Promise<string> => {
       const resp: any = await (ollama as any).chat({
         model: 'llama3.2',
         messages
       });
-      // Ollama liefert { model, created_at, message: { role, content } }
       const content =
-        resp.choices?.[0]?.message?.content   // falls resp.choices vorhanden
-          ?? resp.message?.content            // standard-Ollama-Format
-          ?? resp.choices?.[0]?.text          // fallback
-          ?? JSON.stringify(resp);            // ultimative Fallback
+        resp.choices?.[0]?.message?.content
+          ?? resp.message?.content
+          ?? resp.choices?.[0]?.text
+          ?? JSON.stringify(resp);
       return content.trim();
     }
   };
@@ -44,44 +42,73 @@ export class Orchestrator {
         `🚀 Orchestrator started for ${path.basename(this.featureFile)}`
       );
 
-      // ——— 1) Feature laden ——————————————
       const feature = fs.readFileSync(this.featureFile, 'utf-8');
       this.msgs.push({ role: 'user', content: feature });
 
-      // ——— 2) Ausgabedateien festlegen ——————
-      const dir     = path.dirname(this.featureFile);
+      const dir = path.dirname(this.featureFile);
       const selFile = 'orchestrator_selectors.ts';
       const stpFile = 'orchestrator_steps.ts';
 
-      // ——— 3) SelectorsAgent ————————————
       this.output.appendLine('🔍 Running SelectorsAgent…');
-      const selAgent      = new SelectorsAgent(this.msgs, this.llmClient);
+      const selAgent = new SelectorsAgent(this.msgs, this.llmClient);
       const selectorsCode = await selAgent.generate(feature);
-      const selPath       = path.join(dir, selFile);
+      const selPath = path.join(dir, selFile);
       fs.writeFileSync(selPath, selectorsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: selectorsCode });
       this.output.appendLine(`✅ Selectors written to ${selFile}`);
 
-      // ——— 4) StepsAgent ——————————————
       this.output.appendLine('📝 Running StepsAgent…');
-      const stpAgent  = new StepsAgent(this.msgs, this.llmClient);
+      const stpAgent = new StepsAgent(this.msgs, this.llmClient);
       const stepsCode = await stpAgent.generate(feature, selectorsCode);
-      const stpPath   = path.join(dir, stpFile);
+      const stpPath = path.join(dir, stpFile);
       fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
       this.output.appendLine(`✅ Steps written to ${stpFile}`);
 
-      // ——— 5) CypressAgent ——————————————
+      // ——— 5) CypressAgent — spawn a separate Node.js process ———
       this.output.appendLine('📝 Running CypressAgent…');
       this.output.appendLine(this.featureFile);
-      const cypressLog: string = await runCypress(this.featureFile);
 
-      this.output.appendLine(cypressLog);
+      // Path to the JS file that runs Cypress (compiled from cypressRunner.ts)
+      const runnerPath = path.resolve(__dirname, 'cypressRunner.js');
 
-      // ——— 5) VerificationAgent —————————
+      const cypressProc = spawn('node', [runnerPath, this.featureFile], {
+        shell: true,
+        cwd: process.cwd(),
+      });
+
+      let cypressLog = '';
+
+      cypressProc.stdout.on('data', (data) => {
+        const text = data.toString();
+        this.output.appendLine(text);
+        cypressLog += text;
+      });
+
+      cypressProc.stderr.on('data', (data) => {
+        const text = data.toString();
+        this.output.appendLine(text);
+        cypressLog += text;
+      });
+
+      await new Promise<void>((resolve) => {
+        cypressProc.on('close', (code) => {
+          if (code !== 0) {
+            this.output.appendLine(`❌ Cypress exited with code ${code}`);
+          } else {
+            this.output.appendLine('✅ Cypress run completed successfully');
+          }
+          resolve();
+        });
+      });
+
+      // you can log full Cypress output if you want:
+      this.output.appendLine('--- Cypress output end ---');
+
+      // ——— 6) VerificationAgent —————————
       this.output.appendLine('✔️ Running VerificationAgent…');
       const verifier = new VerificationAgent(this.llmClient);
-      const result   = await verifier.verify(selectorsCode, stepsCode);
+      const result = await verifier.verify(selectorsCode, stepsCode);
 
       if (result.passed) {
         this.output.appendLine('🎉 Verification passed: both files are valid.');
