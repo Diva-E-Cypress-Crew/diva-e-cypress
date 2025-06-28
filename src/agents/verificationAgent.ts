@@ -76,8 +76,8 @@ export class VerificationAgent {
     let fixedSteps:    string|undefined;
     try {
       const obj = JSON.parse(raw);
-      if (typeof obj.selectors === 'string') {fixedSelectors = obj.selectors;}
-      if (typeof obj.steps     === 'string') {fixedSteps    = obj.steps;}
+      if (typeof obj.selectors === 'string') fixedSelectors = obj.selectors;
+      if (typeof obj.steps     === 'string') fixedSteps    = obj.steps;
     } catch {
       errors.push('LLM response was not valid JSON');
     }
