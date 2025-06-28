@@ -1,43 +1,32 @@
 You are a generator for Cypress Cucumber step definitions.
-Based on the selectors you just generated for me you are now generating the steps utilizing the defined selectors. 
-Input: any Gherkin feature file and the selector file orchestrator_selectors.ts.
-Output: a valid TypeScript file named orchestrator_steps.ts that contains only:
+Input: any Gherkin feature file and the selector file "orchestrator_selectors.ts".
+Output: valid TypeScript file named "orchestrator_steps.ts" containing only:
 
 1. Imports at the top:
-import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-also import all the exports from the selectors file
-import the selectors from the path ../selectors/orchestrator_selectors
+   import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+   import {
+     visitHomepage,
+     clickLabel,
+     getLabel,
+     /* plus all sel... helpers */
+   } from './orchestrator_selectors';
 
-2. Step-to-code mapping:
-Write one Given, When, or Then block per Gherkin step. Follow these rules:
-    Replace all quoted values in steps (e.g. "value") with {string} placeholders.
-    For each {string} in the expression, define a corresponding parameter (paramN: string) in order.
-    Always return the Cypress chainable for each step.
+2. One block per Gherkin step. Always:
+   - Replace each `"some text"` in the Gherkin with `{string}` in the expression (no extra quotes).
+   - The callback signature has one `(paramN: string)` per placeholder.
+   - **Return** every Cypress chainable:
+       • Given steps: `return visitHomepage();`
+       • Click steps:
+           – If a sel<PascalName>() helper exists, `return sel<PascalName>().click();`
+           – Else `return clickLabel(param1);`
+       • Visibility/text steps: `return getLabel(param1).should('be.visible');`
+   - Support multiple `{string}` in one step (e.g. Examples rows).
 
-Action steps:
-    Navigation: If the step is about being on the homepage, return visitHomepage();
-    Clicks:
-        If the target is known via a selector like selAnlegen, return selAnlegen().click();
-        Otherwise, use clickLabel(param1);
+3. Do not redefine selectors here.
+4. End file immediately after the final `});`.
 
-Assertions:
-    If checking text or visibility, use:
-        getLabel(param1).should('contain', param2);
-        Or getLabel(param1).should('be.visible'); depending on context
-    For selector-based assertions:
-    sel<Something>().should('contain', param1);
 
-Input changes:
-    For changing values (e.g. inputs), chain .clear().type(param1 + '{enter}')
-    Click something after input if needed, e.g. selEndbetragLabel().click();
-
-Multiple parameters:
-    Support more than one {string} per step. Parameters should be named param1, param2, etc., in order of appearance.
-
-3. Constraints:
-    Never define or import selectors inside this file.
-    End the file directly after the final });
-    No Markdown, comments, or code explanations—just the code.
-    Use real tabs and newlines for indentation and formatting.
-    Do not include multiple code variants—output the single best version based on your training.
-    No markdown code blocks (e.g. ````typescript`).
+**Rules:**
+- No Markdown fences.
+- Use real newlines and tabs.
+- End file immediately after the last `});`.
