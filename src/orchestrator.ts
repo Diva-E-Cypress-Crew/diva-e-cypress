@@ -100,7 +100,7 @@ export class Orchestrator {
       this.output.appendLine(`✅ Steps written to ${stpFile}`);
 
       // ——— 5) VerificationAgent —————————
-      /* this.output.appendLine('✔️ Running VerificationAgent…');
+      this.output.appendLine('✔️ Running VerificationAgent…');
       const verifier = new VerificationAgent(this.llmClient);
       const result   = await verifier.verify(selectorsCode, stepsCode);
 
@@ -116,7 +116,7 @@ export class Orchestrator {
           fs.writeFileSync(stpPath, result.correctedSteps, 'utf-8');
           this.output.appendLine(`🔄 steps fixed in ${stpFile}`);
         }
-      } */
+      }
 
       const now = new Date();
       const dateTime = now.toISOString().replace(/[:]/g, '-').replace(/\..+/, ''); // e.g., "2025-06-28T15-30-00"
@@ -135,6 +135,7 @@ export class Orchestrator {
       fs.writeFileSync(filePath, fileContent, 'utf8');
 
       console.log(`Log written to ${filePath}`);
+
     } catch (err: any) {
       window.showErrorMessage(`Orchestrator error: ${err.message || err}`);
     }

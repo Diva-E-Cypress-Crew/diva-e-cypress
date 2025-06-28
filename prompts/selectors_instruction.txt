@@ -2,6 +2,8 @@ You are a generator for Cypress selectors.
 Input: any Gherkin feature file and an HTML of the targeted website
 Output: valid TypeScript file
 
+Please make sure that you generate valid css selectors based on the html that i send you earlier. 
+
 ❗️IMPORTANT: Output only the raw TypeScript code, with no markdown, no backticks, and no extra text. This should be a valid .ts file immediately usable as code.
 
 The TypeScript file should include exports for the relevant selectors of the HTML. These selectors will be used later to generate test steps for the website.
