@@ -10,6 +10,11 @@ import { StepsAgent }                   from './agents/stepsAgent';
 import { VerificationAgent }            from './agents/verificationAgent';
 import puppeteer from "puppeteer";
 
+function stripCodeFences(text: string): string {
+    // Entfernt versehentlich eingebettete ```-Ticks, falls das LLM welche liefert
+    return text.replace(/^```[a-zA-Z]*\r?\n/, '').replace(/\r?\n```$/, '');
+  }
+
 export class Orchestrator {
   private msgs: ChatMessage[] = [];
   private output: OutputChannel;
@@ -35,6 +40,8 @@ export class Orchestrator {
     this.output = window.createOutputChannel('LLM-Orchestrator');
   }
 
+  
+
   public async run(): Promise<void> {
     try {
       this.output.clear();
@@ -45,7 +52,8 @@ export class Orchestrator {
 
       // ——— 1) Feature laden ——————————————
       const feature = fs.readFileSync(this.featureFile, 'utf-8');
-      this.msgs.push({ role: 'user', content: feature });
+      this.msgs.push({ role: 'user', content: "You are an Expert at writing Cypress Tests and I need your help for writing tests for my homepage: " + this.baseUrl });
+      this.msgs.push({ role: 'user', content: "Therefore first take a look at the following feature file: \n" + feature });
 
       // ——— 2) Ausgabedateien festlegen ——————
       const dir     = path.dirname(path.dirname(this.featureFile));
@@ -73,8 +81,10 @@ export class Orchestrator {
       // Agent aufrufen
       this.output.appendLine('🔍 Running SelectorsAgent…');
       const selAgent      = new SelectorsAgent(this.msgs, this.llmClient);
-      const selectorsCode = await selAgent.generate(feature);
+      let selectorsCode = await selAgent.generate(feature);
       const selPath       = path.join(dir, selFile);
+
+      selectorsCode = stripCodeFences(selectorsCode);
       fs.writeFileSync(selPath, selectorsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: selectorsCode });
       this.output.appendLine(`✅ Selectors written to ${selFile}`);
@@ -83,7 +93,8 @@ export class Orchestrator {
       this.output.appendLine('📝 Running StepsAgent…');
       const stpPath   = path.join(dir, stpFile);
       const stpAgent  = new StepsAgent(this.msgs, this.llmClient);
-      const stepsCode = await stpAgent.generate(feature, selectorsCode);
+      let stepsCode = await stpAgent.generate(feature, selectorsCode);
+      stepsCode = stripCodeFences(stepsCode);
       fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
       this.output.appendLine(`✅ Steps written to ${stpFile}`);
@@ -106,6 +117,24 @@ export class Orchestrator {
           this.output.appendLine(`🔄 steps fixed in ${stpFile}`);
         }
       } */
+
+      const now = new Date();
+      const dateTime = now.toISOString().replace(/[:]/g, '-').replace(/\..+/, ''); // e.g., "2025-06-28T15-30-00"
+      const fileName = `${dateTime}_log.txt`;
+      const logDir = path.resolve(__dirname, '..', 'log'); // up from src/
+      if (!fs.existsSync(logDir)) {
+        fs.mkdirSync(logDir, { recursive: true });
+      }
+
+      const filePath = path.join(logDir, fileName);
+
+      // Convert msgs to text (you can use JSON.stringify or format as needed)
+      const fileContent = JSON.stringify(this.msgs, null, 2);
+
+      // Write to the file
+      fs.writeFileSync(filePath, fileContent, 'utf8');
+
+      console.log(`Log written to ${filePath}`);
     } catch (err: any) {
       window.showErrorMessage(`Orchestrator error: ${err.message || err}`);
     }
