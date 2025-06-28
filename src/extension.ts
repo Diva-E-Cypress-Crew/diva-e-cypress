@@ -1,5 +1,3 @@
-// src/extension.ts
-
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -53,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
       outputChannel.show();
       // Orchestrator schreibt intern ebenfalls in sein eigenes Panel,
       // aber hier nutzen wir erst mal das gleiche Output-Channel
-      await new Orchestrator(featureFile).run();
+      await new Orchestrator(featureFile, "https://meag.gitlab.diva-e.com/investmentrechner-2023").run();
       window.showInformationMessage(
         `✅ Orchestrator run gestartet – bitte schau ins Output-Panel.`
       );
