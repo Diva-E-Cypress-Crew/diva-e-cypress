@@ -8,6 +8,7 @@ import ollama from 'ollama';
 import { ChatMessage, SelectorsAgent } from './agents/selectorsAgent';
 import { StepsAgent }                   from './agents/stepsAgent';
 import { VerificationAgent }            from './agents/verificationAgent';
+import puppeteer from "puppeteer";
 
 export class Orchestrator {
   private msgs: ChatMessage[] = [];
@@ -30,7 +31,7 @@ export class Orchestrator {
     }
   };
 
-  constructor(private featureFile: string) {
+  constructor(private featureFile: string, private baseUrl: string) {
     this.output = window.createOutputChannel('LLM-Orchestrator');
   }
 
@@ -47,11 +48,29 @@ export class Orchestrator {
       this.msgs.push({ role: 'user', content: feature });
 
       // ——— 2) Ausgabedateien festlegen ——————
-      const dir     = path.dirname(this.featureFile);
-      const selFile = 'orchestrator_selectors.ts';
-      const stpFile = 'orchestrator_steps.ts';
+      const dir     = path.dirname(path.dirname(this.featureFile));
+      const selFile = 'common/selectors/orchestrator_selectors.ts';
+      const stpFile = 'common/steps/orchestrator_steps.ts';
 
+      
       // ——— 3) SelectorsAgent ————————————
+      // HTML lesen
+      this.output.appendLine('🔍 Reading HTML');
+      let pageSourceHTML: string;
+      try {
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(this.baseUrl);
+        pageSourceHTML = await page.content();
+        await browser.close();
+      } catch (err: any) {
+        this.output.appendLine(`❌ Main error beim Abrufen der HTML-Seite: ${err.message}`);
+        return;
+      }
+      let message = 'Please remember the structure of this website (full HTML):\n' + pageSourceHTML;
+      this.msgs.push({ role: 'user', content: message });
+
+      // Agent aufrufen
       this.output.appendLine('🔍 Running SelectorsAgent…');
       const selAgent      = new SelectorsAgent(this.msgs, this.llmClient);
       const selectorsCode = await selAgent.generate(feature);
@@ -62,15 +81,15 @@ export class Orchestrator {
 
       // ——— 4) StepsAgent ——————————————
       this.output.appendLine('📝 Running StepsAgent…');
+      const stpPath   = path.join(dir, stpFile);
       const stpAgent  = new StepsAgent(this.msgs, this.llmClient);
       const stepsCode = await stpAgent.generate(feature, selectorsCode);
-      const stpPath   = path.join(dir, stpFile);
       fs.writeFileSync(stpPath, stepsCode, 'utf-8');
       this.msgs.push({ role: 'assistant', content: stepsCode });
       this.output.appendLine(`✅ Steps written to ${stpFile}`);
 
       // ——— 5) VerificationAgent —————————
-      this.output.appendLine('✔️ Running VerificationAgent…');
+      /* this.output.appendLine('✔️ Running VerificationAgent…');
       const verifier = new VerificationAgent(this.llmClient);
       const result   = await verifier.verify(selectorsCode, stepsCode);
 
@@ -86,7 +105,7 @@ export class Orchestrator {
           fs.writeFileSync(stpPath, result.correctedSteps, 'utf-8');
           this.output.appendLine(`🔄 steps fixed in ${stpFile}`);
         }
-      }
+      } */
     } catch (err: any) {
       window.showErrorMessage(`Orchestrator error: ${err.message || err}`);
     }
