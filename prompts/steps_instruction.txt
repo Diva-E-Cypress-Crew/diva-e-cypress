@@ -3,30 +3,52 @@ Input: any Gherkin feature file and the selector file "orchestrator_selectors.ts
 Output: valid TypeScript file named "orchestrator_steps.ts" containing only:
 
 1. Imports at the top:
-   import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-   import {
-     visitHomepage,
-     clickLabel,
-     getLabel,
-     /* plus all sel... helpers */
-   } from './orchestrator_selectors';
+    import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
+    import {
+      visitHomepage,
+      clickLabel,
+      getLabel,
+      /* plus all sel… helpers */
+    } from './orchestrator_selectors';
 
 2. One block per Gherkin step. Always:
-   - Replace each `"some text"` in the Gherkin with `{string}` in the expression (no extra quotes).
-   - The callback signature has one `(paramN: string)` per placeholder.
-   - **Return** every Cypress chainable:
-       • Given steps: `return visitHomepage();`
-       • Click steps:
-           – If a sel<PascalName>() helper exists, `return sel<PascalName>().click();`
-           – Else `return clickLabel(param1);`
-       • Visibility/text steps: `return getLabel(param1).should('be.visible');`
-   - Support multiple `{string}` in one step (e.g. Examples rows).
+   - Replace each literal in the Gherkin (e.g., Anlegen, Was möchten Sie berechnen?) with the Cucumber expression variable `{string}` **without** surrounding quotes.
+   - The step definition must read, for example:
+       ```ts
+       When('he clicks the {string} button', (param1: string) => …);
+       ```
+     **not**:
+       ```ts
+       When('he clicks the "{string}" button', …)
+       ```
+   - The callback signature must have exactly one `(paramN: string)` per `{string}`.
+   - **Return** every Cypress chainable (no implicit or nested callbacks).
 
-3. Do not redefine selectors here.
-4. End file immediately after the final `});`.
+   Helper-Resolution:
+   • **Given** steps always:
+     ```ts
+     return visitHomepage();
+     ```
+   • **When** steps (click):
+     - Compute `X = PascalCase(param1)`.
+     - If helper `sel${X}` exists in orchestrator_selectors.ts, emit:
+       ```ts
+       return sel${X}().click();
+       ```
+     - Otherwise emit:
+       ```ts
+       return clickLabel(param1);
+       ```
+   • **Then** steps (visibility):
+     - Compute `X = PascalCase(param1)`.
+     - If helper `sel${X}` exists, emit:
+       ```ts
+       return sel${X}().should('be.visible');
+       ```
+     - Otherwise emit:
+       ```ts
+       return getLabel(param1).should('be.visible');
+       ```
 
-
-**Rules:**
-- No Markdown fences.
-- Use real newlines and tabs.
-- End file immediately after the last `});`.
+3. Do not redefine or duplicate any selectors in this file.
+4. End the file immediately after the final `});`—no extra code, comments or markdown fences.

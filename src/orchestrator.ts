@@ -17,7 +17,7 @@ export class Orchestrator {
   private llmClient = {
     chat: async (messages: ChatMessage[]): Promise<string> => {
       const resp: any = await (ollama as any).chat({
-        model: 'llama3.2',
+        model: 'gemma2:9b',
         messages
       });
       // Ollama liefert { model, created_at, message: { role, content } }
