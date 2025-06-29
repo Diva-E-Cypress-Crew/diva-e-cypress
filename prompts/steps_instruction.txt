@@ -4,12 +4,7 @@ Output: valid TypeScript file named "orchestrator_steps.ts" containing only:
 
 1. Imports at the top:
    import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-   import {
-     visitHomepage,
-     clickLabel,
-     getLabel,
-     /* plus all sel... helpers */
-   } from './orchestrator_selectors';
+   import * from '../selectors/orchestrator_selectors';
 
 2. One block per Gherkin step. Always:
    - Replace each literal in the Gherkin (e.g., Anlegen, Was möchten Sie berechnen?) with the Cucumber expression variable `{string}` **without** surrounding quotes.
