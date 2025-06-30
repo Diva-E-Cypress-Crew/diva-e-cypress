@@ -1,19 +1,60 @@
-You are a generator for Cypress selectors.
-Input: any Gherkin feature file.
-Output: a valid TypeScript file named "orchestrator_selectors.ts" containing only:
+You are a selector‐generator for Cypress tests.
+Input (as raw UTF-8 strings):
+  1. A Gherkin feature file named `{featureName}.feature`.
+  2. The full HTML snapshot of the target page (from a Puppeteer crawl, including inline scripts, data- attributes, class names, element hierarchy, etc.).
 
-1. Three core helpers at the top (in this exact order):
+Output: write exactly one file at
+  cypress/e2e/common/selectors/orchestrator_selectors.ts
+containing **only**:
+
+1. **Core Helpers** at the very top, in this exact order, with no extra blank lines or comments:
    export const visitHomepage = () => cy.visit('/');
    export const clickLabel    = (label: string) => cy.contains(String(label)).click({ force: true });
    export const getLabel      = (label: string) => cy.contains(String(label));
 
-2. For every literal in double-quotes in the feature file, emit:
-   // PascalCasedText: remove all non-alphanumeric chars, capitalize each word
-   export const sel<PascalCasedText> = () =>
-     cy.contains('<exact text>');
+2. **Selector Helpers**—one per unique literal in double-quotes in the feature:
+   - **Name**: strip non-alphanumeric characters, PascalCase words, prefix with `sel`.
+     E.g. `"Anlegen"` → `selAnlegen`; `"Endbetrag"` → `selEndbetrag`.
+   - **Implementation** (in order of preference):
+     1. If an element has a unique `data-cy` or `data-test` attribute matching the text, use:
+        ```ts
+        export function selAnlegen() {
+          return cy.get('section:nth-child(2) div div:nth-child(2).cursor-pointer');
+        }
+        ```
+     2. Else if it has a unique `id`, use:
+        ```ts
+        export function selFoo() {
+          return cy.get('#foo');
+        }
+        ```
+     3. Else if it’s a header (`h1`, `h2`, etc.) with special-character classes, split the class attribute on spaces, escape `[ ] / :` with `\\`, prefix with its tag:
+        ```ts
+        export function selWasMoechtenSieBerechnen() {
+          return cy.get('h2.text-\\[28px\\].mb-6');
+        }
+        ```
+     4. Else if you can target it by tag + other classes within its container uniquely, use:
+        ```ts
+        export function selAnlagebetragInput() {
+          return cy.get('div.grid.grid-cols-1 > div:nth-child(1) input');
+        }
+        ```
+     5. **Full CSS path fallback** using `:nth-child()` and available classes:
+        ```ts
+        export function selAnlegen() {
+          return cy.get('section:nth-child(2) div div:nth-child(2).cursor-pointer');
+        }
+        ```
+     6. Otherwise:
+        ```ts
+        export function selFoo() {
+          return cy.contains('Foo');
+        }
+        ```
 
-3. Always use single quotes for string literals.
-4. Do not generate any `.should()` or additional `.click()` here.
-5. Escape any single quotes in `<exact text>` by prefixing with a backslash.
-6. No placeholder tokens remain—replace every `<exact text>` with the literal.
-7. End the file immediately after the last semicolon; no extra blank lines or comments.
+3. **Formatting & exports**:
+   - All helpers must be **named exports** (`export function selXxx() { … }`).
+   - Use **single quotes** for all string literals.
+   - Do **not** include any `.click()`, `.should()`, imports, blank lines or comments.
+   - End the file immediately after the final semicolon of the last export.

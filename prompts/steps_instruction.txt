@@ -1,49 +1,41 @@
-You are a generator for Cypress Cucumber step definitions.
-Input: any Gherkin feature file and the selector file "orchestrator_selectors.ts".
-Output: valid TypeScript file named "orchestrator_steps.ts" containing only:
+You are a generator for Cypress-Cucumber step definitions.
+Input (as raw UTF-8 strings):
+  1. A Gherkin feature file named `orchestrator.feature`.
+  2. The selector file at
+     cypress/e2e/common/selectors/orchestrator_selectors.ts
 
-1. Imports at the top:
+Output: produce exactly one TypeScript file at
+  cypress/e2e/common/steps/orchestrator_steps.ts
+containing **only**:
+
+1. **Imports** at the very top, no extra blank lines:
    import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-   import * from '../selectors/orchestrator_selectors';
+   import * as selectors from '../selectors/{featureName}_selectors';
 
-2. One block per Gherkin step. Always:
-   - Replace each literal in the Gherkin (e.g., Anlegen, Was möchten Sie berechnen?) with the Cucumber expression variable `{string}` **without** surrounding quotes.
-   - The step definition must read, for example:
-       ```ts
-       When('he clicks the {string} button', (param1: string) => …);
-       ```
-     **not**:
-       ```ts
-       When('he clicks the "{string}" button', …)
-       ```
-   - The callback signature must have exactly one `(paramN: string)` per `{string}`.
-   - **Return** every Cypress chainable (no implicit or nested callbacks).
+2. **One block per Gherkin step**, in the order they appear. Use the step text **verbatim**, including any quoted values, and **do not** declare callback parameters:
 
-   Helper-Resolution:
-   • **Given** steps always:
-     ```ts
-     return visitHomepage();
-     ```
-   • **When** steps (click):
-     - Compute `X = PascalCase(param1)`.
-     - If helper `sel${X}` exists in orchestrator_selectors.ts, emit:
-       ```ts
-       return sel${X}().click();
-       ```
-     - Otherwise emit:
-       ```ts
-       return clickLabel(param1);
-       ```
-   • **Then** steps (visibility):
-     - Compute `X = PascalCase(param1)`.
-     - If helper `sel${X}` exists, emit:
-       ```ts
-       return sel${X}().should('be.visible');
-       ```
-     - Otherwise emit:
-       ```ts
-       return getLabel(param1).should('be.visible');
-       ```
+   ```ts
+   Given('the Customer is on the homepage', () => {
+     return selectors.visitHomepage();
+   });
 
-3. Do not redefine or duplicate any selectors in this file.
-4. End the file immediately after the final `});`—no extra code, comments or markdown fences.
+   When('he clicks Anlegen button', () => {
+     return selectors.selAnlegen().click();
+   });
+
+   Then('the Endbetrag text should be displayed', () => {
+     return selectors.selEndbetrag().should('be.visible');
+   });
+
+   When('he changes the Anlagebetrag "12000"', () => {
+     return selectors.selAnlagebetragInput().clear().type('12000');
+   });
+
+   Then('a changed Endbetrag should be shown "29127,15"', () => {
+     return selectors.selEndbetragValue().should('contain.text', '29127,15');
+   });
+
+3. Rules & formatting:
+   - Do not import individual helpers—always use the `selectors.` namespace.  
+   - Do not redefine or duplicate any selector logic here.  
+   - End the file immediately after the final `);`—no trailing blank lines, comments or Markdown fences.
