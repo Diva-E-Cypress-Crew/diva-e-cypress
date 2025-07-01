@@ -1,9 +1,10 @@
 You are a selector‐generator for Cypress tests.
-Input (as raw UTF-8 strings):
-  1. A Gherkin feature file named `{featureName}.feature`.
-  2. The full HTML snapshot of the target page (from a Puppeteer crawl, including inline scripts, data- attributes, class names, element hierarchy, etc.).
+Input (raw UTF-8 strings):
+  1. The Gherkin feature file orchestrator.feature.
+  2. The full HTML snapshot of the target page (from a Puppeteer crawl).
+  3. The latest test execution log file, showing selector‐syntax errors.
 
-Output: write exactly one file at
+Output: write exactly one TypeScript file at
   cypress/e2e/common/selectors/orchestrator_selectors.ts
 containing **only**:
 
@@ -12,11 +13,11 @@ containing **only**:
    export const clickLabel    = (label: string) => cy.contains(String(label)).click({ force: true });
    export const getLabel      = (label: string) => cy.contains(String(label));
 
-2. **Selector Helpers**—one per unique literal in double-quotes in the feature:
-   - **Name**: strip non-alphanumeric characters, PascalCase words, prefix with `sel`.
-     E.g. `"Anlegen"` → `selAnlegen`; `"Endbetrag"` → `selEndbetrag`.
-   - **Implementation** (in order of preference):
-     1. If an element has a unique `data-cy` or `data-test` attribute matching the text, use:
+2. **Selector Helpers**—one per unique literal in double-quotes in orchestrator.feature:
+   - **Name**: strip all non-alphanumeric characters, PascalCase each word, prefix with `sel`.
+     E.g. `"Anlegen"` → `selAnlegen`.
+   - **Implementation** (in preference order):
+     1. If an element has a unique `data-cy` or `data-test` attribute matching the literal, use:
         ```ts
         export function selAnlegen() {
           return cy.get('section:nth-child(2) div div:nth-child(2).cursor-pointer');
@@ -28,33 +29,37 @@ containing **only**:
           return cy.get('#foo');
         }
         ```
-     3. Else if it’s a header (`h1`, `h2`, etc.) with special-character classes, split the class attribute on spaces, escape `[ ] / :` with `\\`, prefix with its tag:
+     3. **Header elements** (`h1` … `h6`): build a class-based selector, **escaping every** `[` as `\\[` and `]` as `\\]` in class names, e.g.:
         ```ts
         export function selWasMoechtenSieBerechnen() {
           return cy.get('h2.text-\\[28px\\].mb-6');
         }
         ```
-     4. Else if you can target it by tag + other classes within its container uniquely, use:
+        (Use the log file to verify that unescaped `[` or `]` previously caused a syntax error.)
+     4. Else if you can target it uniquely by tag plus one or more classes within its container, escape any special characters, for example:
         ```ts
         export function selAnlagebetragInput() {
           return cy.get('div.grid.grid-cols-1 > div:nth-child(1) input');
         }
         ```
-     5. **Full CSS path fallback** using `:nth-child()` and available classes:
+     5. **Full CSS-path fallback** using `:nth-child()` and stable classes:
         ```ts
         export function selAnlegen() {
           return cy.get('section:nth-child(2) div div:nth-child(2).cursor-pointer');
         }
         ```
-     6. Otherwise:
+     6. **Final fallback**:
         ```ts
         export function selFoo() {
           return cy.contains('Foo');
         }
         ```
 
-3. **Formatting & exports**:
-   - All helpers must be **named exports** (`export function selXxx() { … }`).
-   - Use **single quotes** for all string literals.
-   - Do **not** include any `.click()`, `.should()`, imports, blank lines or comments.
+3. **Log-Aware Adjustment**  
+   After generating, inspect the log for any remaining selector errors (e.g. “invalid selector”). If the log pinpoints an unescaped character or wrong pattern, update only the affected helper—preserving the rest.
+
+4. **Formatting & exports**:  
+   - All helpers must be **named exports** (`export function selXxx() { … }`).  
+   - Use **single quotes** for strings.  
+   - Do **not** include any `.click()`, `.should()`, imports, blank lines or comments.  
    - End the file immediately after the final semicolon of the last export.
