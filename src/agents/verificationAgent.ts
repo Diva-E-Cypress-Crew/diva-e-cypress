@@ -1,8 +1,7 @@
 // src/agents/verificationAgent.ts
 
 import * as ts from 'typescript';
-import * as fs from 'fs';
-import * as path from 'path';
+import { VerificationPrompt } from '../../prompts/verification_instruction';
 import { ChatMessage, LLmClient } from './selectorsAgent';
 
 export interface VerifyResult {
@@ -17,11 +16,11 @@ export class VerificationAgent {
 
   public async verify(
     selectorsCode: string,
-    stepsCode: string
+    stepsCode: string,
+    htmlSnapshot: string
   ): Promise<VerifyResult> {
     const errors: string[] = [];
 
-    // 1) Syntax‐Check via transpileModule
     const selDiag = ts.transpileModule(selectorsCode, {
       compilerOptions: { module: ts.ModuleKind.CommonJS },
       reportDiagnostics: true
@@ -31,11 +30,10 @@ export class VerificationAgent {
       reportDiagnostics: true
     }).diagnostics ?? [];
 
-    selDiag.concat(stpDiag).forEach(d => {
-      errors.push(ts.flattenDiagnosticMessageText(d.messageText, '\n'));
-    });
+    selDiag.concat(stpDiag).forEach(d =>
+      errors.push(ts.flattenDiagnosticMessageText(d.messageText, '\n'))
+    );
 
-    // 2) Konsistenz‐Check Imports vs. Exports
     const selExports = this.extractExports(selectorsCode);
     const stpImports = this.extractImports(stepsCode);
     const missing    = stpImports.filter(name => !selExports.includes(name));
@@ -43,16 +41,12 @@ export class VerificationAgent {
       errors.push(`Missing selector exports for: ${missing.join(', ')}`);
     }
 
-    // 3) Wenn keine Fehler, fertig
     if (errors.length === 0) {
       return { passed: true, errors };
     }
 
-    // 4) LLM‐Fix nur bei Fehlern
-    const promptPath = path.join(
-      __dirname, '..', '..', 'prompts', 'verification_instruction.txt'
-    );
-    const systemPrompt = fs.readFileSync(promptPath, 'utf-8');
+    const systemPrompt = new VerificationPrompt()
+      .getPrompt(stepsCode, htmlSnapshot);
 
     const messages: ChatMessage[] = [
       { role: 'system',    content: systemPrompt   },
@@ -63,21 +57,21 @@ export class VerificationAgent {
         content:
           'Errors:\n' +
           errors.map(e => `- ${e}`).join('\n') +
-          '\n\nPlease return exactly a JSON object with two keys:\n' +
-          '"selectors": "<full corrected selectors file or null>",\n' +
-          '"steps":    "<full corrected steps file or null>"\n' +
-          'Use actual newlines, no escapes or fences.'
+          '\n\nPlease return exactly a JSON object with keys:\n' +
+          '"selectors": "<corrected selectors or null>",\n' +
+          '"steps":    "<corrected steps or null>"\n' +
+          'Use real newlines, no escapes.'
       }
     ];
 
     const raw = await this.llmClient.chat(messages);
 
-    let fixedSelectors: string|undefined;
-    let fixedSteps:    string|undefined;
+    let correctedSelectors: string|undefined;
+    let correctedSteps:    string|undefined;
     try {
       const obj = JSON.parse(raw);
-      if (typeof obj.selectors === 'string') {fixedSelectors = obj.selectors;}
-      if (typeof obj.steps     === 'string') {fixedSteps    = obj.steps;}
+      if (typeof obj.selectors === 'string') { correctedSelectors = obj.selectors; }
+      if (typeof obj.steps     === 'string') { correctedSteps    = obj.steps; }
     } catch {
       errors.push('LLM response was not valid JSON');
     }
@@ -85,8 +79,8 @@ export class VerificationAgent {
     return {
       passed: false,
       errors,
-      correctedSelectors: fixedSelectors,
-      correctedSteps:    fixedSteps
+      correctedSelectors,
+      correctedSteps
     };
   }
 
