@@ -77,6 +77,10 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "langchain": "^0.3.30",
+    "@langchain/langgraph": "^0.3.11",
+    "@langchain/core": "^0.3.30", 
+    "@langchain/ollama": "^0.2.3"
   }
 }
