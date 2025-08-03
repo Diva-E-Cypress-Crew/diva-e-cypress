@@ -14,32 +14,23 @@
   "contributes": {
     "commands": [
       {
-        "command": "diva-e-cypress.generateWithOllama",
-        "title": "Generate Cypress Test (Ollama)"
-      },
-      {
-        "command": "diva-e-cypress.generateWithHuggingface",
-        "title": "Generate Cypress Test (Huggingface)"
-      },
-      {
         "command": "diva-e-cypress.generateTest",
         "title": "Generate Cypress Test (Orchestrator)"
+      },
+      {
+        "command": "diva-e-cypress.generateCodeLlama",
+        "title": "Generate Cypress Test (CodeLLama)"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "diva-e-cypress.generateWithOllama",
-          "when": "resourceExtname == .feature",
-          "group": "navigation"
-        },
-        {
-          "command": "diva-e-cypress.generateWithHuggingface",
-          "when": "resourceExtname == .feature",
-          "group": "navigation"
-        },
-        {
           "command": "diva-e-cypress.generateTest",
+          "when": "resourceExtname == .feature",
+          "group": "navigation"
+        },
+        {
+          "command": "diva-e-cypress.generateCodeLlama",
           "when": "resourceExtname == .feature",
           "group": "navigation"
         }
