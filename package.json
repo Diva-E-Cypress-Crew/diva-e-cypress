@@ -40,7 +40,7 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p .",
-    "build":   "tsc -p .",
+    "build": "tsc -p .",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
@@ -68,10 +68,12 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0",
-    "langchain": "^0.3.30",
+    "@langchain/core": "^0.3.30",
     "@langchain/langgraph": "^0.3.11",
-    "@langchain/core": "^0.3.30", 
-    "@langchain/ollama": "^0.2.3"
+    "@langchain/ollama": "^0.2.3",
+    "langchain": "^0.3.30",
+    "llama-tokenizer-js": "^1.2.2",
+    "node-fetch": "^2.7.0",
+    "open": "^10.2.0"
   }
 }
