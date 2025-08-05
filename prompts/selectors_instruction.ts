@@ -1,6 +1,25 @@
 import { PromptTemplate } from './promptTemplate';
 
+/**
+ * `SelectorsPrompt` ist eine spezialisierte Prompt-Vorlage, die Anweisungen
+ * für ein Sprachmodell bereitstellt, um basierend auf einem Gherkin-Feature und einem HTML-Snapshot
+ * eine valide TypeScript-Datei mit Cypress-Selektoren zu erzeugen.
+ *
+ * Die generierte Datei folgt strikten Formatierungs- und Stilregeln, um direkt als
+ * Cypress-Hilfsmodul nutzbar zu sein.
+ *
+ * **Einsatzgebiet:** Automatisierte Testgenerierung mit KI für Frontend-Webanwendungen.
+ *
+ * @extends {PromptTemplate}
+ */
 export class SelectorsPrompt extends PromptTemplate {
+  /**
+   * Die vollständige Prompt-Vorlage für die Selectors-Erzeugung.
+   * Diese enthält Regeln, erwartetes Format und Platzhalter für Eingabedaten.
+   *
+   * @protected
+   * @readonly
+   */
   protected readonly instruction = `
 You are a selector-generator for Cypress tests.
 
@@ -36,15 +55,21 @@ export function selHeading(label: string) {
   return cy.get('h2').contains(label);
 }
 
-
 Feature:
 {{featureText}}
 
 HTML Snapshot:
 {{htmlSnapshot}}
-
   `.trim();
 
+  /**
+   * Erzeugt den vollständigen Prompt mit eingefügtem Feature-Text und HTML-Snapshot.
+   * Dieser Prompt wird einem Sprachmodell übergeben, um daraus Cypress-Selektoren zu generieren.
+   *
+   * @param {string} featureText - Der Gherkin-Featuretext (z. B. `.feature`-Dateiinhalt)
+   * @param {string} htmlSnapshot - Der HTML-Snapshot der Zielseite als String
+   * @returns {string} Der formatierte Prompt-Text zur Weitergabe an ein LLM
+   */
   public getPrompt(featureText: string, htmlSnapshot: string): string {
     return this.render({ featureText, htmlSnapshot });
   }
