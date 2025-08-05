@@ -34,10 +34,23 @@ export class CodeLlama {
         this.outputChannel.appendLine(`User: ${userInput}`);
         this.outputChannel.appendLine(`CodeLlama: ${response.content}`);
 
+        let filteredHTML: string;
         await (async () => {
             const extractor = new htmlPreprocessor();
             const dom = await extractor.extractFilteredDOM(this.baseUrl);
-            await extractor.saveAndOpenHTML(dom);
+            filteredHTML = await extractor.generateHTML(dom);
+            await extractor.openInBrowser(dom);
+            const selectorsPrompt = new SelectorsPrompt(this.featureFile, this.baseUrl, filteredHTML);
+
+            const { default: llamaTokenizer } = await import('llama-tokenizer-js');
+            const tokens = llamaTokenizer.encode(selectorsPrompt.getPrompt());
+            this.outputChannel.appendLine(`Tokens: ${tokens.length.toString()}`);
+
+            await this.chatHistory.addMessage(new HumanMessage(selectorsPrompt.getPrompt()));
+            messages = await this.chatHistory.getMessages();
+            response = await this.model.invoke(messages);
+            await this.chatHistory.addMessage(response);
+            this.outputChannel.appendLine(`CodeLlama: ${response.content}`);
         })();
 
         //Puppeteer
@@ -49,11 +62,7 @@ export class CodeLlama {
         // await browser.close();
 
         //Selectors
-        // const selectorsPrompt = new SelectorsPrompt(this.featureFile, this.baseUrl, htmlSnapshot);
-        //
-        // const { default: llamaTokenizer } = await import('llama-tokenizer-js');
-        // const tokens = llamaTokenizer.encode(selectorsPrompt.getPrompt());
-        // this.outputChannel.appendLine(tokens.length.toString());
+
 
 
         // await this.chatHistory.addMessage(new HumanMessage(selectorsPrompt.getPrompt()));
