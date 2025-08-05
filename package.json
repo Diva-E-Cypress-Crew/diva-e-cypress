@@ -49,11 +49,12 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p .",
-    "build":   "tsc -p .",
+    "build": "tsc -p .",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "docs": "typedoc"
   },
   "devDependencies": {
     "@cucumber/gherkin": "^32.1.2",
@@ -74,13 +75,14 @@
     "ollama": "^0.5.15",
     "puppeteer": "^24.10.0",
     "ts-node": "^10.9.1",
+    "typedoc": "^0.28.9",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0",
-    "langchain": "^0.3.30",
+    "@langchain/core": "^0.3.30",
     "@langchain/langgraph": "^0.3.11",
-    "@langchain/core": "^0.3.30", 
-    "@langchain/ollama": "^0.2.3"
+    "@langchain/ollama": "^0.2.3",
+    "langchain": "^0.3.30",
+    "node-fetch": "^2.7.0"
   }
 }
