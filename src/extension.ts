@@ -8,7 +8,8 @@ import { runOllama } from './ollama-runner';
 import { runHuggingface } from './huggingface-runner';
 import { Orchestrator } from './orchestrator';
 
-const { commands, window } = vscode;
+const { commands, window, workspace } = vscode;
+const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
 
 export function activate(context: vscode.ExtensionContext) {
   // Gemeinsames Output-Panel
@@ -18,10 +19,16 @@ export function activate(context: vscode.ExtensionContext) {
   const disposableOllama = commands.registerCommand(
     'diva-e-cypress.generateWithOllama',
     async (uri: vscode.Uri) => {
-      const featureFile = uri.fsPath.toString();
+      const featureFile = uri.fsPath;
       outputChannel.clear();
       outputChannel.show();
-      runOllama(outputChannel, featureFile, context);
+      outputChannel.appendLine(`🔍 Starte Ollama run für Feature-Datei: ${featureFile}`);
+      try {
+        runOllama(outputChannel, featureFile, context);
+        outputChannel.appendLine('✅ Ollama run abgeschlossen.');
+      } catch (err: any) {
+        outputChannel.appendLine(`❌ Ollama run-Fehler: ${err.message}`);
+      }
       window.showInformationMessage(
         `✅ Ollama run gestartet – bitte schau ins Output-Panel.`
       );
@@ -32,10 +39,16 @@ export function activate(context: vscode.ExtensionContext) {
   const disposableHF = commands.registerCommand(
     'diva-e-cypress.generateWithHuggingface',
     async (uri: vscode.Uri) => {
-      const featureFile = uri.fsPath.toString();
+      const featureFile = uri.fsPath;
       outputChannel.clear();
       outputChannel.show();
-      runHuggingface(outputChannel, featureFile);
+      outputChannel.appendLine(`🔍 Starte Huggingface run für Feature-Datei: ${featureFile}`);
+      try {
+        runHuggingface(outputChannel, featureFile);
+        outputChannel.appendLine('✅ Huggingface run abgeschlossen.');
+      } catch (err: any) {
+        outputChannel.appendLine(`❌ Huggingface run-Fehler: ${err.message}`);
+      }
       window.showInformationMessage(
         `✅ Huggingface run gestartet – bitte schau ins Output-Panel.`
       );
@@ -46,12 +59,26 @@ export function activate(context: vscode.ExtensionContext) {
   const disposableOrchestrator = commands.registerCommand(
     'diva-e-cypress.generateTest',
     async (uri: vscode.Uri) => {
-      const featureFile = uri.fsPath.toString();
+      const featureFile = uri.fsPath;
       outputChannel.clear();
       outputChannel.show();
-      // Orchestrator schreibt intern ebenfalls in sein eigenes Panel,
-      // aber hier nutzen wir erst mal das gleiche Output-Channel
-      await new Orchestrator(featureFile, "https://meag.gitlab.diva-e.com/investmentrechner-2023").run();
+      outputChannel.appendLine(`🔍 Starte Orchestrator für Feature-Datei: ${featureFile}`);
+
+      const workspaceRoot = workspace.workspaceFolders?.[0].uri.fsPath ?? '';
+
+      try {
+        const orchestrator = new Orchestrator(
+          featureFile,
+          BASE_URL,
+          outputChannel,
+
+        );
+        await orchestrator.run();
+        outputChannel.appendLine('✅ Orchestrator-Durchlauf abgeschlossen.');
+      } catch (err: any) {
+        outputChannel.appendLine(`❌ Orchestrator-Fehler: ${err.message}`);
+      }
+
       window.showInformationMessage(
         `✅ Orchestrator run gestartet – bitte schau ins Output-Panel.`
       );
