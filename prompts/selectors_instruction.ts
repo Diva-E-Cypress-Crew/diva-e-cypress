@@ -69,6 +69,13 @@ HTML Snapshot:
    * @param {string} featureText - Der Gherkin-Featuretext (z. B. `.feature`-Dateiinhalt)
    * @param {string} htmlSnapshot - Der HTML-Snapshot der Zielseite als String
    * @returns {string} Der formatierte Prompt-Text zur Weitergabe an ein LLM
+   *
+   * @example
+   * const prompt = new SelectorsPrompt();
+   * const selectorsPromptText = prompt.getPrompt(
+   *   'Feature: Login\nScenario: ...',
+   *   '<html>...</html>'
+   * );
    */
   public getPrompt(featureText: string, htmlSnapshot: string): string {
     return this.render({ featureText, htmlSnapshot });

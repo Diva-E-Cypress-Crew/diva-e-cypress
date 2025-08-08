@@ -34,8 +34,8 @@ export abstract class PromptTemplate {
    *
    * @example
    * const context = {
-   *   featureText: 'Feature zum Login',
-   *   htmlSnapshot: '<div>Inhalt</div>'
+   *   featureText: 'Login-Feature',
+   *   htmlSnapshot: '<div>Snapshot</div>'
    * };
    * const promptText = myPrompt.render(context);
    */
