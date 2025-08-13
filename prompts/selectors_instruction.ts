@@ -27,40 +27,31 @@ Input:
 1) Gherkin feature (plain text)
 2) HTML snapshot of the loaded page (plain text)
 
-Output: Output **only** a complete, valid TypeScript file. No comments, no explanations, no Markdown, no extra text. Only code for a Cypress selectors file.
-common/selectors/orchestrator_selectors.ts
-NO explanations, NO markdown, NO comments. JUST WORKING SELECTORS code for cypress!
+Output: Return **only** a complete, valid TypeScript file. No comments, no explanations, no Markdown, no extra text.
 
-Rules:
-- Export core helpers at the top:
-    export const visitHomepage = () => cy.visit('/');
-    export const clickLabel    = (label: string) => cy.contains(String(label)).click({ force: true });
-    export const getLabel      = (label: string) => cy.contains(String(label));
-- For each literal in double quotes in the feature, create a helper:
-    - Name: PascalCase, prefix with sel (e.g. "Anlegen" -> selAnlegen)
-    - Implementation: Choose the most robust unique CSS selector (prefer [data-test], [data-cy], id, classes; fallback to contains).
-- All helpers must be named exports.
-- Use single quotes, no blank lines, no comments, no imports, no '.click()', no '.should()'.
-- Output strictly and **only** valid TypeScript code. **Do not include explanations, code fences, or JSON.**
+Hard rules (MUST follow):
+- Export **ONLY functions** (named exports). Do NOT export string constants, objects, or classes.
+- Every exported function must **return a Cypress chain** that starts with \`cy.\`.
+- The file MUST start with **exactly these helpers in this order** (copy verbatim):
+    export function visitHomepage() { return cy.visit('/'); }
+    export function clickLabel(label: string) { return cy.contains(String(label)).click({ force: true }); }
+    export function getLabel(label: string) { return cy.contains(':visible', String(label)); }
+    export function getHeading(label: string) { return cy.contains('h1:visible, h2:visible, [role="heading"]:visible', String(label)); }
+- For literals in double quotes in the feature you MAY add helpers if useful.
+- Function naming for additional helpers:
+    • ASCII only (ä→ae, ö→oe, ü→ue, ß→ss), remove non-alphanumerics, use camelCase or PascalCase.
+- Prefer robust **unique** selectors: [data-test], [data-cy], id, stable classes; fallback to \`contains\`.
+- Use single quotes. No blank lines. No imports. No \`.click()\` or \`.should()\` inside selector helpers (except clickLabel).
 
-Example output (YOU MUST FOLLOW THIS TYPE OF FORMAT; NO EXPLANATIONS OR COMMENTS):
-
-export function visitHomepage() {
-  return cy.visit('/');
-}
-export function selTile(label: string) {
-  return cy.get('section div.cursor-pointer').contains(label);
-}
-export function selHeading(label: string) {
-  return cy.get('h2').contains(label);
-}
+Strictly return valid **TypeScript code**. **No code fences. No JSON.**
 
 Feature:
 {{featureText}}
 
 HTML Snapshot:
 {{htmlSnapshot}}
-  `.trim();
+`.trim();
+
 
   /**
    * Erzeugt den vollständigen Prompt mit eingefügtem Feature-Text und HTML-Snapshot.

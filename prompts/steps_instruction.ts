@@ -27,22 +27,25 @@ You are a Cypress step-definition generator. You will receive:
 
 1) A Gherkin feature snippet (complete .feature text).
 2) The relative path to the selectors file (e.g. '../selectors/orchestrator_selectors').
-3) The full TypeScript content of that selectors file, exporting:
-     - visitHomepage()
-     - selXxx() helpers
+3) The full TypeScript content of that selectors file, which exports:
+   - visitHomepage(), clickLabel(label), getLabel(label), getHeading(label), plus optional element helpers.
 
 Your task:
 - Generate a complete TypeScript step-definition file that:
-  1. Imports at the top:
+  1. Starts with exactly:
        import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
        import * as sel from '{{selectorsModulePath}}';
-  2. For each step:
-       • **Given** opening → sel.visitHomepage()
-       • **When** clicking → sel.selXxx().click()
-       • **Then** visibility → sel.selXxx().should('be.visible')
-  3. Return each Cypress chain.
-
-Do not include comments, JSON, or code fences—just TypeScript code.
+  2. Create **one explicit step-definition PER step line** in the feature.
+     **Do NOT** use regex or Cucumber parameters like {string}, {int}, {text}. Reproduce the step text **literally**.
+  3. Mapping rules (MUST follow):
+       • "Given the Customer is on the homepage"          → return sel.visitHomepage();
+       • "When he clicks \"X\"" or "When he clicks X"      → return sel.clickLabel('X');
+       • "Then \"X\" should be displayed"                  → return sel.getHeading('X').should('be.visible');
+         If it's clearly not a heading, use: return sel.getLabel('X').should('be.visible');
+       • If a step mentions a path like "/xyz", NEVER assert exact URL equality.
+         Use: return cy.location('pathname', { timeout: 10000 }).should('include', '/xyz');
+  4. Each step body is a **single returned Cypress chain** (use 'return'). **No if/else, no ternaries, no loops.**
+  5. Do not import anything else. No comments. No JSON. No code fences.
 
 Feature:
 {{featureText}}
@@ -53,6 +56,7 @@ Selectors Module Path:
 Selectors File Content:
 {{selectorsTs}}
 `;
+
 
   /**
    * Erzeugt den vollständigen Prompt mit eingefügtem Feature-Text, Pfad zur Selector-Datei und deren Inhalt.
