@@ -10,6 +10,7 @@ import { Orchestrator } from './orchestrator';
 
 const { commands, window, workspace } = vscode;
 const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
+//const BASE_URL = 'https://duckduckgo.com/';
 
 export function activate(context: vscode.ExtensionContext) {
   // Gemeinsames Output-Panel

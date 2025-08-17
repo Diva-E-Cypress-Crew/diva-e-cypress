@@ -4,12 +4,13 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import puppeteer from 'puppeteer';
 
-import { ChatOllama } from '@langchain/ollama';
-import { HumanMessage, AIMessage } from '@langchain/core/messages';
+import {ChatOllama} from '@langchain/ollama';
+import {AIMessage, HumanMessage} from '@langchain/core/messages';
 
-import { SelectorsPrompt } from '../prompts/selectors_instruction';
-import { StepsPrompt }     from '../prompts/steps_instruction';
-import { htmlPreprocessor } from './htmlPreprocessor';
+import {SelectorsPrompt} from '../prompts/selectors_instruction';
+import {StepsPrompt} from '../prompts/steps_instruction';
+import {CodeFixPrompt} from "../prompts/code_fix";
+import {htmlPreprocessor} from './htmlPreprocessor';
 
 export class Orchestrator {
   private model: ChatOllama;
@@ -34,8 +35,12 @@ export class Orchestrator {
 
     // Selektoren erzeugen
     const selectorsPrompt = new SelectorsPrompt().getPrompt(feature, htmlForPrompt);
-    const selectorsTs = await this.invokeForSelectors(selectorsPrompt);
+    let selectorsTs = await this.invokeForSelectors(selectorsPrompt);
 
+    const codeFixPrompt = new CodeFixPrompt().getPrompt(selectorsTs);
+    selectorsTs = await this.invokeCodeRefactor(codeFixPrompt);
+
+    this.output.appendLine(`📦 Selektoren-Vorschau:\n${selectorsTs}\n…`);
     // Steps erzeugen
     const stepsPrompt = new StepsPrompt().getPrompt(
       feature,
@@ -43,6 +48,8 @@ export class Orchestrator {
       selectorsTs
     );
     const stepsTs = await this.invokeForSteps(stepsPrompt, feature);
+
+
 
     // Dateien schreiben (common/selectors + common/steps)
     const featureDir   = path.dirname(this.featureFile);
@@ -80,10 +87,10 @@ export class Orchestrator {
       resp = await this.safeInvoke(retryPrompt);
       code = this.sanitizeSelectorsOutput(resp);
     }
-
-    // Auto-Repair (robuste Helfer + kaputte name-Selectoren fixen + *Input() entfernen)
+    //
+    // // Auto-Repair (robuste Helfer + kaputte name-Selectoren fixen + *Input() entfernen)
     code = this.autoFixSelectors(code);
-
+    //
     if (!this.looksLikeSelectors(code)) {
       this.output.appendLine('❌ Selektoren weiterhin ungültig. Vorschau:');
       this.output.appendLine(code.slice(0, 300));
@@ -128,6 +135,13 @@ export class Orchestrator {
     return code;
   }
 
+  private async invokeCodeRefactor(prompt: string): Promise<string> {
+    this.output.appendLine('▶ Selectors Reparieren…');
+
+    return await this.safeInvoke(prompt);
+
+  }
+
   private async safeInvoke(prompt: string): Promise<string> {
     try {
       const resp = await this.model.invoke([new HumanMessage(prompt)]) as AIMessage;
@@ -168,8 +182,8 @@ export class Orchestrator {
   // ───────────────────────────────────────────────────────────────
 
   private unwrapContent(raw: unknown): string {
-    if (Array.isArray(raw)) return raw.map(i => typeof i === 'string' ? i : JSON.stringify(i)).join('');
-    if (typeof raw === 'string') return raw;
+    if (Array.isArray(raw)) {return raw.map(i => typeof i === 'string' ? i : JSON.stringify(i)).join('');}
+    if (typeof raw === 'string') {return raw;}
     try { return JSON.stringify(raw); } catch { return String(raw); }
   }
 
@@ -181,7 +195,7 @@ export class Orchestrator {
   private sanitizeSelectorsOutput(text: string): string {
     let code = this.extractFirstCodeBlock(text) ?? text;
     const firstExport = code.search(/^\s*export\s+/m);
-    if (firstExport > 0) code = code.slice(firstExport);
+    if (firstExport > 0) {code = code.slice(firstExport);}
     code = code.split('\n').filter(l => !/^\s*import\s+/.test(l)).join('\n');
     code = code.replace(/^\s*\/\/.*$/gm, '').trim();
     return code;
@@ -191,7 +205,7 @@ export class Orchestrator {
     let code = this.extractFirstCodeBlock(text) ?? text;
 
     const firstImport = code.search(/^\s*import\s+/m);
-    if (firstImport > 0) code = code.slice(firstImport);
+    if (firstImport > 0) {code = code.slice(firstImport);}
 
     code = code
       .replace(/\bcy\.visitHomepage\s*\(\s*\)\s*;?/g, 'sel.visitHomepage();')
@@ -289,7 +303,7 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
     const reBlockRegex =
       /(Given|When|Then|And|But)\(\s*\/[\s\S]*?\/[a-z]*\s*,\s*\((?:[^)]*)\)\s*=>\s*\{[\s\S]*?\}\s*\);/gi;
     let m: RegExpExecArray | null;
-    while ((m = reBlockRegex.exec(code)) !== null) kept.push(m[0]);
+    while ((m = reBlockRegex.exec(code)) !== null) {kept.push(m[0]);}
 
     const hasUniversalClick   = kept.some(s => /When\(\s*\/\^.*clicks/i.test(s));
     const hasUniversalShown   = kept.some(s => /Then\(\s*\/\^\(\?:the \)\?.+ should be (?:shown|visible)/i.test(s));
@@ -320,7 +334,7 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
           keep = !!prefix && featureLines.some(line => line.startsWith(prefix));
         }
       }
-      if (keep) kept.push(m[0]);
+      if (keep) {kept.push(m[0]);}
     }
 
     return (header + '\n' + kept.join('\n')).trim();
@@ -331,8 +345,8 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
 
     // export const 'css' → function() { return cy.get('css'); }
     out = out.replace(
-      /export\s+const\s+([A-Za-z0-9_$\u00C0-\u024F]+)\s*=\s*['"`]([^'"`]+)['"`]\s*;?/g,
-      (_m, name, css) => `export function ${name}() { return cy.get('${css}'); }`
+        /export\s+const\s+([A-Za-z0-9_$\u00C0-\u024F]+)\s*=\s*['"`]([^'"`]+)['"`]\s*;?/g,
+        (_m, name, css) => `export function ${name}() { return cy.get('${css}'); }`
     );
 
     // Pflicht-Helper sicherstellen / verbessern
@@ -341,7 +355,7 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
     }
     if (!/export\s+function\s+clickLabel\s*\(/.test(out)) {
       out =
-`export function clickLabel(label: string) {
+          `export function clickLabel(label: string) {
   const parts = String(label).split(/\\s+(?:and|und)\\s+|,\\s*/i).map(s => s.trim()).filter(Boolean);
   let chain = cy.wrap(null);
   parts.forEach(p => { chain = chain.then(() => cy.contains(String(p)).click({ force: true })); });
@@ -350,8 +364,8 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
 ` + out;
     } else {
       out = out.replace(
-        /export function clickLabel\([^)]+\)\s*\{[\s\S]*?\}\s*/m,
-`export function clickLabel(label: string) {
+          /export function clickLabel\([^)]+\)\s*\{[\s\S]*?\}\s*/m,
+          `export function clickLabel(label: string) {
   const parts = String(label).split(/\\s+(?:and|und)\\s+|,\\s*/i).map(s => s.trim()).filter(Boolean);
   let chain = cy.wrap(null);
   parts.forEach(p => { chain = chain.then(() => cy.contains(String(p)).click({ force: true })); });
@@ -363,8 +377,8 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
       out = `export function getLabel(label: string) { return cy.contains(':visible', String(label)); }\n` + out;
     } else {
       out = out.replace(
-        /export function getLabel\(label: string\)\s*\{\s*return cy\.contains\(\s*String\(label\)\s*\);\s*\}/,
-        "export function getLabel(label: string) { return cy.contains(':visible', String(label)); }"
+          /export function getLabel\(label: string\)\s*\{\s*return cy\.contains\(\s*String\(label\)\s*\);\s*\}/,
+          "export function getLabel(label: string) { return cy.contains(':visible', String(label)); }"
       );
     }
     if (!/export\s+function\s+getHeading\s*\(/.test(out)) {
@@ -374,7 +388,7 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
     // Robustes Eingabefeld über zugehöriges Label
     if (!/export\s+function\s+inputByLabel\s*\(/.test(out)) {
       out =
-`export function inputByLabel(label: string) {
+          `export function inputByLabel(label: string) {
   const text = String(label);
   return cy.contains('label', text).then($l => {
     const id = $l.attr('for');
@@ -387,21 +401,38 @@ Then(/^a changed\\s+(.+?)\\s+should be shown\\s+"?(.+?)"?$/i, (_field: string, v
 ` + out;
     }
 
-    // Reparatur zerbrochener "name"-Selektoren (seltene LLM-Artefakte)
+    // --- Reparatur zerbrochener Attribut-Selektoren ---
+    // Fälle wie:
+    //   return cy.get('button[type='); }submit"]';
+    //   return cy.get('[name='); }q"]';
+    // werden zu:
+    //   return cy.get('button[type="submit"]');
+    //   return cy.get('[name="q"]');
     out = out.replace(
-      /return\s+cy\.get\('([^']*\[name=)'\)\s*;\s*\}?\s*['"]([^'"]+)['"]\s*;?/g,
-      (_m, pre, attr) => `return cy.get('${pre}"${attr}"]');`
+        /return\s+cy\.get\(\s*(['"])([^'"]*\[[^\]=]+)=\1\)\s*;\s*\}?\s*(['"])([^'"]+)\3\]\s*['"]?\s*;?/gm,
+        (_m, _q1, pre, _q2, val) => `return cy.get('${pre}="${val}"]');`
     );
+
+    // Überzählige String-Fragmente nach cy.get() entfernen (falls noch Reste vorhanden sind)
     out = out.replace(
-      /(\)\s*;)\s*['"][^'"]+['"]\s*;?/g,
-      '$1'
+        /(cy\.get\([^)]*\)\s*;)\s*['"][^'"]+['"]\s*;?/g,
+        '$1'
     );
+
+    // Vereinzelte, verwaiste Attribut-Endstücke wie:  q"]';  oder  submit"]';  entfernen
+    out = out.replace(/^\s*[A-Za-z0-9_-]+"\]';\s*$/gm, '');
 
     // *Input()-Selektoren komplett entfernen – wir nutzen inputByLabel()
     out = out.replace(/export function\s+[A-Za-z0-9_]+Input\s*\([^)]*\)\s*\{[\s\S]*?\}\s*/g, '');
 
+    // Letzte Sicherheitsnetze: niemals 'undefined="undefined"]' stehen lassen
+    out = out.replace(/cy\.get\(['"]undefined="undefined"]['"]\)/g, "cy.get('*')");
+
     return out.trim();
   }
+
+
+
 
   private looksLikeSelectors(code: string): boolean {
     const hasExportFunction = /(export\s+function\s+\w+\s*\(|export\s+const\s+\w+\s*=\s*\([\w\s:,?=]*\)\s*=>)/.test(code);
