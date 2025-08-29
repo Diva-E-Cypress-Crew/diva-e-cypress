@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { promises as fs } from 'fs';
+import {promises as fs} from 'fs';
 import path from 'path';
 // @ts-ignore
 import open from "open";
@@ -115,7 +115,7 @@ export class htmlPreprocessor {
             throw new Error('No DOM structure to save');
         }
 
-        const htmlContent: string = `
+        return `
             <!DOCTYPE html>
             <html lang="en">
             <head>
@@ -128,8 +128,6 @@ export class htmlPreprocessor {
             </body>
             </html>
         `;
-
-        return htmlContent;
     }
 
     // Utility method to save HTML to file

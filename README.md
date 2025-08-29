@@ -46,16 +46,16 @@ ollama run llama3.2
 
 ## Projekt-Konfigurationsdateien
 
-Datei | Zweck / Beschreibung
------ | --------------------
-package.json | Enthält Metadaten, Abhängigkeiten, NPM-Skripte und Konfiguration der Extension
-package-lock.json | Automatisch gepflegter Lockfile für Abhängigkeits-Management (nicht manuell bearbeiten!)
-tsconfig.json | TypeScript-Compiler-Konfiguration, regelt Kompilierung und Projektstruktur
-typedoc.json | Einstellungen für die automatische Code-Dokumentation mit TypeDoc
+| Datei             | Zweck / Beschreibung                                                                     |
+|-------------------|------------------------------------------------------------------------------------------|
+| package.json      | Enthält Metadaten, Abhängigkeiten, NPM-Skripte und Konfiguration der Extension           |
+| package-lock.json | Automatisch gepflegter Lockfile für Abhängigkeits-Management (nicht manuell bearbeiten!) |
+| tsconfig.json     | TypeScript-Compiler-Konfiguration, regelt Kompilierung und Projektstruktur               |
+| typedoc.json      | Einstellungen für die automatische Code-Dokumentation mit TypeDoc                        |
 
 **Hinweise:**  
 - Für Änderungen an zentralen Konfigurationsdateien bitte immer im Team abstimmen.  
-- Die wichtigsten NPM-Kommandos findest du in `package.json` unter `"scripts"` (z. B. `npm run docs` für Projektdokumentation).
+- Die wichtigsten NPM-Kommandos findest du in `package.json` unter `"scripts"` (z.B. `npm run docs` für Projektdokumentation).
 
 ---
 

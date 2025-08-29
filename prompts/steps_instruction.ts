@@ -1,4 +1,4 @@
-import { PromptTemplate, PromptContext } from './promptTemplate';
+import { PromptTemplate } from './promptTemplate';
 
 /**
  * `StepsPrompt` ist eine spezialisierte Prompt-Vorlage, die Anweisungen für ein Sprachmodell

@@ -1,4 +1,4 @@
-import { PromptTemplate, PromptContext } from './promptTemplate';
+import { PromptTemplate } from './promptTemplate';
 
 export class CodeFixPrompt extends PromptTemplate {
 

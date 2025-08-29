@@ -1,4 +1,4 @@
-import { PromptTemplate, PromptContext } from './promptTemplate';
+import { PromptTemplate } from './promptTemplate';
 
 /**
  * `VerificationPrompt` ist eine spezialisierte Prompt-Vorlage, die Anweisungen für ein Sprachmodell
