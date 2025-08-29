@@ -1,21 +1,13 @@
-// src/agents/stepsAgent.ts
-// src/agents/StepsAgent.ts
 import * as vscode from "vscode";
 import { ChatOllama } from "@langchain/ollama";
-import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { StepsPrompt } from "../../prompts/steps_instruction";
+import {BaseAgent} from "./baseAgent";
 
-// simple helper to unwrap model content
-function unwrapContent(content: unknown): string {
-    if (typeof content === "string") {return content;}
-    if (Array.isArray(content)) {
-        return content.map(unwrapContent).join("\n");
+
+export class StepsAgent extends BaseAgent {
+    constructor(model: ChatOllama, output: vscode.OutputChannel) {
+        super(model, output);
     }
-    return String(content ?? "");
-}
-
-export class StepsAgent {
-    constructor(private model: ChatOllama, private output: vscode.OutputChannel) {}
 
     async generate(feature: string, selectorsTs: string): Promise<string> {
         const stepsPrompt = new StepsPrompt().getPrompt(
@@ -25,21 +17,6 @@ export class StepsAgent {
         );
 
         return this.invokeForSteps(stepsPrompt, feature);
-    }
-
-    private async safeInvoke(prompt: string): Promise<string> {
-        try {
-            const resp = (await this.model.invoke([new HumanMessage(prompt)])) as AIMessage;
-            return unwrapContent(resp.content);
-        } catch (err: any) {
-            this.output.appendLine(
-                `❌ Modellaufruf fehlgeschlagen: ${err?.message ?? err}`
-            );
-            this.output.appendLine(
-                "ℹ️ Prüfe: Läuft `ollama serve`? Ist das Modell gepullt (z. B. `ollama run llama3.2`)?"
-            );
-            throw err;
-        }
     }
 
     private async invokeForSteps(prompt: string, feature: string): Promise<string> {

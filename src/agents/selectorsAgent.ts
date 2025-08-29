@@ -1,38 +1,18 @@
 import * as vscode from 'vscode';
 import { ChatOllama } from '@langchain/ollama';
-import { AIMessage, HumanMessage } from '@langchain/core/messages';
 
 import { CodeFixPrompt } from '../../prompts/code_fix';
 import { SelectorsPrompt } from '../../prompts/selectors_instruction';
+import {BaseAgent} from "./baseAgent";
 
-export class SelectorsAgent {
-  constructor(
-      private model: ChatOllama,
-      private output: vscode.OutputChannel
-  ) {}
+export class SelectorsAgent extends BaseAgent {
+  constructor(model: ChatOllama, output: vscode.OutputChannel) {
+    super(model, output);
+  }
 
   async generate(feature: string, html: string): Promise<string> {
     const prompt = new SelectorsPrompt().getPrompt(feature, html);
     return this.invokeForSelectors(prompt);
-  }
-
-  // ───────────────────────────
-  // Core LLM call
-  // ───────────────────────────
-  private async safeInvoke(prompt: string): Promise<string> {
-    try {
-      const resp = await this.model.invoke([new HumanMessage(prompt)]) as AIMessage;
-      return this.unwrapContent(resp.content);
-    } catch (err: any) {
-      this.output.appendLine(`❌ Modellaufruf fehlgeschlagen: ${err?.message ?? err}`);
-      throw err;
-    }
-  }
-
-  private unwrapContent(raw: unknown): string {
-    if (Array.isArray(raw)) {return raw.map(i => typeof i === 'string' ? i : JSON.stringify(i)).join('');}
-    if (typeof raw === 'string') {return raw;}
-    try { return JSON.stringify(raw); } catch { return String(raw); }
   }
 
   // ───────────────────────────
