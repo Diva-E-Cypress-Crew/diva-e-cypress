@@ -9,8 +9,12 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
-  "main": "out/extension.js",
+  "activationEvents": [
+    "onCommand:diva-e-cypress.generateWithOllama",
+    "onCommand:diva-e-cypress.generateWithHuggingface",
+    "onCommand:diva-e-cypress.generateTest"
+  ],
+  "main": "out/src/extension.js",
   "contributes": {
     "commands": [
       {
@@ -48,7 +52,8 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
+    "compile": "tsc -p .",
+    "build":   "tsc -p .",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
@@ -76,6 +81,11 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "langchain": "^0.3.30",
+    "open": "^9.1.0",
+    "@langchain/langgraph": "^0.3.11",
+    "@langchain/core": "^0.3.30", 
+    "@langchain/ollama": "^0.2.3"
   }
 }
