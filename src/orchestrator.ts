@@ -38,7 +38,8 @@ export class Orchestrator {
     const selectorsAgent = new SelectorsAgent(this.model, this.output);
     let selectorsTs = await selectorsAgent.generate(feature, htmlForPrompt);
     const codeRefactorAgent = new RefactorAgent(this.model, this.output);
-    selectorsTs = await codeRefactorAgent.invokeCodeRefactor(selectorsTs);
+
+    selectorsTs = await codeRefactorAgent.generate(selectorsTs);
 
     this.output.appendLine(`📦 Selektoren-Vorschau:\n${selectorsTs}\n…`);
 

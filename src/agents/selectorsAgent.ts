@@ -18,40 +18,36 @@ export class SelectorsAgent extends BaseAgent {
   // ───────────────────────────
   // Prompt handler
   // ───────────────────────────
-  private async invokeForSelectors(prompt: string): Promise<string> {
-    this.output.appendLine('▶ Erzeuge Selektoren…');
-    this.output.appendLine(`🧩 SelectorsPrompt-Länge: ${prompt.length}`);
+    private async invokeForSelectors(prompt: string): Promise<string> {
+        this.output.appendLine('▶ Erzeuge Selektoren…');
+        this.output.appendLine(`🧩 SelectorsPrompt-Länge: ${prompt.length}`);
 
-    let resp = await this.safeInvoke(prompt);
-    let code = this.sanitizeSelectorsOutput(resp);
+        let resp = await this.safeInvoke(prompt);
+        let code = this.sanitizeSelectorsOutput(resp);
 
-    if (!this.looksLikeSelectors(code)) {
-      this.output.appendLine('⚠️ Selektoren ungültig – versuche strengere Instruktion…');
-      const retryPrompt = `${prompt}\n\nReturn ONLY TypeScript for Cypress selectors. No prose, no Markdown. Start your file with \`export \`.`;
-      resp = await this.safeInvoke(retryPrompt);
-      code = this.sanitizeSelectorsOutput(resp);
+        if (!this.looksLikeSelectors(code)) {
+            this.output.appendLine('⚠️ Selektoren ungültig – versuche strengere Instruktion…');
+            const retryPrompt = `${prompt}\n\nReturn ONLY TypeScript for Cypress selectors. No prose, no Markdown. Start your file with \`export \`.`;
+            resp = await this.safeInvoke(retryPrompt);
+            code = this.sanitizeSelectorsOutput(resp);
+        }
+        //
+        // // Auto-Repair (robuste Helfer + kaputte name-Selectoren fixen + *Input() entfernen)
+        code = this.autoFixSelectors(code);
+        //
+        if (!this.looksLikeSelectors(code)) {
+            this.output.appendLine('❌ Selektoren weiterhin ungültig. Vorschau:');
+            this.output.appendLine(code.slice(0, 300));
+            throw new Error('Model did not return valid selectors code.');
+        }
+
+        this.output.appendLine('✅ Selektoren generiert.');
+        this.output.appendLine(`📦 Selektoren-Vorschau:\n${code.slice(0, 300)}\n…`);
+        return code;
     }
 
-    // Auto-repair via LLM
-    const fixPrompt = new CodeFixPrompt().getPrompt(code);
-    code = await this.safeInvoke(fixPrompt);
-    code = this.sanitizeSelectorsOutput(code);
 
-    // Deterministic auto-fixes
-    code = this.autoFixSelectors(code);
-
-    if (!this.looksLikeSelectors(code)) {
-      this.output.appendLine('❌ Selektoren weiterhin ungültig. Vorschau:');
-      this.output.appendLine(code.slice(0, 300));
-      throw new Error('Model did not return valid selectors code.');
-    }
-
-    this.output.appendLine('✅ Selektoren generiert.');
-    this.output.appendLine(`📦 Selektoren-Vorschau:\n${code.slice(0, 300)}\n…`);
-    return code;
-  }
-
-  // ───────────────────────────
+    // ───────────────────────────
   // Sanitizers & Validators
   // ───────────────────────────
   private extractFirstCodeBlock(text: string): string | null {
@@ -68,13 +64,18 @@ export class SelectorsAgent extends BaseAgent {
     return code;
   }
 
-  private looksLikeSelectors(code: string): boolean {
-    const hasExportFunction = /(export\s+function\s+\w+\s*\(|export\s+const\s+\w+\s*=)/.test(code);
-    const hasReturnCy       = /return\s+cy\./.test(code);
-    return hasExportFunction && hasReturnCy;
-  }
+    private looksLikeSelectors(code: string): boolean {
+        const hasExportFunction = /(export\s+function\s+\w+\s*\(|export\s+const\s+\w+\s*=\s*\([\w\s:,?=]*\)\s*=>)/.test(code);
+        const hasVisitHomepage  = /export\s+function\s+visitHomepage\s*\(\)\s*\{\s*return\s+cy\.visit\(/.test(code);
+        const hasReturnCy       = /return\s+cy\./.test(code);
+        const isNotConstCss     = !/export\s+const\s+\w+\s*=\s*['"`][^'"`]+['"`]\s*;/.test(code);
+        const hasNoGWTImport    = !/(^|\n)\s*import\s+.*Given.*When.*Then/.test(code);
 
-  // ───────────────────────────
+        return hasExportFunction && hasVisitHomepage && hasReturnCy && isNotConstCss && hasNoGWTImport;
+    }
+
+
+    // ───────────────────────────
   // Deterministic Fixes
   // ───────────────────────────
   private autoFixSelectors(code: string): string {
