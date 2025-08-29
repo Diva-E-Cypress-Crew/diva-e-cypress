@@ -6,15 +6,14 @@ import puppeteer from 'puppeteer';
 
 import {ChatOllama} from '@langchain/ollama';
 
-import {StepsPrompt} from '../prompts/steps_instruction';
-import {CodeFixPrompt} from "../prompts/code_fix";
 import {htmlPreprocessor} from './htmlPreprocessor';
 import {SelectorsAgent} from "./agents/selectorsAgent";
 import {StepsAgent} from "./agents/stepsAgent";
+import {RefactorAgent} from "./agents/codeRefactorAgent";
 
 export class Orchestrator {
-  private model: ChatOllama;
-  private output: vscode.OutputChannel;
+  private readonly model: ChatOllama;
+  private readonly output: vscode.OutputChannel;
 
   constructor(
     private featureFile: string,
@@ -38,17 +37,15 @@ export class Orchestrator {
     // Selektoren erzeugen
     const selectorsAgent = new SelectorsAgent(this.model, this.output);
     let selectorsTs = await selectorsAgent.generate(feature, htmlForPrompt);
-
-    //const codeFixPrompt = new CodeFixPrompt().getPrompt(selectorsTs);
-    //selectorsTs = await codeRefactorAgent.invokeCodeRefactor(selectorsTs);
+    const codeRefactorAgent = new RefactorAgent(this.model, this.output);
+    selectorsTs = await codeRefactorAgent.invokeCodeRefactor(selectorsTs);
 
     this.output.appendLine(`📦 Selektoren-Vorschau:\n${selectorsTs}\n…`);
-    // Steps erzeugen
 
+
+    // Steps erzeugen
     const stepsAgent = new StepsAgent(this.model, this.output);
     let stepsTs = await stepsAgent.generate(feature, htmlForPrompt);
-
-
 
 
     // Dateien schreiben (common/selectors + common/steps)
@@ -92,39 +89,5 @@ export class Orchestrator {
       this.output.appendLine(`✅ Vollständiges HTML geholt (Länge: ${html.length})`);
       return html;
     }
-  }
-
-  // ───────────────────────────────────────────────────────────────
-  // Sanitizer & Validator
-  // ───────────────────────────────────────────────────────────────
-
-  private extractFirstCodeBlock(text: string): string | null {
-    const m = text.match(/```[a-zA-Z]*\s*([\s\S]*?)```/);
-    return m ? m[1].trim() : null;
-  }
-
-  private sanitizeStepsOutput(text: string): string {
-    let code = this.extractFirstCodeBlock(text) ?? text;
-
-    const firstImport = code.search(/^\s*import\s+/m);
-    if (firstImport > 0) {code = code.slice(firstImport);}
-
-    code = code
-      .replace(/\bcy\.visitHomepage\s*\(\s*\)\s*;?/g, 'sel.visitHomepage();')
-      .replace(/cy\.get\s*\(\s*sel\./g, 'sel.')
-      .replace(/from\s+['"]\.\/orchestrator_selectors['"]/g, "from '../selectors/orchestrator_selectors'")
-      .replace(/cy\.url\([^)]*\)\.[^;]+;?/gi, '')
-      .replace(/cy\.location\([^)]*\)\.[^;]+;?/gi, '')
-      // Scenario Outline: "<...>" → {string} in Step-Patterns
-      .replace(
-        /(Given|When|Then)\(\s*(['"])([^'"]*?)<[^>]+>([^'"]*?)\2\s*,\s*\(\s*\)\s*=>/g,
-        "$1($2$3{string}$4$2, (text) =>"
-      )
-      .replace(
-        /(Given|When|Then)\(\s*(['"])([^'"]*?)<[^>]+>([^'"]*?)\2\s*,\s*\(([^)]*)\)\s*=>/g,
-        "$1($2$3{string}$4$2, ($5) =>"
-      );
-
-    return code.trim();
   }
 }
