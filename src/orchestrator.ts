@@ -11,6 +11,7 @@ import {SelectorsAgent} from "./agents/selectorsAgent";
 import {StepsAgent} from "./agents/stepsAgent";
 import {RefactorAgent} from "./agents/codeRefactorAgent";
 import {generateStepDefinitions} from "./stepsGenerator";
+import {switchUrl} from "./switchUrl";
 
 export class Orchestrator {
   private readonly model: ChatOllama;
@@ -29,6 +30,14 @@ export class Orchestrator {
 
   public async run(): Promise<void> {
     this.output.appendLine(`🔍 Starte Orchestrator für: ${this.featureFile}`);
+
+    const newUrl = switchUrl(this.featureFile, this.output);
+
+    if (newUrl) {
+      this.baseUrl = newUrl;
+    }
+
+    this.output.appendLine(`🔍 URL: ${this.baseUrl}`);
 
     const feature = fs.readFileSync(this.featureFile, 'utf-8');
     this.output.appendLine(`🔢 Feature-Länge: ${feature.length} Zeichen`);
