@@ -36,7 +36,7 @@ export function generateStepDefinitions(
 
     const steps = Array.from(stepsSet).map((entry) => {
         const [kw, text] = entry.split(":", 2);
-        return `${kw.toLowerCase()}("${text}", () => {\n  // TODO: implement step\n});\n`;
+        return `${kw}("${text}", () => {\n  // TODO: implement step\n});\n`;
     });
 
     return `import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";\n\n` + steps.join("\n");

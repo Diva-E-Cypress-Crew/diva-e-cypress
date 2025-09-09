@@ -64,11 +64,17 @@ export class Orchestrator {
 
     const selPath = path.join(selectorsDir, 'orchestrator_selectors.ts');
     const stpPath = path.join(stepsDir,     'orchestrator_steps.ts');
+    const stpTempPath = path.join(stepsDir,     'orchestrator_steps_temp.ts');
 
     fs.writeFileSync(selPath, selectorsTs, 'utf-8');
     this.output.appendLine(`📄 Selektoren geschrieben: ${selPath}`);
 
     fs.writeFileSync(stpPath, stepsTs, 'utf-8');
+    fs.writeFileSync(stpPath, stepsTs, 'utf-8');
+
+    // Output der tempSteps falls benötigt
+    // fs.writeFileSync(stpTempPath, tempStepsTs, 'utf-8');
+
     this.output.appendLine(`📄 Steps geschrieben: ${stpPath}`);
   }
 
