@@ -23,29 +23,41 @@ export class StepsPrompt extends PromptTemplate {
    * @readonly
    */
   protected readonly instruction = `
-You are a Cypress step-definition generator. You will receive:
-
-1) A Gherkin feature snippet (complete .feature text).
-2) The relative path to the selectors file (e.g. '../selectors/orchestrator_selectors').
-3) The full TypeScript content of that selectors file, which exports:
-   - visitHomepage(), clickLabel(label), getLabel(label), getHeading(label), plus optional element helpers.
+You are a Cypress step-definition generator. You will be given the following inputs:
+- Feature text: a complete .feature Gherkin file.
+- Selectors module path: e.g. "../selectors/orchestrator_selectors".
+- Selectors file content: TypeScript code that exports helper functions such as:
+    - visitHomepage()
+    - clickLabel(label)
+    - getLabel(label)
+    - getHeading(label)
+    - (plus optional element helpers)
+- Temporary step file content: an auto-generated step-definition skeleton that contains one step per line from the feature, with // TODO: implement step placeholders.
 
 Your task:
-- Generate a complete TypeScript step-definition file that:
+- Replace the placeholder step bodies in the step-definition file with working Cypress code:
   1. Starts with exactly:
        import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-       import * as sel from '{{selectorsModulePath}}';
-  2. Create **one explicit step-definition PER step line** in the feature.
-     **Do NOT** use regex or Cucumber parameters like {string}, {int}, {text}. Reproduce the step text **literally**.
-  3. Mapping rules (MUST follow):
-       • "Given the Customer is on the homepage"          → return sel.visitHomepage();
-       • "When he clicks \"X\"" or "When he clicks X"      → return sel.clickLabel('X');
-       • "Then \"X\" should be displayed"                  → return sel.getHeading('X').should('be.visible');
-         If it's clearly not a heading, use: return sel.getLabel('X').should('be.visible');
-       • If a step mentions a path like "/xyz", NEVER assert exact URL equality.
-         Use: return cy.location('pathname', { timeout: 10000 }).should('include', '/xyz');
-  4. Each step body is a **single returned Cypress chain** (use 'return'). **No if/else, no ternaries, no loops.**
-  5. Do not import anything else. No comments. No JSON. No code fences.
+        import * as sel from '{{selectorsModulePath}}';
+  2. For each step line in the feature, replace the // TODO with exactly one Cypress chain using the helpers from the selectors file. 
+      Always return the chain (no await, no plain cy. without return). 
+      Do not leave any step unimplemented.
+  3. Do not modify the step text.
+      No regex.
+      No parameter placeholders ({string}, {int}, {word}, etc).
+      Each step definition must reproduce the literal step text as written in the feature.
+  4. Mapping rules (strict):
+      Given the Customer is on the homepage → return sel.visitHomepage();
+      When he clicks "X" or When he clicks X → return sel.clickLabel('X');
+      Then "X" should be displayed → return sel.getHeading('X').should('be.visible');
+      If "X" is not a heading, use: → return sel.getLabel('X').should('be.visible');
+      If a step refers to a URL/path like /xyz, never check equality. Use: → return cy.location('pathname', { timeout: 10000 }).should('include', '/xyz');
+      Keep in mind X is a placeholder, you would use the actual names given in the step definitions
+  5. No control flow.
+      No if/else.
+      No loops.
+      No ternaries.
+  6. No extra imports, no comments, no code fences, no JSON.
 
 Feature:
 {{featureText}}
@@ -55,6 +67,9 @@ Selectors Module Path:
 
 Selectors File Content:
 {{selectorsTs}}
+
+Steps File Content:
+{{tempStepsTs}}
 `;
 
 
@@ -64,6 +79,7 @@ Selectors File Content:
    * @param {string} featureText - Der Gherkin-Featuretext (z. B. aus einer `.feature`-Datei)
    * @param {string} selectorsModulePath - Relativer Pfad zur Selektoren-Datei
    * @param {string} selectorsTs - TypeScript-Inhalt der Selektoren-Datei
+   * @param {string} tempStepsTs - TypeScript-Inhalt der vorgeschriebenen Steps-Datei
    * @returns {string} Der formatierte Prompt-Text zur Weitergabe an ein LLM
    *
    * @example
@@ -75,10 +91,7 @@ Selectors File Content:
    * );
    */
   public getPrompt(
-    featureText: string,
-    selectorsModulePath: string,
-    selectorsTs: string
-  ): string {
-    return this.render({ featureText, selectorsModulePath, selectorsTs });
+      featureText: string, selectorsModulePath: string, selectorsTs: string, tempStepsTs: string  ): string {
+    return this.render({ featureText, selectorsModulePath, selectorsTs , tempStepsTs});
   }
 }

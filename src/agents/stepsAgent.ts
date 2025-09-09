@@ -9,11 +9,12 @@ export class StepsAgent extends BaseAgent {
         super(model, output);
     }
 
-    async generate(feature: string, selectorsTs: string): Promise<string> {
+    async generate(feature: string, selectorsTs: string, tempStepsTs: string): Promise<string> {
         const stepsPrompt = new StepsPrompt().getPrompt(
             feature,
             "../selectors/orchestrator_selectors",
-            selectorsTs
+            selectorsTs,
+            tempStepsTs
         );
 
         return this.invokeForSteps(stepsPrompt);

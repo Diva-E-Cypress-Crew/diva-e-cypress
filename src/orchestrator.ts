@@ -10,6 +10,7 @@ import {htmlPreprocessor} from './htmlPreprocessor';
 import {SelectorsAgent} from "./agents/selectorsAgent";
 import {StepsAgent} from "./agents/stepsAgent";
 import {RefactorAgent} from "./agents/codeRefactorAgent";
+import {generateStepDefinitions} from "./stepsGenerator";
 
 export class Orchestrator {
   private readonly model: ChatOllama;
@@ -45,8 +46,11 @@ export class Orchestrator {
 
 
     // Steps erzeugen
+
+    let tempStepsTs = generateStepDefinitions(this.featureFile);
+
     const stepsAgent = new StepsAgent(this.model, this.output);
-    let stepsTs = await stepsAgent.generate(feature, htmlForPrompt);
+    let stepsTs = await stepsAgent.generate(feature, selectorsTs, tempStepsTs);
 
 
     // Dateien schreiben (common/selectors + common/steps)
