@@ -10,6 +10,7 @@ import {htmlPreprocessor} from './htmlPreprocessor';
 import {SelectorsAgent} from "./agents/selectorsAgent";
 import {StepsAgent} from "./agents/stepsAgent";
 import {RefactorAgent} from "./agents/codeRefactorAgent";
+import {generateStepDefinitions} from "./stepsGenerator";
 
 export class Orchestrator {
   private readonly model: ChatOllama;
@@ -45,8 +46,11 @@ export class Orchestrator {
 
 
     // Steps erzeugen
+
+    let tempStepsTs = generateStepDefinitions(this.featureFile);
+
     const stepsAgent = new StepsAgent(this.model, this.output);
-    let stepsTs = await stepsAgent.generate(feature, htmlForPrompt);
+    let stepsTs = await stepsAgent.generate(feature, selectorsTs, tempStepsTs);
 
 
     // Dateien schreiben (common/selectors + common/steps)
@@ -60,11 +64,17 @@ export class Orchestrator {
 
     const selPath = path.join(selectorsDir, 'orchestrator_selectors.ts');
     const stpPath = path.join(stepsDir,     'orchestrator_steps.ts');
+    const stpTempPath = path.join(stepsDir,     'orchestrator_steps_temp.ts');
 
     fs.writeFileSync(selPath, selectorsTs, 'utf-8');
     this.output.appendLine(`📄 Selektoren geschrieben: ${selPath}`);
 
     fs.writeFileSync(stpPath, stepsTs, 'utf-8');
+    fs.writeFileSync(stpPath, stepsTs, 'utf-8');
+
+    // Output der tempSteps falls benötigt
+    // fs.writeFileSync(stpTempPath, tempStepsTs, 'utf-8');
+
     this.output.appendLine(`📄 Steps geschrieben: ${stpPath}`);
   }
 
