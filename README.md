@@ -55,16 +55,44 @@ ollama run llama3.2
 
 **Hinweise:**  
 - Für Änderungen an zentralen Konfigurationsdateien bitte immer im Team abstimmen.  
-- Die wichtigsten NPM-Kommandos findest du in `package.json` unter `"scripts"` (z.B. `npm run docs` für Projektdokumentation).
+- Die wichtigsten NPM-Kommandos können in `package.json` unter `"scripts"` gefunden werden (z.B. `npm run docs` für Projektdokumentation).
 
 ---
 
 ## Projektstruktur (Kurzüberblick)
 
+### Repository: "diva-e-cypress"
 - `src/`  
   Enthält die Hauptlogik, Agents und Orchestrator für die KI-gestützte Testgenerierung.
 - `prompts/`  
   Prompt-Templates für die KI-Befehle (Selectors, Steps, Verification).
+
+### Repository: "diva-e-cypress-tests"
+Beinhaltet die eigentliche Testumgebung mit den .feature - und generierten Dateien.
+
+- `e2e/common/selectors/`
+Enthält die automatisch generierten Selector-Dateien.
+- `e2e/common/steps/`
+Enthält die automatisch generierten Steps-Dateien.
+- `e2e/demo/`
+Beispiel .feature-Datei (demo.feature) für Testzwecke.
+- `e2e/features/`
+Weitere .feature-Dateien.
+
+---
+
+## Gesamtworkflow
+
+1. Repo "diva-e-cypress" öffnen
+2. Repo "diva-e-cypress-tests" öffnen
+  - kann mit f5 geöffnet werden
+3. LLM starten
+  - Das LLM mit dem die Selectors - und Steps Dateien generiert werden sollen muss gestartet werden (z.B. Ollama)
+4. Feature-Datei auswählen
+  - Rechtsklick auf eine .feature-Datei (z. B. demo.feature) und per Extension den Prozess starten
+5. Generierung
+  - Die Selectors - und Steps Dateien werden nun erzeugt und in den enstsprechenden Ordnern abgelegt
+6. Den Cypress-Test starten mit `npx cypress open`
 
 ---
 
