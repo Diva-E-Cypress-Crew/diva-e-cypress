@@ -6,7 +6,9 @@ import { PromptTemplate } from './promptTemplate';
  * Assertions zu überprüfen und ggf. zu ergänzen.
  *
  * **Einsatzgebiet:** Automatisierte Qualitätssicherung von generierten End-to-End-Tests durch KI.
- *
+ * @remarks
+ * - Wird derzeit nicht genutzt, da kein verfizierender Agent implementiert ist.
+ * 
  * @extends {PromptTemplate}
  */
 export class VerificationPrompt extends PromptTemplate {

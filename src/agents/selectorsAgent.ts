@@ -1,3 +1,18 @@
+/**
+ * Erzeugt aus einem Gherkin-Feature und einem HTML-Snapshot
+ * **Cypress-Selektoren (TypeScript-Helperfunktionen)**.
+ *
+ * Ablauf (vereinfacht):
+ * 1) Prompt konstruieren ({@link SelectorsPrompt}) und Modell aufrufen (über {@link BaseAgent.safeInvoke}).
+ * 2) Antwort **sanitizen** (Codefences, Imports, Kommentare entfernen; ab erstem `export` schneiden).
+ * 3) Per Heuristik prüfen ({@link looksLikeSelectors}), ob es wie gültiger Selektoren-Code aussieht.
+ * 4) Falls nein: **Retry** mit strengerer Instruktion.
+ * 5) **Deterministische Auto-Fixes** anwenden ({@link autoFixSelectors}) und erneut prüfen.
+ *
+ * Hinweise:
+ * - Erwartungen an die Modellantwort: **nur TypeScript-Code**, keine Erklärtexte/Markdown.
+ * - Validierung achtet u. a. auf `visitHomepage`, `return cy.` und keine CSS-KonstantenExports.
+ */
 import * as vscode from 'vscode';
 import { ChatOllama } from '@langchain/ollama';
 
@@ -5,11 +20,28 @@ import { CodeFixPrompt } from '../../prompts/code_fix';
 import { SelectorsPrompt } from '../../prompts/selectors_instruction';
 import {BaseAgent} from "./baseAgent";
 
+/**
+ * Agent zur Generierung/Normalisierung von **Cypress-Selektoren**.
+ * Baut Prompts aus Feature + HTML, ruft das LLM über die Basisklasse auf
+ * und stellt sicher, dass am Ende **reiner TS-Code** zurückgegeben wird.
+ */
 export class SelectorsAgent extends BaseAgent {
+  /**
+   * @param model  Vorbereitete Chat-Instanz (z. B. `new ChatOllama({ model: 'llama3.2', temperature: 0 })`).
+   * @param output VS Code Output-Channel für Logs/Status.
+   */
   constructor(model: ChatOllama, output: vscode.OutputChannel) {
     super(model, output);
   }
 
+  /**
+   * Baut den {@link SelectorsPrompt} aus Gherkin-Feature und HTML-Snapshot
+   * und startet die Generierung.
+   *
+   * @param feature Inhalt der `.feature`-Datei (Gherkin).
+   * @param html    HTML-Snapshot der Zielseite.
+   * @returns       Bereinigter, validierter und ggf. auto-reparierter TypeScript-Code (nur Code, keine Erklärungen).
+   */
   async generate(feature: string, html: string): Promise<string> {
     const prompt = new SelectorsPrompt().getPrompt(feature, html);
     return this.invokeForSelectors(prompt);
@@ -18,6 +50,17 @@ export class SelectorsAgent extends BaseAgent {
   // ───────────────────────────
   // Prompt handler
   // ───────────────────────────
+
+  /**
+   * Führt den Modellaufruf aus, **sanitizt** die Antwort, prüft per Heuristik,
+   * versucht bei Bedarf einen **Retry** mit strenger Instruktion und
+   * führt anschließend deterministische **Auto-Fixes** aus.
+   *
+   * @param prompt Vollständig formatierter Prompt-String.
+   * @returns      Finaler Selektoren-Code als String.
+   * @throws       Wenn auch nach Retry + Auto-Fix kein gültiger Selektoren-Code erkennbar ist.
+   * @private
+   */
     private async invokeForSelectors(prompt: string): Promise<string> {
         this.output.appendLine('▶ Erzeuge Selektoren…');
         this.output.appendLine(`🧩 SelectorsPrompt-Länge: ${prompt.length}`);
@@ -47,14 +90,34 @@ export class SelectorsAgent extends BaseAgent {
     }
 
 
-    // ───────────────────────────
+  // ───────────────────────────
   // Sanitizers & Validators
   // ───────────────────────────
+
+  /**
+   * Extrahiert den **ersten Markdown-Codeblock** (``` … ```).
+   * Falls keiner vorhanden ist, wird `null` zurückgegeben.
+   *
+   * @param text Modellantwort (Rohtext).
+   * @returns    Inhalt des ersten Codeblocks oder `null`.
+   * @private
+   */
   private extractFirstCodeBlock(text: string): string | null {
     const m = text.match(/```[a-zA-Z]*\s*([\s\S]*?)```/);
     return m ? m[1].trim() : null;
   }
 
+  /**
+   * Wandelt Modellantwort in **reinen TS-Code** um:
+   * - Codefences entfernen (nimmt ggf. nur Inhalt des ersten Blocks),
+   * - vorangestellten Text **ab dem ersten `export`** abschneiden,
+   * - Top-Level-`import`-Zeilen entfernen,
+   * - Zeilenkommentare entfernen und trimmen.
+   *
+   * @param text Modellantwort (Rohtext).
+   * @returns    Bereinigter TypeScript-Code.
+   * @private
+   */
   private sanitizeSelectorsOutput(text: string): string {
     let code = this.extractFirstCodeBlock(text) ?? text;
     const firstExport = code.search(/^\s*export\s+/m);
@@ -64,6 +127,18 @@ export class SelectorsAgent extends BaseAgent {
     return code;
   }
 
+  /**
+   * Heuristik, ob der Text wie **gültiger Selektoren-Code** aussieht:
+   * - Mindestens eine exportierte Funktion,
+   * - Pflicht-Helper `visitHomepage` vorhanden,
+   * - enthält `return cy.`,
+   * - **keine** `export const x = 'css'`-Konstanten,
+   * - **kein** GWT-Import (`Given/When/Then`).
+   *
+   * @param code Kandidat-Code.
+   * @returns    `true`, wenn der Code plausibel ist; sonst `false`.
+   * @private
+   */
     private looksLikeSelectors(code: string): boolean {
         const hasExportFunction = /(export\s+function\s+\w+\s*\(|export\s+const\s+\w+\s*=\s*\([\w\s:,?=]*\)\s*=>)/.test(code);
         const hasVisitHomepage  = /export\s+function\s+visitHomepage\s*\(\)\s*\{\s*return\s+cy\.visit\(/.test(code);
@@ -75,9 +150,24 @@ export class SelectorsAgent extends BaseAgent {
     }
 
 
-    // ───────────────────────────
+  // ───────────────────────────
   // Deterministic Fixes
   // ───────────────────────────
+
+  /**
+   * **Deterministische Reparaturen** des gelieferten Codes:
+   * - `export const 'css'` → Funktions-Helper mit `cy.get('css')`
+   * - Pflicht-Helper ergänzen: `visitHomepage`, `clickLabel`, `getLabel`, `getHeading`, `inputByLabel`
+   * - fehlerhafte Attribut-Selektoren reparieren
+   * - Reste nach `cy.get(...)` entfernen
+   * - Fragmente wie `q"]';` bereinigen
+   * - generische `*Input()`-Funktionen entfernen (wir nutzen `inputByLabel`)
+   * - Safety-Net gegen `undefined="undefined"`
+   *
+   * @param code Ausgangscode aus dem Modell.
+   * @returns    Bereinigter/normalisierter TypeScript-Code.
+   * @private
+   */
   private autoFixSelectors(code: string): string {
     let out = code;
 
