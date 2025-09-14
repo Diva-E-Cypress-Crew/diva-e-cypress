@@ -2,6 +2,7 @@
   "entryPoints": ["prompts", "src"],
   "entryPointStrategy": "expand",
   "out": "docs",
+  "tsconfig": "tsconfig.json",
   "includeVersion": true,
   "excludePrivate": true,
   "excludeExternals": true,
