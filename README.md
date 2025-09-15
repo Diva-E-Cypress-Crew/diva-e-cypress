@@ -25,6 +25,7 @@
 
 ## KanBan - Board
 [Miro(veraltet)](https://miro.com/app/board/uXjVIMEqWZo=/?share_link_id=682357976358)
+
 [Trello](https://trello.com/b/JGFZBSRz/projekt-wm)
 ## Setup
 ```bash
@@ -107,8 +108,17 @@ Beispiel .feature-Datei (demo.feature) für Testzwecke.
 - `e2e/features/`
 Weitere .feature-Dateien, welche eine Gherkin-Logik enthalten die genau so befolgt werden muss um einen funktionierenden Cypress-Test zu gewährleisten.
 
-``` Beispiel einer Muster-Feature-Datei:
 
+#### Beispiel einer Muster-Feature-Datei:
+``` 
+# url: https://meag.gitlab.diva-e.com/investmentrechner-2023/
+
+Feature: MEAG Investmentrechner – Button-Klick (minimal)
+
+  Scenario: Klick auf "Anlegen"-Tile
+    Given the Customer is on the homepage
+    When  he clicks the "Anlegen" button
+    Then  the "Was möchten Sie berechnen?" title should be displayed
 ```
 
 ---
@@ -117,19 +127,19 @@ Weitere .feature-Dateien, welche eine Gherkin-Logik enthalten die genau so befol
 
 1. Repo "diva-e-cypress" öffnen
 2. Repo "diva-e-cypress-tests" öffnen
-  - kann mit f5 geöffnet werden (falls es nicht auf Anhieb funktioniert, stellen Sie sicher, dass eine .ts geöffnet ist)
+    - kann mit f5 geöffnet werden (falls es nicht auf Anhieb funktioniert, stellen Sie sicher, dass eine .ts geöffnet ist)
 3. LLM starten
-  - Das LLM mit dem die Selectors - und Steps Dateien generiert werden sollen muss gestartet werden (z.B. Ollama)
-  - `ollama run llama3.2`
+    - Das LLM mit dem die Selectors - und Steps Dateien generiert werden sollen muss gestartet werden (z.B. Ollama)
+    - `ollama run llama3.2`
 4. Feature-Datei auswählen
-  - Rechtsklick auf eine .feature-Datei (z. B. demo.feature) und per Extension den Prozess starten
-  - Öffnen mit "Generate Cypress Test (Ollama)"
-  - Die anderen Auswahlmöglichkeiten sind aus Testzwecken noch enthalten und können mit anderen LLMs ersetzt werden, falls gewünscht.
+    - Rechtsklick auf eine .feature-Datei (z. B. demo.feature) und per Extension den Prozess starten
+    - Öffnen mit "Generate Cypress Test (Ollama)"
+    - Die anderen Auswahlmöglichkeiten sind aus Testzwecken noch enthalten und können mit anderen LLMs ersetzt werden, falls gewünscht.
 5. Generierung
-  - Die Selectors - und Steps Dateien werden nun erzeugt und in den enstsprechenden Ordnern abgelegt.
-  - Die Generierung kann über das Terminal verfolgt werden - Status.
+    - Die Selectors - und Steps Dateien werden nun erzeugt und in den enstsprechenden Ordnern abgelegt.
+    - Die Generierung kann über das Terminal verfolgt werden - Status.
 6. Den Cypress-Test starten mit `npx cypress open`
-  - Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.
+    - Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.
 
 ---
 
@@ -139,7 +149,9 @@ Weitere .feature-Dateien, welche eine Gherkin-Logik enthalten die genau so befol
   - Legt Testfälle in Gherkin-Syntax fest, die anschließend von der KI verarbeitet werden.
   - Stellen Sie das richtige Format sicher! Eine Beispiel Feature liegt im Test-Projekt.
   - Gherkin-Logik sollte verfolgt werden und die URL für die gewünschte Webseite sollte an der passenden Stelle im richtigen Format liegen.
-  - # url: https://blabla.de/
+  ``` 
+  # url: https://blabla.de/
+  ``` 
 
 - **Automatische Dokumentation:**  
   Mit `npm run docs` (bzw. per TypeDoc) wird die gesamte JSDoc-Kommentierung zu einer HTML-Dokumentation generiert (im Ordner `docs/`).
