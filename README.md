@@ -5,10 +5,15 @@
 ## Automatisches Erstellen von Cypress Tests unter Verwendung von KI Tools
 - Es soll ein Tool entwickelt werden, das eine bestehende Testanforderung auf Basis eines Cucumber Files für eine gegebene Testanwendung analysiert und daraus entsprechend Cypress Tests erzeugt.
 ### Ziel des Projekts:
-- 
+Im Rahmen des Moduls "Projekt Wissensmanagement" an der HTW Berlin war das Ziel, zusammen mit der Firma diva-e ein Tool zu entwickeln, das mithilfe von LLMs (Large Language Models) automatisiert Cypress Tests generiert. Basis hierfür sind Testanforderungen, die in Form von Cucumber-Feature-Dateien vorliegen. Ziel war es, eine Visual Studio Code Extension zu erstellen, mithilfe welcher Nutzer durch einen einfachen Rechtsklick auf eine Feature-Datei den Prozess der Testgenerierung starten können. 
+
+Das Projekt diente dazu, einen Prototypen zu entwickeln, der die Machbarkeit und Sinnhaftigkeit eines solchen Tools demonstriert. Ein weiteres Ziel war es, die Performance von lokalen LLMs über Ollama für einen derartigen Anwendungsfall zu überprüfen.
 
 ### Mögliche zukünftige Verbesserungen:
-- 
+#### - Verwendung leistungsstärkerer LLMs:
+  Es hat sich im Laufe des Projekts gezeigt, das es grundsätzlich möglich ist, Cypress Tests automatisiert zu generieren. Allerdings sind aufgrund der Begrenzungen der lokalen LLMs, insbesondere die Kontextlänge, bisher keine komplexen Testfälle zuverlässig umsetzbar. Daher wäre es interessant, mit leistungsstarken Cloud-basierten LLMs (bspw. GPT-5, Gemini 2.5 Pro) zu überprüfen, ob diese in der Lage sind, auch komplexere Cypress Tests zu generieren.
+#### - Implementierung einer grafischen Benutzeroberfläche (GUI):
+  Ebenfalls wäre es denkbar, über eine GUI die Wahl verschiedener LLMs zu ermöglichen. Außerdem ist es aktuell so, dass die entsprechende URL am Anfang der Feature-Datei angegeben werden muss. Die Wahl der URL könnte hier auch über diese GUI erfolgen.
 
 ### Anmerkungen:
 - 
