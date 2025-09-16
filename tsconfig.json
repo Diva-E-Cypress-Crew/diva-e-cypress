@@ -1,18 +1,43 @@
 {
   "compilerOptions": {
+    // Modulauflösung für Node.js (ESM/CJS-Mix). Passt zu modernen Toolchains.
     "module": "Node16",
+
+    // Ziel-Sprachlevel (z. B. optional chaining etc. vorhanden)
     "target": "ES2022",
+
+    // Kompilierte JS-Dateien landen hier
     "outDir": "out",
+
+    // Standardbibliotheken: moderne JS-Features + DOM-Typen (für Puppeteer/Browser-Typen)
     "lib": ["ES2022", "DOM"],
+
+    // SourceMaps für Debugging im VS Code
     "sourceMap": true,
+
+    // Strikter Typmodus (empfohlen)
     "strict": true,
+
+    // Warnt, wenn eine Funktion ohne Rückgabewert endet
     "noImplicitReturns": true,
+
+    // Verhindert „Durchfallen“ in switch-cases ohne break
     "noFallthroughCasesInSwitch": true,
+
+    // Meldet unbenutzte Parameter (hält Signaturen sauber)
     "noUnusedParameters": true,
+
+    // Erlaubt `import x from 'cjs'` für CommonJS-Module
     "esModuleInterop": true,
+
+    // Erlaubt `import data from './foo.json'`
     "resolveJsonModule": true,
+
+    // Überspringt Typprüfung externer d.ts (schnelleres Build)
     "skipLibCheck": true
   },
+
+  // Diese Ordner werden vom Compiler erfasst
   "include": [
     "src",
     "prompts"

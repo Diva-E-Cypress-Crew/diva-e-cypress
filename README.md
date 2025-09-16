@@ -94,6 +94,7 @@ ollama run llama3.2
 
 - `prompts/`  
   Prompt-Templates für die KI-Befehle (Selectors, Steps, Verification).
+  Einfach modifizierbar, für Umstrukturierung oder Wechseln von LLMs.
 
 ### Repository: "diva-e-cypress-tests"
 Beinhaltet die eigentliche Testumgebung mit den .feature - und generierten Dateien.

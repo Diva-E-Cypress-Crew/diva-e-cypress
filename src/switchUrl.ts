@@ -1,11 +1,45 @@
+/**
+ * Aktualisiert die `baseUrl` in `cypress.config.ts` anhand eines Hinweises in der
+ * **ersten Zeile** einer Gherkin-Feature-Datei.
+ *
+ * Erwartetes Format in Zeile 1 der Feature-Datei:
+ *   `# url: https://example.org/pfad`
+ *
+ * Ablauf:
+ * 1) Feature-Datei lesen und in der **ersten Zeile** nach einem `# url: ...`-Muster suchen.
+ * 2) Ausgehend vom Feature-Pfad den Cypress-Ordner sowie den Pfad zu `cypress.config.ts`
+ *    im Projektroot auflösen.
+ * 3) In der Config die Zeile mit `baseUrl: '...'` per Regex finden und den Wert ersetzen.
+ * 4) Alle Schritte ins `OutputChannel` loggen; bei Erfolg die neue URL zurückgeben.
+ *
+ * Hinweise:
+ * - Wenn keine URL in Zeile 1 steht, wird **nichts** geändert und `null` zurückgegeben.
+ * - Wenn `cypress.config.ts` nicht existiert oder die Regex keine `baseUrl` findet,
+ *   wird ebenfalls **nicht** geändert und `null` zurückgegeben.
+ * - Die Regex akzeptiert einfache/doppelte/backtick Anführungszeichen und erwartet ein
+ *   **abschließendes Komma** nach `baseUrl`.
+ */
+ 
 // src/utils/updateCypressConfig.ts
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
 
 /**
- * Reads the first line of the feature file, extracts URL (if present),
- * then updates cypress.config.ts with that URL as baseUrl.
+ * Liest die erste Zeile der Feature-Datei, extrahiert (falls vorhanden) die URL im
+ * Format `# url: ...` und ersetzt in `cypress.config.ts` die `baseUrl` durch diese URL.
+ *
+ * @param featureFile Vollständiger Pfad zur `.feature`-Datei.
+ * @param output      VS Code Output-Channel für Status-/Fehlermeldungen.
+ * @returns           Die neu gesetzte URL bei Erfolg, sonst `null`.
+ *
+ * @example
+ * ```ts
+ * const newUrl = switchUrl('/abs/path/to/cypress/e2e/features/foo.feature', output);
+ * if (newUrl) {
+ *   output.appendLine(`Neue baseUrl: ${newUrl}`);
+ * }
+ * ```
  */
 export function switchUrl(
     featureFile: string,
