@@ -28,11 +28,8 @@ Das Projekt diente dazu, einen Prototypen zu entwickeln, der die Machbarkeit und
 - Felix Riedel         
 - Grace Leton Dodi
 
-## KanBan - Board
-[Miro(veraltet)](https://miro.com/app/board/uXjVIMEqWZo=/?share_link_id=682357976358)
-
-[Trello](https://trello.com/b/JGFZBSRz/projekt-wm)
 ## Setup
+
 ```bash
 npm install
 ```

@@ -1,8 +1,8 @@
 {
   "name": "diva-e-cypress",
   "displayName": "diva-e-cypress",
-  "description": "",
-  "version": "0.0.1",
+  "description": "Automatische Generierung von Cypress-Tests mit Open Source LLMs",
+  "version": "1.0",
   "engines": {
     "vscode": "^1.100.0"
   },
