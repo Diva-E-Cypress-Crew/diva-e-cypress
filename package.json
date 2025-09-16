@@ -2,7 +2,7 @@
   "name": "diva-e-cypress",
   "displayName": "diva-e-cypress",
   "description": "Automatische Generierung von Cypress-Tests mit Open Source LLMs",
-  "version": "1.0",
+  "version": "1.0.0",
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -10,38 +10,18 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:diva-e-cypress.generateWithOllama",
-    "onCommand:diva-e-cypress.generateWithHuggingface",
     "onCommand:diva-e-cypress.generateTest"
   ],
   "main": "out/src/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "diva-e-cypress.generateWithOllama",
-        "title": "Generate Cypress Test (Ollama)"
-      },
-      {
-        "command": "diva-e-cypress.generateWithHuggingface",
-        "title": "Generate Cypress Test (Huggingface)"
-      },
-      {
         "command": "diva-e-cypress.generateTest",
-        "title": "Generate Cypress Test (Orchestrator)"
+        "title": "Generate Cypress Test"
       }
     ],
     "menus": {
       "explorer/context": [
-        {
-          "command": "diva-e-cypress.generateWithOllama",
-          "when": "resourceExtname == .feature",
-          "group": "navigation"
-        },
-        {
-          "command": "diva-e-cypress.generateWithHuggingface",
-          "when": "resourceExtname == .feature",
-          "group": "navigation"
-        },
         {
           "command": "diva-e-cypress.generateTest",
           "when": "resourceExtname == .feature",
