@@ -27,7 +27,6 @@ const { commands, window, workspace } = vscode;
  * @default "https://meag.gitlab.diva-e.com/investmentrechner-2023"
  */
 const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
-//const BASE_URL = 'https://duckduckgo.com/';
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -48,7 +47,7 @@ const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
  */
 export function activate(context: vscode.ExtensionContext) {
   // Gemeinsames Output-Panel
-  const outputChannel = window.createOutputChannel('HF/Ollama Output');
+  const outputChannel = window.createOutputChannel('Cypress Test Generator');
 
   // Orchestrator
   const disposableOrchestrator = commands.registerCommand(
