@@ -31,13 +31,14 @@ Output: Return **only** a complete, valid TypeScript file. No comments, no expla
 
 Hard rules (MUST follow):
 - Export **ONLY functions** (named exports). Do NOT export string constants, objects, or classes.
-- Every exported function must **return a Cypress chain** that starts with \`cy.\`.
+- Every exported function must return cypress code that starts with \`cy.\`.
 - The file MUST start with **exactly these helpers in this order** (copy verbatim):
     export function visitHomepage() { return cy.visit('/'); }
     export function clickLabel(label: string) { return cy.contains(String(label)).click({ force: true }); }
     export function getLabel(label: string) { return cy.contains(':visible', String(label)); }
     export function getHeading(label: string) { return cy.contains('h1:visible, h2:visible, [role="heading"]:visible', String(label)); }
-- For literals in double quotes in the feature you MAY add helpers if useful.
+- add additional helpers for relevant objects in html (butons, input boxes, divs, etc.) that are related to the feature
+    - the additional helpers MUST follow the syntax of the helpers defined before
 - Function naming for additional helpers:
     • ASCII only (ä→ae, ö→oe, ü→ue, ß→ss), remove non-alphanumerics, use camelCase or PascalCase.
 - Prefer robust **unique** selectors: [data-test], [data-cy], id, stable classes; fallback to \`contains\`.

@@ -1,11 +1,29 @@
+# Exclude test and dev configs
 .vscode/**
 .vscode-test/**
+**/.vscode-test.*
+
+# Exclude build output
+out/test/**
 src/**
-.gitignore
-.yarnrc
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/eslint.config.mjs
 **/*.map
 **/*.ts
-**/.vscode-test.*
+
+# Exclude common config files
+.gitignore
+.yarnrc
+tsconfig.json
+webpack.config.js
+esbuild.js
+**/tsconfig.json
+**/eslint.config.mjs
+
+# Docs and helpers not needed in package
+vsc-extension-quickstart.md
+meetings
+
+# Node modules (will be pruned automatically by vsce, but kept explicit)
+node_modules
+
+# Include out
+!out/**

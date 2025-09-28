@@ -13,9 +13,23 @@
  */
 import * as vscode from 'vscode';
 import * as dotenv from 'dotenv';
-dotenv.config();
 
-import { Orchestrator } from './orchestrator';
+// Configure dotenv with explicit path handling
+try {
+  dotenv.config({ path: process.cwd() + '/.env' });
+} catch (error) {
+  console.log('No .env file found, continuing without it');
+}
+
+// Import orchestrator after dotenv setup
+let Orchestrator: any;
+try {
+  const orchestratorModule = require('./orchestrator');
+  Orchestrator = orchestratorModule.Orchestrator;
+  console.log('🚀 DIVA-E-CYPRESS: Orchestrator imported successfully');
+} catch (error) {
+  console.error('🚀 DIVA-E-CYPRESS: Failed to import Orchestrator:', error);
+}
 
 const { commands, window, workspace } = vscode;
 
@@ -27,7 +41,6 @@ const { commands, window, workspace } = vscode;
  * @default "https://meag.gitlab.diva-e.com/investmentrechner-2023"
  */
 const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
-//const BASE_URL = 'https://duckduckgo.com/';
 
 // noinspection JSUnusedGlobalSymbols
 /**
@@ -47,28 +60,40 @@ const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
  * @param context Von VS Code bereitgestellter Extension-Kontext (Disposables/Subscriptions).
  */
 export function activate(context: vscode.ExtensionContext) {
+  console.log('🚀 DIVA-E-CYPRESS: Extension is activating...');
+  
   // Gemeinsames Output-Panel
-  const outputChannel = window.createOutputChannel('HF/Ollama Output');
+  const outputChannel = window.createOutputChannel('Cypress Test Generator');
+  
+  console.log('🚀 DIVA-E-CYPRESS: About to register command...');
 
   // Orchestrator
   const disposableOrchestrator = commands.registerCommand(
     'diva-e-cypress.generateTest',
     async (uri: vscode.Uri) => {
+      console.log('🚀 DIVA-E-CYPRESS: Command executed!', uri.fsPath);
+      
       const featureFile = uri.fsPath;
       outputChannel.clear();
       outputChannel.show();
       outputChannel.appendLine(`🔍 Starte Orchestrator für Feature-Datei: ${featureFile}`);
 
-      const workspaceRoot = workspace.workspaceFolders?.[0].uri.fsPath ?? '';
-        outputChannel.appendLine(workspaceRoot);
-
+      const workspaceRoot = workspace.workspaceFolders?.[0]?.uri?.fsPath || '';
+      if (workspaceRoot) {
+        outputChannel.appendLine(`📁 Workspace: ${workspaceRoot}`);
+      } else {
+        outputChannel.appendLine('⚠️ No workspace found');
+      }
 
       try {
+        if (!Orchestrator) {
+          throw new Error('Orchestrator class not available');
+        }
+        
         const orchestrator = new Orchestrator(
           featureFile,
           BASE_URL,
-          outputChannel,
-
+          outputChannel
         );
         await orchestrator.run();
         outputChannel.appendLine('✅ Orchestrator-Durchlauf abgeschlossen.');
@@ -87,6 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     disposableOrchestrator
   );
+  
+  console.log('🚀 DIVA-E-CYPRESS: Extension activated successfully!');
+  outputChannel.appendLine('🚀 DIVA-E-CYPRESS: Extension loaded and ready!');
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -94,4 +122,6 @@ export function activate(context: vscode.ExtensionContext) {
  * Optionaler Cleanup-Hook beim Deaktivieren der Extension.
  * Aktuell leer – Disposables werden über `context.subscriptions` entsorgt.
  */
-export function deactivate() {}
+export function deactivate() {
+  console.log('🚀 DIVA-E-CYPRESS: Extension deactivated');
+}

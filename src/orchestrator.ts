@@ -72,7 +72,7 @@ export class Orchestrator {
    * Alle Teilschritte loggen in das Output-Panel; Fehler werden gefangen und dort ausgegeben.
    */
   public async run(): Promise<void> {
-    this.output.appendLine(`🔍 Starte Orchestrator für: ${this.featureFile}`);
+    // this.output.appendLine(`🔍 Starte Orchestrator für: ${this.featureFile}`);
 
     // (1) Optional: URL aus Feature übernehmen und in cypress.config.ts schreiben
     const newUrl = switchUrl(this.featureFile, this.output);
@@ -97,7 +97,7 @@ export class Orchestrator {
     // Striktes Cleanup: reiner, kompilierbarer TypeScript-Code
     selectorsTs = await codeRefactorAgent.generate(selectorsTs);
 
-    this.output.appendLine(`📦 Selektoren-Vorschau:\n${selectorsTs}\n…`);
+    // this.output.appendLine(`📦 Selektoren-Vorschau:\n${selectorsTs}\n…`);
 
     // (4) Steps erzeugen
 

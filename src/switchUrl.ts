@@ -54,7 +54,7 @@ export function switchUrl(
         const urlMatch = firstLine.match(/#\s*url:\s*(.+)/i);
         if (urlMatch) {
             extractedUrl = urlMatch[1].trim();
-            output.appendLine(`🌍 URL aus Feature gelesen: ${extractedUrl}`);
+            //output.appendLine(`🌍 URL aus Feature gelesen: ${extractedUrl}`);
         } else {
             output.appendLine(`⚠️ Keine URL in erster Zeile gefunden.`);
             return null;
@@ -86,7 +86,7 @@ export function switchUrl(
                 `baseUrl: '${extractedUrl}',`
             );
             fs.writeFileSync(configPath, configContent, 'utf-8');
-            output.appendLine(`✅ baseUrl ersetzt: ${oldUrl} → ${extractedUrl}`);
+            //output.appendLine(`✅ baseUrl ersetzt: ${oldUrl} → ${extractedUrl}`);
             return extractedUrl;
         } else {
             output.appendLine(`⚠️ Keine baseUrl in config gefunden, keine Ersetzung durchgeführt.`);

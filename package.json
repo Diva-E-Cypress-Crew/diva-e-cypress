@@ -2,7 +2,8 @@
   "name": "diva-e-cypress",
   "displayName": "diva-e-cypress",
   "description": "Automatische Generierung von Cypress-Tests mit Open Source LLMs",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "publisher": "diva-e-cypress-crew",
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -31,7 +32,10 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "node esbuild.js",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "compile": "tsc -p .",
     "build": "tsc -p .",
     "watch": "tsc -watch -p ./",
@@ -56,6 +60,7 @@
     "esbuild": "^0.25.4",
     "eslint": "^9.25.1",
     "inference": "^2.0.106",
+    "npm-run-all": "^4.1.5",
     "ollama": "^0.5.15",
     "puppeteer": "^24.10.0",
     "ts-node": "^10.9.1",
@@ -67,7 +72,10 @@
     "@langchain/langgraph": "^0.3.11",
     "@langchain/ollama": "^0.2.3",
     "langchain": "^0.3.30",
-    "node-fetch": "^2.7.0",
-    "open": "^9.1.0"
+    "node-fetch": "^2.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/diva-e-cypress.git"
   }
 }

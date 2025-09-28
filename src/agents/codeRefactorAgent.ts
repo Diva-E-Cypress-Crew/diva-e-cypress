@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { ChatOllama } from "@langchain/ollama";
 import { BaseAgent } from "./baseAgent";
-import { SelectorsPrompt } from "../../prompts/selectors_instruction"; // (derzeit ungenutzt)
-import { CodeFixPrompt } from "../../prompts/code_fix";
+import { SelectorsPrompt } from "../prompts/selectors_instruction"; // (derzeit ungenutzt)
+import { CodeFixPrompt } from "../prompts/code_fix";
 
 /**
  * `RefactorAgent` repariert bzw. normalisiert vom LLM generierten
