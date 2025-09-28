@@ -57,6 +57,11 @@ npm install cypress --save-dev
 
 ### Extension Installation
 
+Die aktuelle Version kann aus diesem Repo heruntergeladen werden: `diva-e-cypress-1.0.X.vsix`
+
+<img width="700" alt="image" src="img/installation.png" />
+
+
 1. Öffnen Sie Visual Studio Code
 2. Navigieren Sie zur Erweiterungen-Ansicht (Shortcut: `Ctrl+Shift+X` bzw. `⇧⌘X` auf macOS)
 3. Klicken Sie oben rechts auf das `⋯`-Menü (Weitere Aktionen)
@@ -97,10 +102,15 @@ npm install cypress --save-dev
    - "Generate Cypress Test" auswählen
    - Den Fortschritt im VS Code Terminal verfolgen
 
+   <img width="700" alt="image" src="img/generate-test.png" />
+
 5. **Tests ausführen**
    ```bash
    npx cypress open
    ```
+
+    <img width="700" alt="image" src="img/run-test-1.png" />
+    <img width="700" alt="image" src="img/run-test-2.png" />
 
 ### Wichtige Hinweise zur Verwendung
 

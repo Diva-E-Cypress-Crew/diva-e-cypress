@@ -82,13 +82,19 @@ npm install cypress --save-dev
 
 4. **Testgenerierung starten**
    - Rechtsklick auf die `.feature`-Datei
+         <img width="700" alt="image" src="img/generate-test.png" />
    - "Generate Cypress Test" auswählen
    - Den Fortschritt im VS Code Terminal verfolgen
+
+
 
 5. **Tests ausführen**
    ```bash
    npx cypress open
    ```
+
+    <img width="700" alt="image" src="img/run-test-1.png" />
+    <img width="700" alt="image" src="img/run-test-2.png" />
 
 ### Wichtige Hinweise zur Verwendung
 
