@@ -159,3 +159,28 @@ Feature: MEAG Investmentrechner – Button-Klick (minimal)
 - **Automatische Dokumentation:**  
   Mit `npm run docs` (bzw. per TypeDoc) wird die gesamte JSDoc-Kommentierung zu einer HTML-Dokumentation generiert (im Ordner `docs/`).
 
+---
+
+### Erweiterung bauen (Nur für Entwickler)
+
+Erst muss die Erweiterung verpackt werden in eine `.vsix` Datei. 
+
+``` 
+  vsce package
+``` 
+
+Dann kann sie lokal installiert werden.
+(Linux/Mac: code muss als PATH Variable hinzugefügt werden)
+
+``` 
+  code --install-extension my-extension-0.0.1.vsix
+``` 
+
+Alternativ per UI:
+
+1. Erweiterungen-Ansicht (Shortcut: ⇧⌘X auf macOS bzw. Ctrl+Shift+X unter Windows/Linux).
+2. Klicke oben rechts auf das ⋯-Menü (Weitere Aktionen).
+3. VSIX installieren….
+4. Navigiere zu diva-e-cypress-1.0.0.vsix und wähle sie aus.
+
+

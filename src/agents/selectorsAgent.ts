@@ -197,32 +197,10 @@ export class SelectorsAgent extends BaseAgent {
     // getLabel
     if (!/export\s+function\s+getLabel\s*\(/.test(out)) {
       out = `export function getLabel(label: string) { return cy.contains(':visible', String(label)); }\n` + out;
-    } else {
-      out = out.replace(
-          /export function getLabel\(label: string\)\s*\{\s*return cy\.contains\(\s*String\(label\)\s*\);\s*}/,
-          "export function getLabel(label: string) { return cy.contains(':visible', String(label)); }"
-      );
-    }
-
+    } 
     // getHeading
     if (!/export\s+function\s+getHeading\s*\(/.test(out)) {
       out = `export function getHeading(label: string) { return cy.contains('h1:visible, h2:visible, [role=\"heading\"]:visible', String(label)); }\n` + out;
-    }
-
-    // inputByLabel
-    if (!/export\s+function\s+inputByLabel\s*\(/.test(out)) {
-      out =
-          `export function inputByLabel(label: string) {
-  const text = String(label);
-  return cy.contains('label', text).then($l => {
-    const id = $l.attr('for');
-    if (id) return cy.get('#' + id);
-    const $input = $l.closest('form, *').find('input, textarea, [contenteditable="true"]').first();
-    if ($input && $input.length) return cy.wrap($input);
-    return cy.contains(':visible', text).parents().find('input, textarea, [contenteditable="true"]').first();
-  });
-}
-` + out;
     }
 
     // Broken attribute selectors (repair cases like type='); }submit"]')
@@ -239,9 +217,6 @@ export class SelectorsAgent extends BaseAgent {
 
     // Remove stray fragments like q"]';
     out = out.replace(/^\s*[A-Za-z0-9_-]+"]';\s*$/gm, '');
-
-    // Remove *Input() functions (we rely on inputByLabel)
-    out = out.replace(/export function\s+[A-Za-z0-9_]+Input\s*\([^)]*\)\s*\{[\s\S]*?}\s*/g, '');
 
     // Safety net: no undefined selectors
     out = out.replace(/cy\.get\(['"]undefined="undefined"]['"]\)/g, "cy.get('*')");
