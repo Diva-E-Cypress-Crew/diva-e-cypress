@@ -46,21 +46,30 @@ const BASE_URL = 'https://meag.gitlab.diva-e.com/investmentrechner-2023';
  * @param context Von VS Code bereitgestellter Extension-Kontext (Disposables/Subscriptions).
  */
 export function activate(context: vscode.ExtensionContext) {
+  console.log('🚀 DIVA-E-CYPRESS: Extension is activating...');
+  
   // Gemeinsames Output-Panel
   const outputChannel = window.createOutputChannel('Cypress Test Generator');
+  
+  console.log('🚀 DIVA-E-CYPRESS: About to register command...');
 
   // Orchestrator
   const disposableOrchestrator = commands.registerCommand(
     'diva-e-cypress.generateTest',
     async (uri: vscode.Uri) => {
+      console.log('🚀 DIVA-E-CYPRESS: Command executed!', uri.fsPath);
+      
       const featureFile = uri.fsPath;
       outputChannel.clear();
       outputChannel.show();
       outputChannel.appendLine(`🔍 Starte Orchestrator für Feature-Datei: ${featureFile}`);
 
-      const workspaceRoot = workspace.workspaceFolders?.[0].uri.fsPath ?? '';
-        outputChannel.appendLine(workspaceRoot);
-
+      const workspaceRoot = workspace.workspaceFolders?.[0]?.uri?.fsPath || '';
+      if (workspaceRoot) {
+        outputChannel.appendLine(`📁 Workspace: ${workspaceRoot}`);
+      } else {
+        outputChannel.appendLine('⚠️ No workspace found');
+      }
 
       try {
         const orchestrator = new Orchestrator(

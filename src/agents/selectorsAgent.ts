@@ -16,8 +16,8 @@
 import * as vscode from 'vscode';
 import { ChatOllama } from '@langchain/ollama';
 
-import { CodeFixPrompt } from '../../prompts/code_fix';
-import { SelectorsPrompt } from '../../prompts/selectors_instruction';
+import { CodeFixPrompt } from '../prompts/code_fix';
+import { SelectorsPrompt } from '../prompts/selectors_instruction';
 import {BaseAgent} from "./baseAgent";
 
 /**

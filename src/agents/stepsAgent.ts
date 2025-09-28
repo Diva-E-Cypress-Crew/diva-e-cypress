@@ -14,7 +14,7 @@
  */
 import * as vscode from "vscode";
 import { ChatOllama } from "@langchain/ollama";
-import { StepsPrompt } from "../../prompts/steps_instruction";
+import { StepsPrompt } from "../prompts/steps_instruction";
 import {BaseAgent} from "./baseAgent";
 
 
