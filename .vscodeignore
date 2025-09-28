@@ -25,5 +25,6 @@ meetings
 # Node modules (will be pruned automatically by vsce, but kept explicit)
 node_modules
 
-# Include out
+# Includes
 !out/**
+!img/**

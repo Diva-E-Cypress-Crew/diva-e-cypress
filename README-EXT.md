@@ -82,7 +82,7 @@ npm install cypress --save-dev
 
 4. **Testgenerierung starten**
    - Rechtsklick auf die `.feature`-Datei
-         <img width="700" alt="image" src="img/generate-test.png" />
+         <img width="700" alt="image" src="https://raw.githubusercontent.com/Diva-E-Cypress-Crew/diva-e-cypress/refs/heads/main/img/generate-test.png" />
    - "Generate Cypress Test" auswählen
    - Den Fortschritt im VS Code Terminal verfolgen
 
@@ -93,8 +93,8 @@ npm install cypress --save-dev
    npx cypress open
    ```
 
-    <img width="700" alt="image" src="img/run-test-1.png" />
-    <img width="700" alt="image" src="img/run-test-2.png" />
+    <img width="700" alt="image" src="https://raw.githubusercontent.com/Diva-E-Cypress-Crew/diva-e-cypress/refs/heads/main/img/run-test-1.png" />
+    <img width="700" alt="image" src="https://raw.githubusercontent.com/Diva-E-Cypress-Crew/diva-e-cypress/refs/heads/main/img/run-test-2.png" />
 
 ### Wichtige Hinweise zur Verwendung
 
