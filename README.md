@@ -15,12 +15,6 @@ Das Projekt diente dazu, einen Prototypen zu entwickeln, der die Machbarkeit und
 #### - Implementierung einer grafischen Benutzeroberfläche (GUI):
   Ebenfalls wäre es denkbar, über eine GUI die Wahl verschiedener LLMs zu ermöglichen. Außerdem ist es aktuell so, dass die entsprechende URL am Anfang der Feature-Datei angegeben werden muss. Die Wahl der URL könnte hier auch über diese GUI erfolgen.
 
-### Anmerkungen:
-- 
-
-
-**Ansprechpartner:** Alexander Thoms
-
 ## Mitglieder
 - Leander Piepenbring   
 - Tobias Lindhorst       
@@ -28,27 +22,34 @@ Das Projekt diente dazu, einen Prototypen zu entwickeln, der die Machbarkeit und
 - Felix Riedel         
 - Grace Leton Dodi
 
+**Ansprechpartner Diva-E:** Alexander Thoms
+
+---
+
+## Installation
+
+**Vorraussetzungen:**
+- Ollama inkl. LLama 3.2
+- Cypress
+
+1. Erweiterungen-Ansicht (Shortcut: ⇧⌘X auf macOS bzw. Ctrl+Shift+X unter Windows/Linux).
+2. Klicke oben rechts auf das ⋯-Menü (Weitere Aktionen).
+3. VSIX installieren….
+4. Navigiere zu diva-e-cypress-X.X.X.vsix und wähle sie aus.
+
+---
+
 ## Setup
 
 ```bash
 npm install
 ```
-oder alternativ / manuell:
-```bash
-npm install -D cypress@13.6.3
-npm install -D cypress-cucumber-preprocessor@4.3.1
-npm install -D typescript@5.3.3
-npm install -D @badeball/cypress-cucumber-preprocessor@20.0.1
-npm install -D @shelex/cypress-allure-plugin@2.40.1
-```
-
-Zur Sicherstellung, dass alle Packages auf den neusten Stand installiert sind. 
 
 ### Cypress Starten
 ```bash
 (npx) cypress open
 ```
-Über E2E Testing Broweser auswählen und Test ausführen. 
+Über E2E Testing Browser auswählen und Test ausführen. 
 
 ### Ollama 
 
@@ -75,13 +76,6 @@ ollama run llama3.2
 
 **Erweiterung der Dokumentation:**
 - Falls die Dokumentation erweitert werden soll, pushen Sie die Änderungen mit `nmp run docs`  
----
-
-## Projektstruktur (Kurzüberblick)
-
-### Repository: "diva-e-cypress"
-Hier ist die überarbeitete Projektstruktur mit präziseren und an den Tree angepassten Beschreibungen:
-
 ---
 
 ## Projektstruktur (Kurzüberblick)
@@ -191,22 +185,62 @@ Feature: MEAG Investmentrechner – Button-Klick (minimal)
 
 ---
 
-## Gesamtworkflow
+## Workflow: Cypress-Tests mit *diva-e-cypress Extension* & Ollama
 
+1. **Cypress-Projekt öffnen**
+
+   - Öffnen Sie ein bestehendes oder neues Cypress-Projekt in VS Code.
+   - Die *diva-e-cypress*-Extension (VSIX) muss bereits installiert sein.
+
+2. **LLM starten (Ollama)**
+
+   - Starten Sie Ollama und LLama 3.2 
+
+     ```bash
+     ollama run llama3.2
+     ```
+
+3. **Feature-Datei auswählen**
+
+   - Rechtsklick auf eine `.feature`-Datei
+   - Über die Extension den Prozess starten:
+
+   -  **"Generate Cypress Test"** auswählen.
+     <img width="521" height="594" alt="image" src="https://github.com/user-attachments/assets/4a5429a4-1500-4009-9caa-f1294bc0b719" />
+
+
+4. **Generierung der Testdateien**
+
+   - Die **Selectors**- und **Steps**-Dateien werden automatisch erzeugt und in die entsprechenden Projektordner geschrieben.
+   - Den Fortschritt der Generierung können Sie im VS Code Terminal mitverfolgen.
+
+5. **Cypress-Test ausführen**
+
+   - Starten Sie die Tests mit:
+
+     ```bash
+     npx cypress open
+     ```
+   - ⚠️ Falls Fehler auftreten:
+
+     - Prüfen, ob nur **eine eindeutige** `steps.ts`, `selectors.ts` und `.feature`-Datei im Projekt hinterlegt ist.
+
+
+## Für Entwickler: 
 1. Repo "diva-e-cypress" öffnen
-2. Repo "diva-e-cypress-tests" öffnen
-    - kann mit f5 geöffnet werden (falls es nicht auf Anhieb funktioniert, stellen Sie sicher, dass eine .ts geöffnet ist)
-3. LLM starten
-    - Das LLM mit dem die Selectors - und Steps Dateien generiert werden sollen muss gestartet werden (z.B. Ollama)
+2. `extension.ts` in VSCode öffnen
+3. `F5` zum testen der Erweiterung
+    - ein neues VSCode Fenster öffnet sich, hier kann der Ordner mit den Cypress Tests ausgewählt werden
+4. Repo "diva-e-cypress-tests" öffnen
+5. LLM starten
     - `ollama run llama3.2`
-4. Feature-Datei auswählen
+7. Feature-Datei auswählen
     - Rechtsklick auf eine .feature-Datei (z. B. demo.feature) und per Extension den Prozess starten
-    - Öffnen mit "Generate Cypress Test (Ollama)"
-    - Die anderen Auswahlmöglichkeiten sind aus Testzwecken noch enthalten und können mit anderen LLMs ersetzt werden, falls gewünscht.
-5. Generierung
+    - Öffnen mit "Generate Cypress Test"
+8. Generierung
     - Die Selectors - und Steps Dateien werden nun erzeugt und in den enstsprechenden Ordnern abgelegt.
     - Die Generierung kann über das Terminal verfolgt werden - Status.
-6. Den Cypress-Test starten mit `npx cypress open`
+9. Den Cypress-Test starten mit `npx cypress open`
     - Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.
 
 ---
@@ -218,7 +252,7 @@ Feature: MEAG Investmentrechner – Button-Klick (minimal)
   - Stellen Sie das richtige Format sicher! Eine Beispiel Feature liegt im Test-Projekt.
   - Gherkin-Logik sollte verfolgt werden und die URL für die gewünschte Webseite sollte an der passenden Stelle im richtigen Format liegen.
   ``` 
-  # url: https://blabla.de/
+  # url: https://myurl.com/
   ``` 
 
 - **Automatische Dokumentation:**  
@@ -240,12 +274,5 @@ Dann kann sie lokal installiert werden.
 ``` 
   code --install-extension my-extension-0.0.1.vsix
 ``` 
-
-Alternativ per UI:
-
-1. Erweiterungen-Ansicht (Shortcut: ⇧⌘X auf macOS bzw. Ctrl+Shift+X unter Windows/Linux).
-2. Klicke oben rechts auf das ⋯-Menü (Weitere Aktionen).
-3. VSIX installieren….
-4. Navigiere zu diva-e-cypress-X.X.X.vsix und wähle sie aus.
 
 
