@@ -13,9 +13,23 @@
  */
 import * as vscode from 'vscode';
 import * as dotenv from 'dotenv';
-dotenv.config();
 
-import { Orchestrator } from './orchestrator';
+// Configure dotenv with explicit path handling
+try {
+  dotenv.config({ path: process.cwd() + '/.env' });
+} catch (error) {
+  console.log('No .env file found, continuing without it');
+}
+
+// Import orchestrator after dotenv setup
+let Orchestrator: any;
+try {
+  const orchestratorModule = require('./orchestrator');
+  Orchestrator = orchestratorModule.Orchestrator;
+  console.log('🚀 DIVA-E-CYPRESS: Orchestrator imported successfully');
+} catch (error) {
+  console.error('🚀 DIVA-E-CYPRESS: Failed to import Orchestrator:', error);
+}
 
 const { commands, window, workspace } = vscode;
 
@@ -72,11 +86,14 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       try {
+        if (!Orchestrator) {
+          throw new Error('Orchestrator class not available');
+        }
+        
         const orchestrator = new Orchestrator(
           featureFile,
           BASE_URL,
-          outputChannel,
-
+          outputChannel
         );
         await orchestrator.run();
         outputChannel.appendLine('✅ Orchestrator-Durchlauf abgeschlossen.');
@@ -95,6 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     disposableOrchestrator
   );
+  
+  console.log('🚀 DIVA-E-CYPRESS: Extension activated successfully!');
+  outputChannel.appendLine('🚀 DIVA-E-CYPRESS: Extension loaded and ready!');
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -102,4 +122,6 @@ export function activate(context: vscode.ExtensionContext) {
  * Optionaler Cleanup-Hook beim Deaktivieren der Extension.
  * Aktuell leer – Disposables werden über `context.subscriptions` entsorgt.
  */
-export function deactivate() {}
+export function deactivate() {
+  console.log('🚀 DIVA-E-CYPRESS: Extension deactivated');
+}

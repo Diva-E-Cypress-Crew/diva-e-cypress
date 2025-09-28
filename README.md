@@ -1,6 +1,6 @@
 # Projekt Wissensmanagement: Diva-E 
 
-**Version:** 1.0.0 (Projektabschluss HTW Berlin SoSe2025)
+**Version:** 1.0.2 (Projektabschluss HTW Berlin SoSe2025)
 
 ## Automatisches Erstellen von Cypress Tests unter Verwendung von KI Tools
 - Es soll ein Tool entwickelt werden, das eine bestehende Testanforderung auf Basis eines Cucumber Files für eine gegebene Testanwendung analysiert und daraus entsprechend Cypress Tests erzeugt.
@@ -80,25 +80,90 @@ ollama run llama3.2
 ## Projektstruktur (Kurzüberblick)
 
 ### Repository: "diva-e-cypress"
-- `src/`  
-  Enthält die Hauptlogik, Agents und Orchestrator für die KI-gestützte Testgenerierung.
-  - `agents`  
-  Hier sind alle Orchestrator-Abschnitte (Agents) einzeln abgebildet, um eine bessere Organisation zu gewährleisten.
-  Der Aufbau jedes Agents ist in dem jeweiligen Abschnitt genauer erklärt.
-  - `test`  
-  Hier ist die eigentliche Backend-Logik dokumentiert. 
-  Orchestrator: Kernlogik der LLM-Aufrufe, von hier werden die einzelnen Dateien angesteuert und aufgerufen.
-  extension.ts: Zum interaktiven VS-Code Plugin in der Test-Umgebung.
-  htmlPreprocessor.ts: Auslagerung der Vorverarbeitung der Webseite für die LLM-Prompts durch Puppeteer.
-  stepsGenerator.ts: Erweiterung der Steps-Generierung. Die Feature wird vor dem Aufrufen der LLMs ausgelesen und eine Schablone für die Steps-Klassen generiert.
-  switchUrl.ts: Ergänzung eines vereinfachten URL-Wechsels für die Cypress-Tests.
+Hier ist die überarbeitete Projektstruktur mit präziseren und an den Tree angepassten Beschreibungen:
+
+---
+
+## Projektstruktur (Kurzüberblick)
+
+### Repository: **diva-e-cypress**
+
+```
+--- src
+├── agents
+│   ├── baseAgent.ts
+│   ├── codeRefactorAgent.ts
+│   ├── selectorsAgent.ts
+│   ├── stepsAgent.ts
+│   └── verificationAgent.ts
+├── extension.ts
+├── htmlPreprocessor.ts
+├── orchestrator.ts
+├── prompts
+│   ├── code_fix.ts
+│   ├── promptTemplate.ts
+│   ├── selectors_instruction.ts
+│   ├── steps_instruction.ts
+│   └── verification_instruction.ts
+├── stepsGenerator.ts
+└── switchUrl.ts
+````
+
+- `src/`
+  Enthält die Hauptlogik des Projekts mit Agents, Orchestrator und Hilfsmodulen für die KI-gestützte Testgenerierung.
+
+  - `agents/`
+    Sammlung spezialisierter Agents, die jeweils einen Teil der Orchestrator-Logik abbilden:
+
+    - **baseAgent.ts** – Gemeinsame Basisfunktionalitäten für alle Agents.
+    - **codeRefactorAgent.ts** – Agent zur automatischen Code-Refaktorierung.
+    - **selectorsAgent.ts** – Verantwortlich für die Generierung und Verwaltung von Selektoren.
+    - **stepsAgent.ts** – Erzeugt Testschritte aus Feature-Beschreibungen.
+    - **verificationAgent.ts** – Kümmert sich um die Validierung und Überprüfung der Testergebnisse.
+
+  - **orchestrator.ts**
+    Zentrale Steuerungslogik für LLM-Aufrufe und die Koordination der Agents.
+
+  - **extension.ts**
+    Bindeglied zum interaktiven VS-Code-Plugin in der Test-Umgebung.
+
+  - **htmlPreprocessor.ts**
+    Vorverarbeitung der Ziel-Webseite mit Puppeteer zur Optimierung der Prompt-Erstellung.
+
+  - **stepsGenerator.ts**
+    Liest Feature-Dateien ein und erstellt Schablonen für die Generierung von Step-Klassen.
+
+  - **switchUrl.ts**
+    Hilfsmodul zum einfachen Wechsel von URLs innerhalb der Cypress-Tests.
+
+* `prompts/`
+  Beinhaltet modulare Prompt-Templates für verschiedene KI-Aufgaben. Diese sind leicht anpassbar, z. B. bei LLM-Wechseln oder Umstrukturierungen:
+
+  - **code_fix.ts** – Vorlage für Codekorrekturen.
+  - **promptTemplate.ts** – Generische Prompt-Struktur als Basismodell.
+  - **selectors_instruction.ts** – Vorgaben für die Selektoren-Erzeugung.
+  - **steps_instruction.ts** – Regeln und Muster zur Step-Generierung.
+  - **verification_instruction.ts** – Vorgaben für die Überprüfung und Validierung von Tests.
 
 
-- `prompts/`  
-  Prompt-Templates für die KI-Befehle (Selectors, Steps, Verification).
-  Einfach modifizierbar, für Umstrukturierung oder Wechseln von LLMs.
 
 ### Repository: "diva-e-cypress-tests"
+
+```
+cypress
+├── downloads
+├── e2e
+│   ├── common
+│   │   ├── selectors
+│   │   │   └── orchestrator_selectors.ts
+│   │   └── steps
+│   │       └── orchestrator_steps.ts
+│   └── features
+│       └── orchestrator.feature
+└── support
+    └── e2e.js
+```
+
 Beinhaltet die eigentliche Testumgebung mit den .feature - und generierten Dateien.
 Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.
 
@@ -181,6 +246,6 @@ Alternativ per UI:
 1. Erweiterungen-Ansicht (Shortcut: ⇧⌘X auf macOS bzw. Ctrl+Shift+X unter Windows/Linux).
 2. Klicke oben rechts auf das ⋯-Menü (Weitere Aktionen).
 3. VSIX installieren….
-4. Navigiere zu diva-e-cypress-1.0.0.vsix und wähle sie aus.
+4. Navigiere zu diva-e-cypress-X.X.X.vsix und wähle sie aus.
 
 

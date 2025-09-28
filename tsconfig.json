@@ -40,6 +40,6 @@
   // Diese Ordner werden vom Compiler erfasst
   "include": [
     "src",
-    "prompts"
+    "src/prompts"
   ]
 }

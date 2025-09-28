@@ -1,8 +1,7 @@
 import puppeteer from 'puppeteer';
 import {promises as fs} from 'fs';
 import path from 'path';
-// @ts-ignore
-import open from "open";
+import * as vscode from 'vscode';
 
 /**
  * Repräsentiert einen **gefilterten DOM-Knoten**:
@@ -212,7 +211,7 @@ export class htmlPreprocessor {
     }
 
     /**
-     * Hilfsfunktion: Speichert das HTML und öffnet es im **Standardbrowser**.
+     * Hilfsfunktion: Speichert das HTML und öffnet es mit VS Code's eingebautem Browser.
      *
      * @param filteredDOM Gezielter Root/Teilbaum (typisch: Ergebnis aus {@link extractFilteredDOM}).
      * @param outputPath  Dateipfad für die Ausgabe (Standard: `'filtered-dom.html'`).
@@ -221,6 +220,6 @@ export class htmlPreprocessor {
     async openInBrowser(filteredDOM: FilteredNode, outputPath: string = 'filtered-dom.html'): Promise<void> {
         await this.saveHTML(filteredDOM, outputPath);
         const absolutePath = path.resolve(outputPath);
-        await open(absolutePath);
+        await vscode.env.openExternal(vscode.Uri.file(absolutePath));
     }
 }
