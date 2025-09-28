@@ -1,6 +1,6 @@
 # Projekt Wissensmanagement: Diva-E Cypress Test Generator
 
-**Version:** 1.0.2 (Projektabschluss HTW Berlin SoSe2025)
+**Version:** 1.0.3 (Projektabschluss HTW Berlin SoSe2025)
 
 ## Überblick
 
@@ -136,10 +136,20 @@ npx cypress open
 
 ### Extension Building
 
+Extension kompilieren:
+```bash
+node esbuild.js --production
+```
+
+
 Extension als `.vsix`-Datei verpacken:
 ```bash
+npm prepack
 vsce package
+npm postpack
 ```
+- `prepack` und `postpack` sind erforderlich, damit für die Erweiterung nur die kurze Beschreibung (`README-EXT.md`) verwendet wird
+
 
 Lokale Installation:
 ```bash

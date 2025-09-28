@@ -20,3 +20,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - moving prompts folder
 - fixing issues related to path
 - remove open package
+
+
+## [1.0.3]
+
+- shorten description
+- seperate project details between extension and github

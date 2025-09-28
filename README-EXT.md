@@ -1,6 +1,6 @@
 # Projekt Wissensmanagement: Diva-E Cypress Test Generator
 
-**Version:** 1.0.2 (Projektabschluss HTW Berlin SoSe2025)
+**Version:** 1.0.3 (Projektabschluss HTW Berlin SoSe2025)
 
 ## Überblick
 
