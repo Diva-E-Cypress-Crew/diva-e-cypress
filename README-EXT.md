@@ -53,18 +53,6 @@ npm install cypress --save-dev
 
 ---
 
-## Installation
-
-### Extension Installation
-
-1. Öffnen Sie Visual Studio Code
-2. Navigieren Sie zur Erweiterungen-Ansicht (Shortcut: `Ctrl+Shift+X` bzw. `⇧⌘X` auf macOS)
-3. Klicken Sie oben rechts auf das `⋯`-Menü (Weitere Aktionen)
-4. Wählen Sie "VSIX installieren..."
-5. Navigieren Sie zur `diva-e-cypress-X.X.X.vsix` Datei und wählen Sie diese aus
-
----
-
 ## Verwendung
 
 ### Grundlegender Workflow
@@ -110,78 +98,10 @@ npm install cypress --save-dev
 
 ---
 
-## Entwicklung
+## Struktur Cypress Testumgebung
 
-### Projekt Setup 
-
-1. Abhängigkeiten installieren:
-```bash
-npm install
-```
-
-2. Cypress starten (zum Testen):
-```bash
-npx cypress open
-```
-
-3. E2E Testing Browser auswählen und Test ausführen
-
-### Extension testen
-
-1. Repository "diva-e-cypress" öffnen
-2. `extension.ts` in VSCode öffnen
-3. `F5` drücken zum Testen der Extension
-4. Neues VSCode-Fenster öffnet sich für Tests
-5. Repository "diva-e-cypress-tests" als Testprojekt verwenden
-
-### Extension Building
-
-Extension als `.vsix`-Datei verpacken:
-```bash
-vsce package
-```
-
-Lokale Installation:
-```bash
-code --install-extension my-extension-0.0.1.vsix
-```
-
-### Dokumentation generieren
-
-```bash
-npm run docs
-```
-
-Erstellt HTML-Dokumentation aus JSDoc-Kommentaren im `docs/`-Ordner.
-
----
-
-## Projektstruktur
-
-### Repository: diva-e-cypress
-
-```
-src/
-├── agents/
-│   ├── baseAgent.ts              # Basisfunktionalitäten für alle Agents
-│   ├── codeRefactorAgent.ts      # Code-Refaktorierung
-│   ├── selectorsAgent.ts         # Selector-Generierung
-│   ├── stepsAgent.ts            # Testschritt-Erzeugung
-│   └── verificationAgent.ts     # Test-Validierung
-├── prompts/
-│   ├── code_fix.ts              # Prompt für Codekorrekturen
-│   ├── promptTemplate.ts        # Basis-Prompt-Struktur
-│   ├── selectors_instruction.ts # Selector-Generierung
-│   ├── steps_instruction.ts     # Step-Generierung
-│   └── verification_instruction.ts # Test-Validierung
-├── extension.ts                 # VS Code Extension Interface
-├── orchestrator.ts              # Zentrale Steuerungslogik
-├── htmlPreprocessor.ts          # Webseiten-Vorverarbeitung
-├── stepsGenerator.ts            # Feature-File Processing
-└── switchUrl.ts                 # URL-Management
-```
-
-### Repository: diva-e-cypress-tests
+- zB. [https://github.com/Diva-E-Cypress-Crew/diva-e-cypress-tests/tree/main]
+- das Testprojekt **muss** folgende Struktur haben ansonten kann es zu Fehler kommen
 
 ```
 cypress/
@@ -196,19 +116,6 @@ cypress/
 └── support/
     └── e2e.js
 ```
-
----
-
-## Konfigurationsdateien
-
-| Datei             | Zweck                                                           |
-|-------------------|-----------------------------------------------------------------|
-| package.json      | Extension-Metadaten, Abhängigkeiten, NPM-Skripte              |
-| package-lock.json | Dependency Lockfile (nicht manuell bearbeiten)                 |
-| tsconfig.json     | TypeScript-Compiler-Konfiguration                              |
-| typedoc.json      | Code-Dokumentations-Einstellungen                              |
-
-**Wichtig:** Änderungen an zentralen Konfigurationsdateien sollten im Team abgestimmt werden.
 
 ---
 
