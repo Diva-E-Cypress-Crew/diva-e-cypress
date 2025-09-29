@@ -12,6 +12,11 @@ Im Rahmen des Moduls "Projekt Wissensmanagement" an der HTW Berlin wurde zusamme
 
 Das Projekt diente zur Entwicklung eines Prototypen, der die Machbarkeit und Sinnhaftigkeit eines solchen Tools demonstriert. Ein weiteres Ziel war die Überprüfung der Performance lokaler LLMs über Ollama für diesen Anwendungsfall.
 
+### Organisatorisches
+
+Da es sich um eine Projektarbeit im **Modul "Projekt Wissensmanagement"** an der HTW Berlin handelt, wurden alle organisatorischen Dokumente separat im **Ordner "organisatorisches"** abgelegt.
+Dort befinden sich unter anderem die Meeting-Protokolle sowie die Präsentationen.
+
 ### Projektteam
 
 - Leander Piepenbring   

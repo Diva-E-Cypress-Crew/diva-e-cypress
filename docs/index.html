@@ -1,161 +1,211 @@
-<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>diva-e-cypress - v1.0</title><meta name="description" content="Documentation for diva-e-cypress"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">diva-e-cypress - v1.0</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>diva-e-cypress - v1.0</h1></div><div class="tsd-panel tsd-typography"><h1 id="projekt-wissensmanagement-diva-e" class="tsd-anchor-link">Projekt Wissensmanagement: Diva-E<a href="#projekt-wissensmanagement-diva-e" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p><strong>Version:</strong> 1.0.0 (Projektabschluss HTW Berlin SoSe2025)</p>
-<h2 id="automatisches-erstellen-von-cypress-tests-unter-verwendung-von-ki-tools" class="tsd-anchor-link">Automatisches Erstellen von Cypress Tests unter Verwendung von KI Tools<a href="#automatisches-erstellen-von-cypress-tests-unter-verwendung-von-ki-tools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
-<li>Es soll ein Tool entwickelt werden, das eine bestehende Testanforderung auf Basis eines Cucumber Files für eine gegebene Testanwendung analysiert und daraus entsprechend Cypress Tests erzeugt.</li>
-</ul>
-<h3 id="ziel-des-projekts" class="tsd-anchor-link">Ziel des Projekts:<a href="#ziel-des-projekts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Im Rahmen des Moduls &quot;Projekt Wissensmanagement&quot; an der HTW Berlin war das Ziel, zusammen mit der Firma diva-e ein Tool zu entwickeln, das mithilfe von LLMs (Large Language Models) automatisiert Cypress Tests generiert. Basis hierfür sind Testanforderungen, die in Form von Cucumber-Feature-Dateien vorliegen. Ziel war es, eine Visual Studio Code Extension zu erstellen, mithilfe welcher Nutzer durch einen einfachen Rechtsklick auf eine Feature-Datei den Prozess der Testgenerierung starten können.</p>
-<p>Das Projekt diente dazu, einen Prototypen zu entwickeln, der die Machbarkeit und Sinnhaftigkeit eines solchen Tools demonstriert. Ein weiteres Ziel war es, die Performance von lokalen LLMs über Ollama für einen derartigen Anwendungsfall zu überprüfen.</p>
-<h3 id="mögliche-zukünftige-verbesserungen" class="tsd-anchor-link">Mögliche zukünftige Verbesserungen:<a href="#mögliche-zukünftige-verbesserungen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><h4 id="--verwendung-leistungsstärkerer-llms" class="tsd-anchor-link">- Verwendung leistungsstärkerer LLMs:<a href="#--verwendung-leistungsstärkerer-llms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Es hat sich im Laufe des Projekts gezeigt, das es grundsätzlich möglich ist, Cypress Tests automatisiert zu generieren. Allerdings sind aufgrund der Begrenzungen der lokalen LLMs, insbesondere die Kontextlänge, bisher keine komplexen Testfälle zuverlässig umsetzbar. Daher wäre es interessant, mit leistungsstarken Cloud-basierten LLMs (bspw. GPT-5, Gemini 2.5 Pro) zu überprüfen, ob diese in der Lage sind, auch komplexere Cypress Tests zu generieren.</p>
-<h4 id="--implementierung-einer-grafischen-benutzeroberfläche-gui" class="tsd-anchor-link">- Implementierung einer grafischen Benutzeroberfläche (GUI):<a href="#--implementierung-einer-grafischen-benutzeroberfläche-gui" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><p>Ebenfalls wäre es denkbar, über eine GUI die Wahl verschiedener LLMs zu ermöglichen. Außerdem ist es aktuell so, dass die entsprechende URL am Anfang der Feature-Datei angegeben werden muss. Die Wahl der URL könnte hier auch über diese GUI erfolgen.</p>
-<h3 id="anmerkungen" class="tsd-anchor-link">Anmerkungen:<a href="#anmerkungen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li></li>
-</ul>
-<p><strong>Ansprechpartner:</strong> Alexander Thoms</p>
-<h2 id="mitglieder" class="tsd-anchor-link">Mitglieder<a href="#mitglieder" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ul>
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>diva-e-cypress - v1.0.3</title><meta name="description" content="Documentation for diva-e-cypress"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script><script async src="assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="index.html" class="title">diva-e-cypress - v1.0.3</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>diva-e-cypress - v1.0.3</h1></div><div class="tsd-panel tsd-typography"><h1 id="projekt-wissensmanagement-diva-e-cypress-test-generator" class="tsd-anchor-link">Projekt Wissensmanagement: Diva-E Cypress Test Generator<a href="#projekt-wissensmanagement-diva-e-cypress-test-generator" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p><strong>Version:</strong> 1.0.3 (Projektabschluss HTW Berlin SoSe2025)</p>
+<h2 id="überblick" class="tsd-anchor-link">Überblick<a href="#überblick" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Das Tool entwickelt automatisch Cypress Tests basierend auf bestehenden Testanforderungen aus Cucumber Files. Es handelt sich um eine Visual Studio Code Extension, die mithilfe von Large Language Models (LLMs) den Testgenerierungsprozess automatisiert.</p>
+<h3 id="projektziel" class="tsd-anchor-link">Projektziel<a href="#projektziel" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Im Rahmen des Moduls &quot;Projekt Wissensmanagement&quot; an der HTW Berlin wurde zusammen mit der Firma diva-e ein Tool entwickelt, das mithilfe von LLMs automatisiert Cypress Tests generiert. Die Basis bilden Testanforderungen in Form von Cucumber-Feature-Dateien. Nutzer können durch einen einfachen Rechtsklick auf eine Feature-Datei den Testgenerierungsprozess starten.</p>
+<p>Das Projekt diente zur Entwicklung eines Prototypen, der die Machbarkeit und Sinnhaftigkeit eines solchen Tools demonstriert. Ein weiteres Ziel war die Überprüfung der Performance lokaler LLMs über Ollama für diesen Anwendungsfall.</p>
+<h3 id="organisatorisches" class="tsd-anchor-link">Organisatorisches<a href="#organisatorisches" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Da es sich um eine Projektarbeit im <strong>Modul &quot;Projekt Wissensmanagement&quot;</strong> an der HTW Berlin handelt, wurden alle organisatorischen Dokumente separat im <strong>Ordner &quot;organisatorisches&quot;</strong> abgelegt.
+Dort befinden sich unter anderem die Meeting-Protokolle sowie die Präsentationen.</p>
+<h3 id="projektteam" class="tsd-anchor-link">Projektteam<a href="#projektteam" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
 <li>Leander Piepenbring</li>
 <li>Tobias Lindhorst</li>
 <li>Maximilian Berthold</li>
 <li>Felix Riedel</li>
 <li>Grace Leton Dodi</li>
 </ul>
-<h2 id="setup" class="tsd-anchor-link">Setup<a href="#setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span>
-</code><button type="button">Copy</button></pre>
-
-<p>oder alternativ / manuell:</p>
-<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">cypress@13.6.3</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">cypress-cucumber-preprocessor@4.3.1</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">typescript@5.3.3</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">@badeball/cypress-cucumber-preprocessor@20.0.1</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-3">-D</span><span class="hl-1"> </span><span class="hl-2">@shelex/cypress-allure-plugin@2.40.1</span>
-</code><button type="button">Copy</button></pre>
-
-<p>Zur Sicherstellung, dass alle Packages auf den neusten Stand installiert sind.</p>
-<h3 id="cypress-starten" class="tsd-anchor-link">Cypress Starten<a href="#cypress-starten" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-1">(</span><span class="hl-0">npx</span><span class="hl-1">) </span><span class="hl-0">cypress</span><span class="hl-1"> </span><span class="hl-2">open</span>
-</code><button type="button">Copy</button></pre>
-
-<p>Über E2E Testing Broweser auswählen und Test ausführen.</p>
-<h3 id="ollama" class="tsd-anchor-link">Ollama<a href="#ollama" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p><a href="https://ollama.com/download">https://ollama.com/download</a></p>
+<p><strong>Ansprechpartner Diva-E:</strong> Alexander Thoms</p>
+<hr>
+<h2 id="voraussetzungen" class="tsd-anchor-link">Voraussetzungen<a href="#voraussetzungen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Folgende Software muss vor der Installation vorhanden sein:</p>
+<h3 id="systemanforderungen" class="tsd-anchor-link">Systemanforderungen<a href="#systemanforderungen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Visual Studio Code</li>
+<li>Node.js + npm</li>
+</ul>
+<h3 id="erforderliche-tools" class="tsd-anchor-link">Erforderliche Tools<a href="#erforderliche-tools" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li><strong>Ollama</strong> mit LLama 3.2 Modell</li>
+<li><strong>Cypress</strong> Framework</li>
+</ul>
+<h3 id="ollama-installation-und-setup" class="tsd-anchor-link">Ollama Installation und Setup<a href="#ollama-installation-und-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>
+<p>Ollama herunterladen und installieren: <a href="https://ollama.com/download">https://ollama.com/download</a></p>
+</li>
+<li>
+<p>LLama 3.2 Modell installieren und starten:</p>
+</li>
+</ol>
 <pre><code class="bash"><span class="hl-0">ollama</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">llama3.2</span>
 </code><button type="button">Copy</button></pre>
 
-<h2 id="projekt-konfigurationsdateien" class="tsd-anchor-link">Projekt-Konfigurationsdateien<a href="#projekt-konfigurationsdateien" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><table>
+<h3 id="cypress-installation" class="tsd-anchor-link">Cypress Installation<a href="#cypress-installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1"> </span><span class="hl-2">cypress</span><span class="hl-1"> </span><span class="hl-3">--save-dev</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="installation" class="tsd-anchor-link">Installation<a href="#installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="extension-installation" class="tsd-anchor-link">Extension Installation<a href="#extension-installation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Die aktuelle Version kann aus diesem Repo heruntergeladen werden: <code>diva-e-cypress-1.0.X.vsix</code></p>
+<img width="700" alt="image" src="media/installation.png" />
+<ol>
+<li>Öffnen Sie Visual Studio Code</li>
+<li>Navigieren Sie zur Erweiterungen-Ansicht (Shortcut: <code>Ctrl+Shift+X</code> bzw. <code>⇧⌘X</code> auf macOS)</li>
+<li>Klicken Sie oben rechts auf das <code>⋯</code>-Menü (Weitere Aktionen)</li>
+<li>Wählen Sie &quot;VSIX installieren...&quot;</li>
+<li>Navigieren Sie zur <code>diva-e-cypress-X.X.X.vsix</code> Datei und wählen Sie diese aus</li>
+</ol>
+<hr>
+<h2 id="verwendung" class="tsd-anchor-link">Verwendung<a href="#verwendung" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="grundlegender-workflow" class="tsd-anchor-link">Grundlegender Workflow<a href="#grundlegender-workflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>
+<p><strong>Cypress-Projekt öffnen</strong></p>
+<ul>
+<li>Öffnen Sie ein bestehendes oder neues Cypress-Projekt in VS Code</li>
+<li>Stellen Sie sicher, dass die diva-e-cypress Extension installiert ist</li>
+</ul>
+</li>
+<li>
+<p><strong>LLM starten</strong></p>
+<pre><code class="bash"><span class="hl-0">ollama</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">llama3.2</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Feature-Datei vorbereiten</strong></p>
+<ul>
+<li>Erstellen Sie eine <code>.feature</code>-Datei mit korrekter Gherkin-Syntax</li>
+<li>Die URL der Testanwendung muss am Dateianfang angegeben werden:</li>
+</ul>
+<pre><code class="gherkin"># url: https://example.com/
+
+Feature: Beispiel Test
+
+  Scenario: Beispiel Szenario
+    Given der Benutzer ist auf der Startseite
+    When er auf "Login" klickt
+    Then sollte die Anmeldeseite angezeigt werden
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>
+<p><strong>Testgenerierung starten</strong></p>
+<ul>
+<li>Rechtsklick auf die <code>.feature</code>-Datei</li>
+<li>&quot;Generate Cypress Test&quot; auswählen</li>
+<li>Den Fortschritt im VS Code Terminal verfolgen</li>
+</ul>
+<img width="700" alt="image" src="media/generate-test.png" />
+</li>
+<li>
+<p><strong>Tests ausführen</strong></p>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">cypress</span><span class="hl-1"> </span><span class="hl-2">open</span>
+</code><button type="button">Copy</button></pre>
+
+ <img width="700" alt="image" src="media/run-test-1.png" />
+ <img width="700" alt="image" src="media/run-test-2.png" />
+</li>
+</ol>
+<h3 id="wichtige-hinweise-zur-verwendung" class="tsd-anchor-link">Wichtige Hinweise zur Verwendung<a href="#wichtige-hinweise-zur-verwendung" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
+<li>Stellen Sie sicher, dass nur eine eindeutige <code>steps.ts</code>, <code>selectors.ts</code> und <code>.feature</code>-Datei im Projekt vorhanden ist</li>
+<li>Die Feature-Datei muss die korrekte URL-Angabe am Dateianfang enthalten</li>
+<li>Befolgen Sie die Gherkin-Syntax für konsistente Ergebnisse</li>
+</ul>
+<hr>
+<h2 id="entwicklung" class="tsd-anchor-link">Entwicklung<a href="#entwicklung" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="projekt-setup" class="tsd-anchor-link">Projekt Setup<a href="#projekt-setup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Abhängigkeiten installieren:</li>
+</ol>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span>
+</code><button type="button">Copy</button></pre>
+
+<ol start="2">
+<li>Cypress starten (zum Testen):</li>
+</ol>
+<pre><code class="bash"><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">cypress</span><span class="hl-1"> </span><span class="hl-2">open</span>
+</code><button type="button">Copy</button></pre>
+
+<ol start="3">
+<li>E2E Testing Browser auswählen und Test ausführen</li>
+</ol>
+<h3 id="extension-testen" class="tsd-anchor-link">Extension testen<a href="#extension-testen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ol>
+<li>Repository &quot;diva-e-cypress&quot; öffnen</li>
+<li><code>extension.ts</code> in VSCode öffnen</li>
+<li><code>F5</code> drücken zum Testen der Extension</li>
+<li>Neues VSCode-Fenster öffnet sich für Tests</li>
+<li>Repository &quot;diva-e-cypress-tests&quot; als Testprojekt verwenden</li>
+</ol>
+<h3 id="extension-building" class="tsd-anchor-link">Extension Building<a href="#extension-building" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Extension kompilieren:</p>
+<pre><code class="bash"><span class="hl-0">node</span><span class="hl-1"> </span><span class="hl-2">esbuild.js</span><span class="hl-1"> </span><span class="hl-3">--production</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Extension als <code>.vsix</code>-Datei verpacken:</p>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">prepack</span><br/><span class="hl-0">vsce</span><span class="hl-1"> </span><span class="hl-2">package</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">postpack</span>
+</code><button type="button">Copy</button></pre>
+
+<ul>
+<li><code>prepack</code> und <code>postpack</code> sind erforderlich, damit für die Erweiterung nur die kurze Beschreibung (<code>README-EXT.md</code>) verwendet wird</li>
+</ul>
+<p>Lokale Installation:</p>
+<pre><code class="bash"><span class="hl-0">code</span><span class="hl-1"> </span><span class="hl-3">--install-extension</span><span class="hl-1"> </span><span class="hl-2">my-extension-0.0.1.vsix</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="dokumentation-generieren" class="tsd-anchor-link">Dokumentation generieren<a href="#dokumentation-generieren" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">docs</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Erstellt HTML-Dokumentation aus JSDoc-Kommentaren im <code>docs/</code>-Ordner.</p>
+<hr>
+<h2 id="projektstruktur" class="tsd-anchor-link">Projektstruktur<a href="#projektstruktur" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="repository-diva-e-cypress" class="tsd-anchor-link">Repository: diva-e-cypress<a href="#repository-diva-e-cypress" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code><span class="hl-4">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">agents</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">baseAgent</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">              # </span><span class="hl-4">Basisfunktionalitäten</span><span class="hl-1"> </span><span class="hl-4">für</span><span class="hl-1"> </span><span class="hl-4">alle</span><span class="hl-1"> </span><span class="hl-4">Agents</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">codeRefactorAgent</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">      # </span><span class="hl-4">Code</span><span class="hl-1">-</span><span class="hl-4">Refaktorierung</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">selectorsAgent</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">         # </span><span class="hl-4">Selector</span><span class="hl-1">-</span><span class="hl-4">Generierung</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">stepsAgent</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">            # </span><span class="hl-4">Testschritt</span><span class="hl-1">-</span><span class="hl-4">Erzeugung</span><br/><span class="hl-1">│   └── </span><span class="hl-4">verificationAgent</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">     # </span><span class="hl-4">Test</span><span class="hl-1">-</span><span class="hl-4">Validierung</span><br/><span class="hl-1">├── </span><span class="hl-4">prompts</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">code_fix</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">              # </span><span class="hl-4">Prompt</span><span class="hl-1"> </span><span class="hl-4">für</span><span class="hl-1"> </span><span class="hl-4">Codekorrekturen</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">promptTemplate</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">        # </span><span class="hl-4">Basis</span><span class="hl-1">-</span><span class="hl-4">Prompt</span><span class="hl-1">-</span><span class="hl-4">Struktur</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">selectors_instruction</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1"> # </span><span class="hl-4">Selector</span><span class="hl-1">-</span><span class="hl-4">Generierung</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">steps_instruction</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">     # </span><span class="hl-4">Step</span><span class="hl-1">-</span><span class="hl-4">Generierung</span><br/><span class="hl-1">│   └── </span><span class="hl-4">verification_instruction</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1"> # </span><span class="hl-4">Test</span><span class="hl-1">-</span><span class="hl-4">Validierung</span><br/><span class="hl-1">├── </span><span class="hl-4">extension</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">                 # </span><span class="hl-5">VS</span><span class="hl-1"> </span><span class="hl-4">Code</span><span class="hl-1"> </span><span class="hl-4">Extension</span><span class="hl-1"> </span><span class="hl-4">Interface</span><br/><span class="hl-1">├── </span><span class="hl-4">orchestrator</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">              # </span><span class="hl-4">Zentrale</span><span class="hl-1"> </span><span class="hl-4">Steuerungslogik</span><br/><span class="hl-1">├── </span><span class="hl-4">htmlPreprocessor</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">          # </span><span class="hl-4">Webseiten</span><span class="hl-1">-</span><span class="hl-4">Vorverarbeitung</span><br/><span class="hl-1">├── </span><span class="hl-4">stepsGenerator</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">            # </span><span class="hl-4">Feature</span><span class="hl-1">-</span><span class="hl-4">File</span><span class="hl-1"> </span><span class="hl-4">Processing</span><br/><span class="hl-1">└── </span><span class="hl-4">switchUrl</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">                 # </span><span class="hl-5">URL</span><span class="hl-1">-</span><span class="hl-4">Management</span>
+</code><button>Copy</button></pre>
+
+<h3 id="repository-diva-e-cypress-tests" class="tsd-anchor-link">Repository: diva-e-cypress-tests<a href="#repository-diva-e-cypress-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><pre><code><span class="hl-4">cypress</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">e2e</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">common</span><span class="hl-1">/</span><br/><span class="hl-1">│   │   ├── </span><span class="hl-4">selectors</span><span class="hl-1">/</span><br/><span class="hl-1">│   │   │   └── </span><span class="hl-4">orchestrator_selectors</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">  # </span><span class="hl-4">Generierte</span><span class="hl-1"> </span><span class="hl-4">Selectors</span><br/><span class="hl-1">│   │   └── </span><span class="hl-4">steps</span><span class="hl-1">/</span><br/><span class="hl-1">│   │       └── </span><span class="hl-4">orchestrator_steps</span><span class="hl-1">.</span><span class="hl-4">ts</span><span class="hl-1">      # </span><span class="hl-4">Generierte</span><span class="hl-1"> </span><span class="hl-4">Steps</span><br/><span class="hl-1">│   └── </span><span class="hl-4">features</span><span class="hl-1">/</span><br/><span class="hl-1">│       └── </span><span class="hl-4">orchestrator</span><span class="hl-1">.</span><span class="hl-4">feature</span><span class="hl-1">           # </span><span class="hl-4">Feature</span><span class="hl-1">-</span><span class="hl-4">Dateien</span><br/><span class="hl-1">└── </span><span class="hl-4">support</span><span class="hl-1">/</span><br/><span class="hl-1">    └── </span><span class="hl-4">e2e</span><span class="hl-1">.</span><span class="hl-4">js</span>
+</code><button>Copy</button></pre>
+
+<hr>
+<h2 id="konfigurationsdateien" class="tsd-anchor-link">Konfigurationsdateien<a href="#konfigurationsdateien" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><table>
 <thead>
 <tr>
 <th>Datei</th>
-<th>Zweck / Beschreibung</th>
+<th>Zweck</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>package.json</td>
-<td>Enthält Metadaten, Abhängigkeiten, NPM-Skripte und Konfiguration der Extension</td>
+<td>Extension-Metadaten, Abhängigkeiten, NPM-Skripte</td>
 </tr>
 <tr>
 <td>package-lock.json</td>
-<td>Automatisch gepflegter Lockfile für Abhängigkeits-Management (nicht manuell bearbeiten!)</td>
+<td>Dependency Lockfile (nicht manuell bearbeiten)</td>
 </tr>
 <tr>
 <td>tsconfig.json</td>
-<td>TypeScript-Compiler-Konfiguration, regelt Kompilierung und Projektstruktur</td>
+<td>TypeScript-Compiler-Konfiguration</td>
 </tr>
 <tr>
 <td>typedoc.json</td>
-<td>Einstellungen für die automatische Code-Dokumentation mit TypeDoc</td>
+<td>Code-Dokumentations-Einstellungen</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Hinweise:</strong></p>
-<ul>
-<li>Für Änderungen an zentralen Konfigurationsdateien bitte immer im Team abstimmen.</li>
-<li>Die wichtigsten NPM-Kommandos können in <code>package.json</code> unter <code>&quot;scripts&quot;</code> gefunden werden (z.B. <code>npm run docs</code> für Projektdokumentation).</li>
-</ul>
-<p><strong>Erweiterung der Dokumentation:</strong></p>
-<ul>
-<li>Falls die Dokumentation erweitert werden soll, pushen Sie die Änderungen mit <code>nmp run docs</code></li>
-</ul>
+<p><strong>Wichtig:</strong> Änderungen an zentralen Konfigurationsdateien sollten im Team abgestimmt werden.</p>
 <hr>
-<h2 id="projektstruktur-kurzüberblick" class="tsd-anchor-link">Projektstruktur (Kurzüberblick)<a href="#projektstruktur-kurzüberblick" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="repository-diva-e-cypress" class="tsd-anchor-link">Repository: &quot;diva-e-cypress&quot;<a href="#repository-diva-e-cypress" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>
-<p><code>src/</code><br>
-Enthält die Hauptlogik, Agents und Orchestrator für die KI-gestützte Testgenerierung.</p>
-<ul>
-<li><code>agents</code><br>
-Hier sind alle Orchestrator-Abschnitte (Agents) einzeln abgebildet, um eine bessere Organisation zu gewährleisten.
-Der Aufbau jedes Agents ist in dem jeweiligen Abschnitt genauer erklärt.</li>
-<li><code>test</code><br>
-Hier ist die eigentliche Backend-Logik dokumentiert.
-Orchestrator: Kernlogik der LLM-Aufrufe, von hier werden die einzelnen Dateien angesteuert und aufgerufen.
-extension.ts: Zum interaktiven VS-Code Plugin in der Test-Umgebung.
-htmlPreprocessor.ts: Auslagerung der Vorverarbeitung der Webseite für die LLM-Prompts durch Puppeteer.
-stepsGenerator.ts: Erweiterung der Steps-Generierung. Die Feature wird vor dem Aufrufen der LLMs ausgelesen und eine Schablone für die Steps-Klassen generiert.
-switchUrl.ts: Ergänzung eines vereinfachten URL-Wechsels für die Cypress-Tests.</li>
-</ul>
-</li>
-<li>
-<p><code>prompts/</code><br>
-Prompt-Templates für die KI-Befehle (Selectors, Steps, Verification).
-Einfach modifizierbar, für Umstrukturierung oder Wechseln von LLMs.</p>
-</li>
-</ul>
-<h3 id="repository-diva-e-cypress-tests" class="tsd-anchor-link">Repository: &quot;diva-e-cypress-tests&quot;<a href="#repository-diva-e-cypress-tests" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Beinhaltet die eigentliche Testumgebung mit den .feature - und generierten Dateien.
-Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.</p>
-<ul>
-<li><code>e2e/common/selectors/</code>
-Enthält die automatisch generierten Selector-Dateien.</li>
-<li><code>e2e/common/steps/</code>
-Enthält die automatisch generierten Steps-Dateien.</li>
-<li><code>e2e/demo/</code>
-Beispiel .feature-Datei (demo.feature) für Testzwecke.</li>
-<li><code>e2e/features/</code>
-Weitere .feature-Dateien, welche eine Gherkin-Logik enthalten die genau so befolgt werden muss um einen funktionierenden Cypress-Test zu gewährleisten.</li>
-</ul>
-<h4 id="beispiel-einer-muster-feature-datei" class="tsd-anchor-link">Beispiel einer Muster-Feature-Datei:<a href="#beispiel-einer-muster-feature-datei" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code><span class="hl-1"># </span><span class="hl-4">url</span><span class="hl-1">: </span><span class="hl-4">https</span><span class="hl-1">:</span><span class="hl-5">//meag.gitlab.diva-e.com/investmentrechner-2023/</span><br/><br/><span class="hl-4">Feature</span><span class="hl-1">: </span><span class="hl-6">MEAG</span><span class="hl-1"> </span><span class="hl-7">Investmentrechner</span><span class="hl-1"> – </span><span class="hl-7">Button</span><span class="hl-1">-</span><span class="hl-0">Klick</span><span class="hl-1"> (</span><span class="hl-7">minimal</span><span class="hl-1">)</span><br/><br/><span class="hl-1">  </span><span class="hl-4">Scenario</span><span class="hl-1">: </span><span class="hl-7">Klick</span><span class="hl-1"> </span><span class="hl-7">auf</span><span class="hl-1"> </span><span class="hl-2">&quot;Anlegen&quot;</span><span class="hl-1">-</span><span class="hl-7">Tile</span><br/><span class="hl-1">    </span><span class="hl-7">Given</span><span class="hl-1"> </span><span class="hl-7">the</span><span class="hl-1"> </span><span class="hl-7">Customer</span><span class="hl-1"> </span><span class="hl-7">is</span><span class="hl-1"> </span><span class="hl-7">on</span><span class="hl-1"> </span><span class="hl-7">the</span><span class="hl-1"> </span><span class="hl-7">homepage</span><br/><span class="hl-1">    </span><span class="hl-7">When</span><span class="hl-1">  </span><span class="hl-7">he</span><span class="hl-1"> </span><span class="hl-7">clicks</span><span class="hl-1"> </span><span class="hl-7">the</span><span class="hl-1"> </span><span class="hl-2">&quot;Anlegen&quot;</span><span class="hl-1"> </span><span class="hl-7">button</span><br/><span class="hl-1">    </span><span class="hl-7">Then</span><span class="hl-1">  </span><span class="hl-7">the</span><span class="hl-1"> </span><span class="hl-2">&quot;Was möchten Sie berechnen?&quot;</span><span class="hl-1"> </span><span class="hl-7">title</span><span class="hl-1"> </span><span class="hl-7">should</span><span class="hl-1"> </span><span class="hl-7">be</span><span class="hl-1"> </span><span class="hl-7">displayed</span>
-</code><button>Copy</button></pre>
+<h2 id="beispiel-feature-datei" class="tsd-anchor-link">Beispiel Feature-Datei<a href="#beispiel-feature-datei" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="gherkin"># url: https://meag.gitlab.diva-e.com/investmentrechner-2023/
+
+Feature: MEAG Investmentrechner – Button-Klick (minimal)
+
+  Scenario: Klick auf "Anlegen"-Tile
+    Given the Customer is on the homepage
+    When  he clicks the "Anlegen" button
+    Then  the "Was möchten Sie berechnen?" title should be displayed
+</code><button type="button">Copy</button></pre>
 
 <hr>
-<h2 id="gesamtworkflow" class="tsd-anchor-link">Gesamtworkflow<a href="#gesamtworkflow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><ol>
-<li>Repo &quot;diva-e-cypress&quot; öffnen</li>
-<li>Repo &quot;diva-e-cypress-tests&quot; öffnen
-<ul>
-<li>kann mit f5 geöffnet werden (falls es nicht auf Anhieb funktioniert, stellen Sie sicher, dass eine .ts geöffnet ist)</li>
-</ul>
-</li>
-<li>LLM starten
-<ul>
-<li>Das LLM mit dem die Selectors - und Steps Dateien generiert werden sollen muss gestartet werden (z.B. Ollama)</li>
-<li><code>ollama run llama3.2</code></li>
-</ul>
-</li>
-<li>Feature-Datei auswählen
-<ul>
-<li>Rechtsklick auf eine .feature-Datei (z. B. demo.feature) und per Extension den Prozess starten</li>
-<li>Öffnen mit &quot;Generate Cypress Test (Ollama)&quot;</li>
-<li>Die anderen Auswahlmöglichkeiten sind aus Testzwecken noch enthalten und können mit anderen LLMs ersetzt werden, falls gewünscht.</li>
-</ul>
-</li>
-<li>Generierung
-<ul>
-<li>Die Selectors - und Steps Dateien werden nun erzeugt und in den enstsprechenden Ordnern abgelegt.</li>
-<li>Die Generierung kann über das Terminal verfolgt werden - Status.</li>
-</ul>
-</li>
-<li>Den Cypress-Test starten mit <code>npx cypress open</code>
-<ul>
-<li>Falls Fehler beim Ausführen der Cypress-Tests in der Cypress Konsole aufkommen, stellen Sie sicher, dass nur eine eindeutige steps.ts | selectors.ts und feature hinterlegt sind.</li>
-</ul>
-</li>
-</ol>
+<h2 id="zukünftige-verbesserungen" class="tsd-anchor-link">Zukünftige Verbesserungen<a href="#zukünftige-verbesserungen" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="verwendung-leistungsstärkerer-llms" class="tsd-anchor-link">Verwendung leistungsstärkerer LLMs<a href="#verwendung-leistungsstärkerer-llms" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Die Verwendung lokaler LLMs zeigt Begrenzungen bei der Kontextlänge, wodurch komplexe Testfälle noch nicht zuverlässig umsetzbar sind. Cloud-basierte LLMs (GPT-5, Gemini 2.5 Pro) könnten diese Einschränkungen überwinden.</p>
+<h3 id="grafische-benutzeroberfläche" class="tsd-anchor-link">Grafische Benutzeroberfläche<a href="#grafische-benutzeroberfläche" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Eine GUI könnte die Auswahl verschiedener LLMs ermöglichen und die URL-Konfiguration vereinfachen, anstatt diese in der Feature-Datei anzugeben.</p>
 <hr>
-<h3 id="weitere-hinweise" class="tsd-anchor-link">Weitere Hinweise<a href="#weitere-hinweise" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><ul>
-<li>
-<p><strong>Feature-Dateien (<code>.feature</code>):</strong></p>
+<h2 id="troubleshooting" class="tsd-anchor-link">Troubleshooting<a href="#troubleshooting" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="häufige-probleme" class="tsd-anchor-link">Häufige Probleme<a href="#häufige-probleme" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p><strong>Cypress-Tests schlagen fehl:</strong></p>
 <ul>
-<li>Legt Testfälle in Gherkin-Syntax fest, die anschließend von der KI verarbeitet werden.</li>
-<li>Stellen Sie das richtige Format sicher! Eine Beispiel Feature liegt im Test-Projekt.</li>
-<li>Gherkin-Logik sollte verfolgt werden und die URL für die gewünschte Webseite sollte an der passenden Stelle im richtigen Format liegen.</li>
+<li>Überprüfen Sie, dass nur eine eindeutige <code>steps.ts</code>, <code>selectors.ts</code> und <code>.feature</code>-Datei vorhanden ist</li>
+<li>Stellen Sie sicher, dass Ollama läuft und das LLama 3.2 Modell verfügbar ist</li>
 </ul>
-<pre><code><span class="hl-1"># </span><span class="hl-4">url</span><span class="hl-1">: </span><span class="hl-4">https</span><span class="hl-1">:</span><span class="hl-5">//blabla.de/</span>
-</code><button>Copy</button></pre>
-
-</li>
-<li>
-<p><strong>Automatische Dokumentation:</strong><br>
-Mit <code>npm run docs</code> (bzw. per TypeDoc) wird die gesamte JSDoc-Kommentierung zu einer HTML-Dokumentation generiert (im Ordner <code>docs/</code>).</p>
-</li>
+<p><strong>Extension funktioniert nicht:</strong></p>
+<ul>
+<li>Prüfen Sie, ob die Extension korrekt installiert wurde</li>
+<li>Starten Sie VS Code neu nach der Installation</li>
 </ul>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#projekt-wissensmanagement-diva-e"><span>Projekt <wbr/>Wissensmanagement: <wbr/>Diva-<wbr/>E</span></a><ul><li><a href="#automatisches-erstellen-von-cypress-tests-unter-verwendung-von-ki-tools"><span>Automatisches <wbr/>Erstellen von <wbr/>Cypress <wbr/>Tests unter <wbr/>Verwendung von <wbr/>KI <wbr/>Tools</span></a></li><li><ul><li><a href="#ziel-des-projekts"><span>Ziel des <wbr/>Projekts:</span></a></li><li><a href="#mögliche-zukünftige-verbesserungen"><span>Mögliche zukünftige <wbr/>Verbesserungen:</span></a></li><li><ul><li><a href="#--verwendung-leistungsstärkerer-llms"><span>-<wbr/> <wbr/>Verwendung leistungsstärkerer <wbr/>LL<wbr/>Ms:</span></a></li><li><a href="#--implementierung-einer-grafischen-benutzeroberfläche-gui"><span>-<wbr/> <wbr/>Implementierung einer grafischen <wbr/>Benutzeroberfläche (<wbr/>GUI):</span></a></li></ul></li><li><a href="#anmerkungen"><span>Anmerkungen:</span></a></li></ul></li><li><a href="#mitglieder"><span>Mitglieder</span></a></li><li><a href="#setup"><span>Setup</span></a></li><li><ul><li><a href="#cypress-starten"><span>Cypress <wbr/>Starten</span></a></li><li><a href="#ollama"><span>Ollama</span></a></li></ul></li><li><a href="#installation"><span>Installation</span></a></li><li><a href="#projekt-konfigurationsdateien"><span>Projekt-<wbr/>Konfigurationsdateien</span></a></li><li><a href="#projektstruktur-kurzüberblick"><span>Projektstruktur (<wbr/>Kurzüberblick)</span></a></li><li><ul><li><a href="#repository-diva-e-cypress"><span>Repository: &quot;diva-<wbr/>e-<wbr/>cypress&quot;</span></a></li><li><a href="#repository-diva-e-cypress-tests"><span>Repository: &quot;diva-<wbr/>e-<wbr/>cypress-<wbr/>tests&quot;</span></a></li><li><ul><li><a href="#beispiel-einer-muster-feature-datei"><span>Beispiel einer <wbr/>Muster-<wbr/>Feature-<wbr/>Datei:</span></a></li></ul></li></ul></li><li><a href="#gesamtworkflow"><span>Gesamtworkflow</span></a></li><li><ul><li><a href="#weitere-hinweise"><span>Weitere <wbr/>Hinweise</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">diva-e-cypress - v1.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
+<p><strong>Generierung schlägt fehl:</strong></p>
+<ul>
+<li>Überprüfen Sie die URL-Angabe in der Feature-Datei</li>
+<li>Stellen Sie sicher, dass die Gherkin-Syntax korrekt ist</li>
+</ul>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#projekt-wissensmanagement-diva-e-cypress-test-generator"><span>Projekt <wbr/>Wissensmanagement: <wbr/>Diva-<wbr/>E <wbr/>Cypress <wbr/>Test <wbr/>Generator</span></a><ul><li><a href="#überblick"><span>Überblick</span></a></li><li><ul><li><a href="#projektziel"><span>Projektziel</span></a></li><li><a href="#organisatorisches"><span>Organisatorisches</span></a></li><li><a href="#projektteam"><span>Projektteam</span></a></li></ul></li><li><a href="#voraussetzungen"><span>Voraussetzungen</span></a></li><li><ul><li><a href="#systemanforderungen"><span>Systemanforderungen</span></a></li><li><a href="#erforderliche-tools"><span>Erforderliche <wbr/>Tools</span></a></li><li><a href="#ollama-installation-und-setup"><span>Ollama <wbr/>Installation und <wbr/>Setup</span></a></li><li><a href="#cypress-installation"><span>Cypress <wbr/>Installation</span></a></li></ul></li><li><a href="#installation"><span>Installation</span></a></li><li><ul><li><a href="#extension-installation"><span>Extension <wbr/>Installation</span></a></li></ul></li><li><a href="#verwendung"><span>Verwendung</span></a></li><li><ul><li><a href="#grundlegender-workflow"><span>Grundlegender <wbr/>Workflow</span></a></li><li><a href="#wichtige-hinweise-zur-verwendung"><span>Wichtige <wbr/>Hinweise zur <wbr/>Verwendung</span></a></li></ul></li><li><a href="#entwicklung"><span>Entwicklung</span></a></li><li><ul><li><a href="#projekt-setup"><span>Projekt <wbr/>Setup</span></a></li><li><a href="#extension-testen"><span>Extension testen</span></a></li><li><a href="#extension-building"><span>Extension <wbr/>Building</span></a></li><li><a href="#dokumentation-generieren"><span>Dokumentation generieren</span></a></li></ul></li><li><a href="#projektstruktur"><span>Projektstruktur</span></a></li><li><ul><li><a href="#repository-diva-e-cypress"><span>Repository: diva-<wbr/>e-<wbr/>cypress</span></a></li><li><a href="#repository-diva-e-cypress-tests"><span>Repository: diva-<wbr/>e-<wbr/>cypress-<wbr/>tests</span></a></li></ul></li><li><a href="#konfigurationsdateien"><span>Konfigurationsdateien</span></a></li><li><a href="#beispiel-feature-datei"><span>Beispiel <wbr/>Feature-<wbr/>Datei</span></a></li><li><a href="#zukünftige-verbesserungen"><span>Zukünftige <wbr/>Verbesserungen</span></a></li><li><ul><li><a href="#verwendung-leistungsstärkerer-llms"><span>Verwendung leistungsstärkerer <wbr/>LL<wbr/>Ms</span></a></li><li><a href="#grafische-benutzeroberfläche"><span>Grafische <wbr/>Benutzeroberfläche</span></a></li></ul></li><li><a href="#troubleshooting"><span>Troubleshooting</span></a></li><li><ul><li><a href="#häufige-probleme"><span>Häufige <wbr/>Probleme</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="modules.html">diva-e-cypress - v1.0.3</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
