@@ -17,6 +17,16 @@ Das Projekt diente zur Entwicklung eines Prototypen, der die Machbarkeit und Sin
 Da es sich um eine Projektarbeit im **Modul "Projekt Wissensmanagement"** an der HTW Berlin handelt, wurden alle organisatorischen Dokumente separat im **Ordner "organisatorisches"** abgelegt.
 Dort befinden sich unter anderem die Meeting-Protokolle sowie die Präsentationen.
 
+#### Dokumentation öffnen
+
+Für die Projektdokumentation verwenden wir **TypeDoc**.
+
+Die Dokumentation kann entweder lokal über die Datei index.html im docs-Ordner geöffnet werden
+oder direkt online über **GitHub Pages**:
+
+https://diva-e-cypress-crew.github.io/diva-e-cypress/
+
+
 ### Projektteam
 
 - Leander Piepenbring   
